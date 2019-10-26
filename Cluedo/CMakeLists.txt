@@ -15,11 +15,11 @@ ENDIF()
 
 find_package(Qt5 COMPONENTS Core Gui Widgets OpenGL REQUIRED)
 
-set(HEADERS UI/CluedoUI.h)
+include_directories(${PROJECT_SOURCE_DIR}/UI ${PROJECT_SOURCE_DIR}/Model ${PROJECT_SOURCE_DIR}/GameManager)
 
-set(SOURCES UI/CluedoUI.cpp main.cpp)
+FILE(GLOB SOURCES ${PROJECT_SOURCE_DIR}/UI/*.cpp ${PROJECT_SOURCE_DIR}/Model/*.cpp ${PROJECT_SOURCE_DIR}/GameManager/*.cpp main.cpp)
 
-add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets Qt5::OpenGL)
 
