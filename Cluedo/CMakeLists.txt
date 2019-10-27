@@ -13,7 +13,7 @@ IF (WIN32)
     set(CMAKE_PREFIX_PATH D:\\Programme\\Qt\\Qt5.10.1\\5.10.1\\msvc2017_64\\lib\\cmake)
 ENDIF()
 
-find_package(Qt5 COMPONENTS Core Gui Widgets OpenGL REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/UI ${PROJECT_SOURCE_DIR}/Model ${PROJECT_SOURCE_DIR}/GameManager)
 
@@ -28,7 +28,6 @@ IF (WIN32)
     get_target_property(QtCore_location_Release Qt5::Core IMPORTED_LOCATION_RELEASE)
     get_target_property(QtQui_location_Release Qt5::Gui IMPORTED_LOCATION_RELEASE)
     get_target_property(QtWidgets_location_Release Qt5::Widgets IMPORTED_LOCATION_RELEASE)
-    get_target_property(QtOpenGL_location_Release Qt5::OpenGL IMPORTED_LOCATION_RELEASE)
     get_target_property(QtCore_location_Debug Qt5::Core IMPORTED_LOCATION_DEBUG)
     get_target_property(QtQui_location_Debug Qt5::Gui IMPORTED_LOCATION_DEBUG)
     get_target_property(QtWidgets_location_Debug Qt5::Widgets IMPORTED_LOCATION_DEBUG)

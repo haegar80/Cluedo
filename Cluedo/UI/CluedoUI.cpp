@@ -1,16 +1,14 @@
 #include "CluedoUI.h"
+#include "StartGameUI.h"
+#include <QtCore/QDir>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QScrollArea>
-#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QMessageBox>
 #include <QImageReader>
 #include <memory>
 
@@ -73,6 +71,9 @@ void CluedoUI::setupUi()
     m_imageSelectedRoom->setGeometry(QRect(550, 200, 281, 281));
     m_imageSelectedRoom->setFrameShape(QFrame::Box);
     m_imageSelectedRoom->setScaledContents(true);
+    m_buttonStartGame = new QPushButton(m_centralwidget);
+    m_buttonStartGame->setObjectName(QString::fromUtf8("buttonStartGame"));
+    m_buttonStartGame->setGeometry(QRect(980, 50, 75, 23));
     m_quitButton = new QPushButton(m_centralwidget);
     m_quitButton->setObjectName(QString::fromUtf8("quitButton"));
     m_quitButton->setGeometry(QRect(20, screenGeometry.height() - 73, 75, 23));
@@ -90,6 +91,7 @@ void CluedoUI::setupUi()
     QObject::connect(m_listMurder, SIGNAL(itemSelectionChanged()), this, SLOT(selectedMurder()));
     QObject::connect(m_listWeapon, SIGNAL(itemSelectionChanged()), this, SLOT(selectedWeapon()));
     QObject::connect(m_listRoom, SIGNAL(itemSelectionChanged()), this, SLOT(selectedRoom()));
+    QObject::connect(m_buttonStartGame, SIGNAL(pressed()), this, SLOT(buttonStartGame_clicked()));
     QObject::connect(m_quitButton, SIGNAL(pressed()), this, SLOT(close()));
 }
 
@@ -100,6 +102,7 @@ void CluedoUI::retranslateUi()
     m_labelMurderList->setText(QApplication::translate("MainWindow", "Auswahl T\303\244ter", 0));
     m_labelWeaponList->setText(QApplication::translate("MainWindow", "Auswahl Waffe", 0));
     m_labelRoomList->setText(QApplication::translate("MainWindow", "Auswahl Raum", 0));
+    m_buttonStartGame->setText(QApplication::translate("MainWindow", "Starte Spiel", 0));
     m_quitButton->setText(QApplication::translate("MainWindow", "Quit", 0));
 }
 
@@ -143,6 +146,14 @@ void CluedoUI::selectedRoom()
             m_imageSelectedRoom->setPixmap(QPixmap::fromImage(image));
         }
     }
+}
+
+void CluedoUI::buttonStartGame_clicked()
+{
+    m_startGameUI = new StartGameUI();
+    m_startGameUI->setWindowModality(Qt::ApplicationModal);
+    m_startGameUI->setAttribute(Qt::WA_DeleteOnClose);
+    m_startGameUI->show();
 }
 
 void CluedoUI::fillMurderList()

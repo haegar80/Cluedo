@@ -1,15 +1,14 @@
 #pragma once
 
-#include "../GameManager/CluedoObjectLoader.h"
 #include <QtWidgets/QMainWindow>
+#include "../GameManager/CluedoObjectLoader.h"
 
+class StartGameUI;
 class QWidget;
 class QPushButton;
 class QListWidget;
 class QPushButton;
 class QLabel;
-class QScrollArea;
-class QCheckBox;
 class QMenuBar;
 class QStatusBar;
 class QString;
@@ -31,6 +30,7 @@ public:
     void selectedMurder();
     void selectedWeapon();
     void selectedRoom();
+    void buttonStartGame_clicked();
 
 private:
     QWidget * m_centralwidget;
@@ -44,10 +44,12 @@ private:
     QLabel* m_labelRoomList;
     QListWidget *m_listRoom;
     QLabel* m_imageSelectedRoom;
+    QPushButton* m_buttonStartGame;
     QPushButton* m_quitButton;
     QMenuBar* m_menubar;
     QStatusBar* m_statusbar;
 
+    StartGameUI* m_startGameUI;
     CluedoObjectLoader m_cluedoObjectLoader;
 
     void fillMurderList();
