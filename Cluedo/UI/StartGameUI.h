@@ -2,13 +2,12 @@
 
 #include <QtWidgets/QMainWindow>
 
+class PlayerSetUI;
 class QWidget;
 class QPushButton;
 class QLineEdit;
-class QPushButton;
 class QLabel;
 class QString;
-class QImage;
 class QStatusBar;
 class QComboBox;
 class QMenuBar;
@@ -29,11 +28,13 @@ public:
     void buttonStartGame_clicked();
 
 private:
+    PlayerSetUI * m_playerSetUI;
+
     QWidget* m_centralwidget;
-    QLineEdit* m_lineEditUserName;
-    QLabel* m_labelUserName;
-    QLabel* m_labelNumberOfComputerUsers;
-    QComboBox* m_comboBoxNumberOfComputerUsers;
+    QLineEdit* m_lineEditPlayerName;
+    QLabel* m_labelPlayerName;
+    QLabel* m_labelNumberOfComputerPlayers;
+    QComboBox* m_comboBoxNumberOfComputerPlayers;
     QPushButton* m_buttonStartGame;
     QMenuBar* m_menubar;
     QStatusBar* m_statusbar;

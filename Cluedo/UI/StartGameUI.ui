@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLineEdit" name="lineEditUserName">
+   <widget class="QLineEdit" name="lineEditPlayerName">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -24,7 +24,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QLabel" name="labelUserName">
+   <widget class="QLabel" name="labelPlayerName">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -37,7 +37,7 @@
      <string>Benutzername</string>
     </property>
    </widget>
-   <widget class="QLabel" name="labelNumberOfComputerUsers">
+   <widget class="QLabel" name="labelNumberOfComputerPlayers">
     <property name="geometry">
      <rect>
       <x>300</x>
@@ -50,7 +50,7 @@
      <string>Anzahl Computergegner</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBoxNumberOfComputerUsers">
+   <widget class="QComboBox" name="comboBoxNumberOfComputerPlayers">
     <property name="geometry">
      <rect>
       <x>440</x>

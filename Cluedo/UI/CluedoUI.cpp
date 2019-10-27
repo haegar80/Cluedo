@@ -10,7 +10,6 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
 #include <QImageReader>
-#include <memory>
 
 CluedoUI::CluedoUI()
 {

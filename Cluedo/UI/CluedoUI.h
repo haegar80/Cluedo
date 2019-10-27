@@ -4,6 +4,7 @@
 #include "../GameManager/CluedoObjectLoader.h"
 
 class StartGameUI;
+
 class QWidget;
 class QPushButton;
 class QListWidget;

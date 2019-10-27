@@ -1,4 +1,5 @@
 #include "StartGameUI.h"
+#include "PlayerSetUI.h"
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
@@ -8,8 +9,6 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
-#include <QImageReader>
-#include <memory>
 
 StartGameUI::StartGameUI()
 {
@@ -25,18 +24,18 @@ void StartGameUI::setupUi()
     this->resize(570, 211);
     m_centralwidget = new QWidget(this);
     m_centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-    m_lineEditUserName = new QLineEdit(m_centralwidget);
-    m_lineEditUserName->setObjectName(QString::fromUtf8("lineEditUserName"));
-    m_lineEditUserName->setGeometry(QRect(130, 40, 131, 20));
-    m_labelUserName = new QLabel(m_centralwidget);
-    m_labelUserName->setObjectName(QString::fromUtf8("labelUserName"));
-    m_labelUserName->setGeometry(QRect(50, 40, 81, 16));
-    m_labelNumberOfComputerUsers = new QLabel(m_centralwidget);
-    m_labelNumberOfComputerUsers->setObjectName(QString::fromUtf8("labelNumberOfComputerUsers"));
-    m_labelNumberOfComputerUsers->setGeometry(QRect(300, 40, 121, 16));
-    m_comboBoxNumberOfComputerUsers = new QComboBox(m_centralwidget);
-    m_comboBoxNumberOfComputerUsers->setObjectName(QString::fromUtf8("comboBoxNumberOfComputerUsers"));
-    m_comboBoxNumberOfComputerUsers->setGeometry(QRect(440, 40, 69, 22));
+    m_lineEditPlayerName = new QLineEdit(m_centralwidget);
+    m_lineEditPlayerName->setObjectName(QString::fromUtf8("lineEditPlayerName"));
+    m_lineEditPlayerName->setGeometry(QRect(130, 40, 131, 20));
+    m_labelPlayerName = new QLabel(m_centralwidget);
+    m_labelPlayerName->setObjectName(QString::fromUtf8("labelPlayerName"));
+    m_labelPlayerName->setGeometry(QRect(50, 40, 81, 16));
+    m_labelNumberOfComputerPlayers = new QLabel(m_centralwidget);
+    m_labelNumberOfComputerPlayers->setObjectName(QString::fromUtf8("labelNumberOfComputerPlayers"));
+    m_labelNumberOfComputerPlayers->setGeometry(QRect(300, 40, 121, 16));
+    m_comboBoxNumberOfComputerPlayers = new QComboBox(m_centralwidget);
+    m_comboBoxNumberOfComputerPlayers->setObjectName(QString::fromUtf8("comboBoxNumberOfComputerPlayers"));
+    m_comboBoxNumberOfComputerPlayers->setGeometry(QRect(440, 40, 69, 22));
     m_buttonStartGame = new QPushButton(m_centralwidget);
     m_buttonStartGame->setObjectName(QString::fromUtf8("buttonStartGame"));
     m_buttonStartGame->setGeometry(QRect(50, 120, 75, 23));
@@ -53,21 +52,24 @@ void StartGameUI::setupUi()
 
     QObject::connect(m_buttonStartGame, SIGNAL(pressed()), this, SLOT(buttonStartGame_clicked()));
 
-    m_comboBoxNumberOfComputerUsers->insertItem(0, "Kein");
-    m_comboBoxNumberOfComputerUsers->insertItem(1, "1");
-    m_comboBoxNumberOfComputerUsers->insertItem(2, "2");
-    m_comboBoxNumberOfComputerUsers->insertItem(3, "3");
+    m_comboBoxNumberOfComputerPlayers->insertItem(0, "Kein");
+    m_comboBoxNumberOfComputerPlayers->insertItem(1, "1");
+    m_comboBoxNumberOfComputerPlayers->insertItem(2, "2");
+    m_comboBoxNumberOfComputerPlayers->insertItem(3, "3");
 }
 
 void StartGameUI::retranslateUi()
 {
-    this->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
-    m_labelUserName->setText(QApplication::translate("MainWindow", "Benutzername", 0));
-    m_labelNumberOfComputerUsers->setText(QApplication::translate("MainWindow", "Anzahl Computergegner"));
-    m_buttonStartGame->setText(QApplication::translate("MainWindow", "Start Game", 0));
+    this->setWindowTitle(QApplication::translate("StartGame", "StartGame", 0));
+    m_labelPlayerName->setText(QApplication::translate("StartGame", "Benutzername", 0));
+    m_labelNumberOfComputerPlayers->setText(QApplication::translate("StartGame", "Anzahl Computergegner"));
+    m_buttonStartGame->setText(QApplication::translate("StartGame", "Start Game", 0));
 }
 
 void StartGameUI::buttonStartGame_clicked()
 {
-
+    m_playerSetUI = new PlayerSetUI();
+    m_playerSetUI->setAttribute(Qt::WA_DeleteOnClose);
+    m_playerSetUI->show();
+    this->close();
 }
