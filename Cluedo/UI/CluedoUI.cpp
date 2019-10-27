@@ -106,33 +106,42 @@ void CluedoUI::retranslateUi()
 void CluedoUI::selectedMurder()
 {
     QListWidgetItem* item = m_listMurder->selectedItems().at(0);
-    QString itemText = item->text();
-    QImage image = getImage(itemText);
-    if (!image.isNull())
+    if (nullptr != item)
     {
-        m_imageSelectedMurder->setPixmap(QPixmap::fromImage(image));
+        QString itemText = item->text();
+        QImage image = getImage(itemText);
+        if (!image.isNull())
+        {
+            m_imageSelectedMurder->setPixmap(QPixmap::fromImage(image));
+        }
     }
 }
 
 void CluedoUI::selectedWeapon()
 {
     QListWidgetItem* item = m_listWeapon->selectedItems().at(0);
-    QString itemText = item->text();
-    QImage image = getImage(itemText);
-    if (!image.isNull())
+    if (nullptr != item)
     {
-        m_imageSelectedWeapon->setPixmap(QPixmap::fromImage(image));
+        QString itemText = item->text();
+        QImage image = getImage(itemText);
+        if (!image.isNull())
+        {
+            m_imageSelectedWeapon->setPixmap(QPixmap::fromImage(image));
+        }
     }
 }
 
 void CluedoUI::selectedRoom()
 {
     QListWidgetItem* item = m_listRoom->selectedItems().at(0);
-    QString itemText = item->text();
-    QImage image = getImage(itemText);
-    if (!image.isNull())
+    if (nullptr != item)
     {
-        m_imageSelectedRoom->setPixmap(QPixmap::fromImage(image));
+        QString itemText = item->text();
+        QImage image = getImage(itemText);
+        if (!image.isNull())
+        {
+            m_imageSelectedRoom->setPixmap(QPixmap::fromImage(image));
+        }
     }
 }
 
