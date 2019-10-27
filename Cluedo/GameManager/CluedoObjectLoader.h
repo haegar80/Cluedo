@@ -2,12 +2,11 @@
 
 #include "../Model/CluedoObject.h"
 #include <vector>
-#include <memory>
 
 class CluedoObjectLoader
 {
 public:
-    CluedoObjectLoader();
+    static CluedoObjectLoader& getInstance();
     virtual ~CluedoObjectLoader();
 
     std::vector<CluedoObject*>& getMurders()
@@ -26,6 +25,8 @@ public:
     }
 
 private:
+    CluedoObjectLoader();
+
     std::vector<CluedoObject*> m_murders;
     std::vector<CluedoObject*> m_weapons;
     std::vector<CluedoObject*> m_rooms;
@@ -34,8 +35,8 @@ private:
     void createWeapons();
     void createRooms();
 
-    CluedoObjectLoader(const CluedoObjectLoader& copy) = default;
-    CluedoObjectLoader& operator= (const CluedoObjectLoader& copy) = default;
-    CluedoObjectLoader(CluedoObjectLoader&& other) = default;
-    CluedoObjectLoader& operator= (CluedoObjectLoader&& other) = default;
+    CluedoObjectLoader(const CluedoObjectLoader& copy) = delete;
+    CluedoObjectLoader& operator= (const CluedoObjectLoader& copy) = delete;
+    CluedoObjectLoader(CluedoObjectLoader&& other) = delete;
+    CluedoObjectLoader& operator= (CluedoObjectLoader&& other) = delete;
 };

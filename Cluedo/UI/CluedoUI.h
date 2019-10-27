@@ -1,7 +1,6 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
-#include "../GameManager/CluedoObjectLoader.h"
 
 class StartGameUI;
 
@@ -51,7 +50,6 @@ private:
     QStatusBar* m_statusbar;
 
     StartGameUI* m_startGameUI;
-    CluedoObjectLoader m_cluedoObjectLoader;
 
     void fillMurderList();
     void fillWeaponList();

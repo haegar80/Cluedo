@@ -1,5 +1,7 @@
 #include "StartGameUI.h"
 #include "PlayerSetUI.h"
+#include "../Model/PlayerSet.h"
+#include "../GameManager/GameController.h"
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
@@ -56,6 +58,8 @@ void StartGameUI::setupUi()
     m_comboBoxNumberOfComputerPlayers->insertItem(1, "1");
     m_comboBoxNumberOfComputerPlayers->insertItem(2, "2");
     m_comboBoxNumberOfComputerPlayers->insertItem(3, "3");
+    m_comboBoxNumberOfComputerPlayers->insertItem(4, "4");
+    m_comboBoxNumberOfComputerPlayers->insertItem(5, "5");
 }
 
 void StartGameUI::retranslateUi()
@@ -68,7 +72,20 @@ void StartGameUI::retranslateUi()
 
 void StartGameUI::buttonStartGame_clicked()
 {
-    m_playerSetUI = new PlayerSetUI();
+    int numberOfComputerPlayers = m_comboBoxNumberOfComputerPlayers->currentIndex();
+    if (numberOfComputerPlayers < 0)
+    {
+        numberOfComputerPlayers = 0;
+    }
+
+    for (int i = 0; i < numberOfComputerPlayers; i++)
+    {
+        (void) GameController::getInstance().createNewPlayerSet();
+    }
+    
+    PlayerSet* playerSet = GameController::getInstance().createNewPlayerSet();
+
+    m_playerSetUI = new PlayerSetUI(playerSet);
     m_playerSetUI->setAttribute(Qt::WA_DeleteOnClose);
     m_playerSetUI->show();
     this->close();

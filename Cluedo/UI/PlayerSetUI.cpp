@@ -1,4 +1,7 @@
 #include "PlayerSetUI.h"
+#include "../Model/PlayerSet.h"
+#include "../GameManager/GameController.h"
+#include <QtCore/QDir>
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QLabel>
@@ -6,8 +9,9 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
+#include <QImageReader>
 
-PlayerSetUI::PlayerSetUI()
+PlayerSetUI::PlayerSetUI(PlayerSet* p_playerSet) : m_playerSet(p_playerSet)
 {
     setupUi();
 }
@@ -83,6 +87,10 @@ void PlayerSetUI::setupUi()
     this->setStatusBar(m_statusbar);
 
     retranslateUi();
+
+    GameController::getInstance().selectAndDistributeCluedoObjects();
+    hideNotUsedCluedoObjects();
+    fillCluedoObjects();
 }
 
 void PlayerSetUI::retranslateUi()
@@ -101,4 +109,127 @@ void PlayerSetUI::retranslateUi()
     m_imageCluedoObject4->setText(QString());
     m_imageCluedoObject5->setText(QString());
     m_imageCluedoObject6->setText(QString());
+}
+
+void PlayerSetUI::hideNotUsedCluedoObjects()
+{
+    int numberOfCluedoObjects = m_playerSet->getNumberOfCluedoObjects();
+
+    switch (numberOfCluedoObjects)
+    {
+    case 0:
+        m_labelCluedoObject1->hide();
+        m_imageCluedoObject1->hide();
+    case 1:
+        m_labelCluedoObject2->hide();
+        m_imageCluedoObject2->hide();
+    case 2:
+        m_labelCluedoObject3->hide();
+        m_imageCluedoObject3->hide();
+    case 3:
+        m_labelCluedoObject4->hide();
+        m_imageCluedoObject4->hide();
+    case 4:
+        m_labelCluedoObject5->hide();
+        m_imageCluedoObject5->hide();
+    case 5:
+        m_labelCluedoObject6->hide();
+        m_imageCluedoObject6->hide();
+        break;
+    default:
+        break;
+    }
+}
+
+void PlayerSetUI::fillCluedoObjects()
+{
+    if (nullptr != m_playerSet)
+    {
+        std::vector<CluedoObject*>& cluedoObjects = m_playerSet->getCluedoObjects();
+        int index = 1;
+        for (CluedoObject* cluedoObject : cluedoObjects)
+        {
+            QString name = QString::fromStdString(cluedoObject->getName());
+            if (1 == index)
+            {
+                m_labelCluedoObject1->setText(name);
+                QImage image = getImage(name);
+                if (!image.isNull())
+                {
+                    m_imageCluedoObject1->setPixmap(QPixmap::fromImage(image));
+                }
+            }
+            else if (2 == index)
+            {
+                m_labelCluedoObject2->setText(name);
+                QImage image = getImage(name);
+                if (!image.isNull())
+                {
+                    m_imageCluedoObject2->setPixmap(QPixmap::fromImage(image));
+                }
+            }
+            else if (3 == index)
+            {
+                m_labelCluedoObject3->setText(name);
+                QImage image = getImage(name);
+                if (!image.isNull())
+                {
+                    m_imageCluedoObject3->setPixmap(QPixmap::fromImage(image));
+                }
+            }
+            else if (4 == index)
+            {
+                m_labelCluedoObject4->setText(name);
+                QImage image = getImage(name);
+                if (!image.isNull())
+                {
+                    m_imageCluedoObject4->setPixmap(QPixmap::fromImage(image));
+                }
+            }
+            else if (5 == index)
+            {
+                m_labelCluedoObject5->setText(name);
+                QImage image = getImage(name);
+                if (!image.isNull())
+                {
+                    m_imageCluedoObject5->setPixmap(QPixmap::fromImage(image));
+                }
+            }
+            else if (6 == index)
+            {
+                m_labelCluedoObject6->setText(name);
+                QImage image = getImage(name);
+                if (!image.isNull())
+                {
+                    m_imageCluedoObject6->setPixmap(QPixmap::fromImage(image));
+                }
+            }
+            index++;
+        }
+    }
+}
+
+QString PlayerSetUI::getFilePath(const QString& p_itemText)
+{
+    QString path = p_itemText;
+    QString extension(".jpg");
+    path += extension;
+
+    QDir dirPath(QString("Pics"));
+    if (dirPath.exists())
+    {
+        QFileInfo file(dirPath, path);
+        path = file.absoluteFilePath();
+    }
+
+    return path;
+}
+
+QImage PlayerSetUI::getImage(const QString& p_itemText)
+{
+    QImageReader imageReader(getFilePath(p_itemText));
+    imageReader.setAutoTransform(true);
+    QImage image = imageReader.read();
+
+    return image;
 }

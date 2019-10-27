@@ -3,6 +3,12 @@
 #include  "../Model/Weapon.h"
 #include  "../Model/Room.h"
 
+CluedoObjectLoader& CluedoObjectLoader::getInstance()
+{
+    static CluedoObjectLoader instance;
+    return instance;
+}
+
 CluedoObjectLoader::CluedoObjectLoader()
 {
     createMurders();

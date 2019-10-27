@@ -1,5 +1,6 @@
 #include "CluedoUI.h"
 #include "StartGameUI.h"
+#include "../GameManager/CluedoObjectLoader.h"
 #include <QtCore/QDir>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
@@ -157,7 +158,7 @@ void CluedoUI::buttonStartGame_clicked()
 
 void CluedoUI::fillMurderList()
 {
-    std::vector<CluedoObject*> murders = m_cluedoObjectLoader.getMurders();
+    std::vector<CluedoObject*> murders = CluedoObjectLoader::getInstance().getMurders();
     for (CluedoObject* murder : murders)
     {
         m_listMurder->addItem(QString::fromStdString(murder->getName()));
@@ -166,7 +167,7 @@ void CluedoUI::fillMurderList()
 
 void CluedoUI::fillWeaponList()
 {
-    std::vector<CluedoObject*> weapons = m_cluedoObjectLoader.getWeapons();
+    std::vector<CluedoObject*> weapons = CluedoObjectLoader::getInstance().getWeapons();
     for (CluedoObject* weapon : weapons)
     {
         m_listWeapon->addItem(QString(weapon->getName().c_str()));
@@ -175,7 +176,7 @@ void CluedoUI::fillWeaponList()
 
 void CluedoUI::fillRoomList()
 {
-    std::vector<CluedoObject*> rooms = m_cluedoObjectLoader.getRooms();
+    std::vector<CluedoObject*> rooms = CluedoObjectLoader::getInstance().getRooms();
     for (CluedoObject* room : rooms)
     {
         m_listRoom->addItem(QString(room->getName().c_str()));

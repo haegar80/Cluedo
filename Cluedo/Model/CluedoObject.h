@@ -10,8 +10,8 @@ public:
     {
         Undefined = 0,
         Murder = 1,
-        Weapon = 1,
-        Room = 2,
+        Weapon = 2,
+        Room = 3,
     };
 
     CluedoObject(CluedoObjectType p_cluedoObjectType, std::string p_name);

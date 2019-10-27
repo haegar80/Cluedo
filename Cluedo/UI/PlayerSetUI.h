@@ -2,11 +2,15 @@
 
 #include <QtWidgets/QMainWindow>
 
+class PlayerSet;
+
 class QWidget;
 class QPushButton;
 class QLabel;
 class QStatusBar;
 class QMenuBar;
+class QString;
+class QImage;
 
 /// author: Copyright by Marcel Fuchs
 class PlayerSetUI : public QMainWindow
@@ -14,7 +18,7 @@ class PlayerSetUI : public QMainWindow
     Q_OBJECT
 
 public:
-    PlayerSetUI();
+    PlayerSetUI(PlayerSet* p_playerSet);
     virtual ~PlayerSetUI() = default;
 
     void setupUi();
@@ -24,6 +28,8 @@ public:
 
 
 private:
+    PlayerSet* m_playerSet;
+
     QWidget* m_centralwidget;
     QLabel* m_labelCluedoObjects;
     QLabel* m_labelCluedoObject1;
@@ -40,4 +46,9 @@ private:
     QLabel* m_imageCluedoObject6;
     QMenuBar* m_menubar;
     QStatusBar* m_statusbar;
+
+    void hideNotUsedCluedoObjects();
+    void fillCluedoObjects();
+    QString getFilePath(const QString& p_itemText);
+    QImage getImage(const QString& p_itemText);
 };
