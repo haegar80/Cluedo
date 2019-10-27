@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QImage>
 #include <string>
 
 class CluedoObject
@@ -24,6 +25,7 @@ public:
 private:
     CluedoObjectType m_cluedoObjectTye{ Undefined };
     std::string m_name{ "" };
+    QImage m_image{};
 
     CluedoObject(const CluedoObject& copy) = default;
     CluedoObject& operator= (const CluedoObject& copy) = default;

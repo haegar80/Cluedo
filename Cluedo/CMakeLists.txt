@@ -44,5 +44,7 @@ IF (WIN32)
         COMMAND ${CMAKE_COMMAND} -E copy ${QtQui_location_Debug} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         COMMAND ${CMAKE_COMMAND} -E copy ${QtWidgets_location_Debug} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
         COMMAND ${CMAKE_COMMAND} -E copy ${QtOpenGL_location_Debug} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/Pics ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Pics
     )
 ENDIF()

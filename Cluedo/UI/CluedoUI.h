@@ -12,6 +12,8 @@ class QScrollArea;
 class QCheckBox;
 class QMenuBar;
 class QStatusBar;
+class QString;
+class QImage;
 
 /// author: Copyright by Marcel Fuchs
 class CluedoUI : public QMainWindow
@@ -38,8 +40,10 @@ private:
     QLabel* m_imageSelectedMurder;
     QLabel* m_labelWeaponList;
     QListWidget* m_listWeapon;
+    QLabel* m_imageSelectedWeapon;
     QLabel* m_labelRoomList;
     QListWidget *m_listRoom;
+    QLabel* m_imageSelectedRoom;
     QPushButton* m_quitButton;
     QMenuBar* m_menubar;
     QStatusBar* m_statusbar;
@@ -49,4 +53,6 @@ private:
     void fillMurderList();
     void fillWeaponList();
     void fillRoomList();
+    QString getFilePath(const QString& p_itemText);
+    QImage getImage(const QString& p_itemText);
 };

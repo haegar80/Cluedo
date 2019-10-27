@@ -11,7 +11,8 @@
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
-#include <memory>;
+#include <QImageReader>
+#include <memory>
 
 CluedoUI::CluedoUI()
 {
@@ -45,7 +46,7 @@ void CluedoUI::setupUi()
     m_listMurder->setSelectionMode(QAbstractItemView::ExtendedSelection);
     m_imageSelectedMurder = new QLabel(m_selectionObjectWidget);
     m_imageSelectedMurder->setObjectName(QString::fromUtf8("imageSelectedMurder"));
-    m_imageSelectedMurder->setGeometry(QRect(50, 200, 211, 131));
+    m_imageSelectedMurder->setGeometry(QRect(50, 200, 211, 281));
     m_imageSelectedMurder->setFrameShape(QFrame::Box);
     m_imageSelectedMurder->setScaledContents(true);
     m_labelWeaponList = new QLabel(m_selectionObjectWidget);
@@ -55,13 +56,23 @@ void CluedoUI::setupUi()
     m_listWeapon->setObjectName(QString::fromUtf8("listWeapon"));
     m_listWeapon->setGeometry(QRect(300, 30, 211, 131));
     m_listWeapon->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    m_imageSelectedWeapon = new QLabel(m_selectionObjectWidget);
+    m_imageSelectedWeapon->setObjectName(QString::fromUtf8("imageSelectedWeapon"));
+    m_imageSelectedWeapon->setGeometry(QRect(300, 200, 211, 281));
+    m_imageSelectedWeapon->setFrameShape(QFrame::Box);
+    m_imageSelectedWeapon->setScaledContents(true);
     m_labelRoomList = new QLabel(m_selectionObjectWidget);
     m_labelRoomList->setObjectName(QString::fromUtf8("labelRoomList"));
     m_labelRoomList->setGeometry(QRect(550, 0, 81, 16));
     m_listRoom = new QListWidget(m_selectionObjectWidget);
     m_listRoom->setObjectName(QString::fromUtf8("listRoom"));
-    m_listRoom->setGeometry(QRect(550, 30, 211, 131));
+    m_listRoom->setGeometry(QRect(550, 30, 281, 131));
     m_listRoom->setSelectionMode(QAbstractItemView::ExtendedSelection);
+    m_imageSelectedRoom = new QLabel(m_selectionObjectWidget);
+    m_imageSelectedRoom->setObjectName(QString::fromUtf8("imageSelectedRoom"));
+    m_imageSelectedRoom->setGeometry(QRect(550, 200, 281, 281));
+    m_imageSelectedRoom->setFrameShape(QFrame::Box);
+    m_imageSelectedRoom->setScaledContents(true);
     m_quitButton = new QPushButton(m_centralwidget);
     m_quitButton->setObjectName(QString::fromUtf8("quitButton"));
     m_quitButton->setGeometry(QRect(20, screenGeometry.height() - 73, 75, 23));
@@ -94,17 +105,35 @@ void CluedoUI::retranslateUi()
 
 void CluedoUI::selectedMurder()
 {
-    
+    QListWidgetItem* item = m_listMurder->selectedItems().at(0);
+    QString itemText = item->text();
+    QImage image = getImage(itemText);
+    if (!image.isNull())
+    {
+        m_imageSelectedMurder->setPixmap(QPixmap::fromImage(image));
+    }
 }
 
 void CluedoUI::selectedWeapon()
 {
-   
+    QListWidgetItem* item = m_listWeapon->selectedItems().at(0);
+    QString itemText = item->text();
+    QImage image = getImage(itemText);
+    if (!image.isNull())
+    {
+        m_imageSelectedWeapon->setPixmap(QPixmap::fromImage(image));
+    }
 }
 
 void CluedoUI::selectedRoom()
 {
-  
+    QListWidgetItem* item = m_listRoom->selectedItems().at(0);
+    QString itemText = item->text();
+    QImage image = getImage(itemText);
+    if (!image.isNull())
+    {
+        m_imageSelectedRoom->setPixmap(QPixmap::fromImage(image));
+    }
 }
 
 void CluedoUI::fillMurderList()
@@ -132,4 +161,29 @@ void CluedoUI::fillRoomList()
     {
         m_listRoom->addItem(QString(room->getName().c_str()));
     }
+}
+
+QString CluedoUI::getFilePath(const QString& p_itemText)
+{
+    QString path = p_itemText;
+    QString extension(".jpg");
+    path += extension;
+
+    QDir dirPath(QString("Pics"));
+    if (dirPath.exists())
+    {
+        QFileInfo file(dirPath, path);
+        path = file.absoluteFilePath();
+    }
+
+    return path;
+}
+
+QImage CluedoUI::getImage(const QString& p_itemText)
+{
+    QImageReader imageReader(getFilePath(p_itemText));
+    imageReader.setAutoTransform(true);
+    QImage image = imageReader.read();
+
+    return image;
 }

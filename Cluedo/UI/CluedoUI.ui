@@ -42,7 +42,7 @@
        <x>50</x>
        <y>200</y>
        <width>211</width>
-       <height>131</height>
+       <height>281</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -99,7 +99,7 @@
       <rect>
        <x>550</x>
        <y>30</y>
-       <width>211</width>
+       <width>281</width>
        <height>131</height>
       </rect>
      </property>
@@ -118,6 +118,44 @@
      </property>
      <property name="text">
       <string>Auswahl Raum</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="imageSelectedWeapon">
+     <property name="geometry">
+      <rect>
+       <x>300</x>
+       <y>200</y>
+       <width>211</width>
+       <height>281</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="imageSelectedRoom">
+     <property name="geometry">
+      <rect>
+       <x>550</x>
+       <y>200</y>
+       <width>281</width>
+       <height>281</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
      </property>
     </widget>
    </widget>
