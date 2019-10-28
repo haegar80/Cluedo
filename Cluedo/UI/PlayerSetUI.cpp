@@ -29,22 +29,22 @@ void PlayerSetUI::setupUi()
 
     m_labelCluedoObject1 = new QLabel(m_centralwidget);
     m_labelCluedoObject1->setObjectName(QString::fromUtf8("labelCluedoObject1"));
-    m_labelCluedoObject1->setGeometry(QRect(40, 50, 47, 13));
+    m_labelCluedoObject1->setGeometry(QRect(40, 50, 111, 13));
     m_labelCluedoObject2 = new QLabel(m_centralwidget);
     m_labelCluedoObject2->setObjectName(QString::fromUtf8("labelCluedoObject2"));
-    m_labelCluedoObject2->setGeometry(QRect(180, 50, 47, 13));
+    m_labelCluedoObject2->setGeometry(QRect(180, 50, 111, 13));
     m_labelCluedoObject3 = new QLabel(m_centralwidget);
     m_labelCluedoObject3->setObjectName(QString::fromUtf8("labelCluedoObject3"));
-    m_labelCluedoObject3->setGeometry(QRect(320, 50, 47, 13));
+    m_labelCluedoObject3->setGeometry(QRect(320, 50, 111, 13));
     m_labelCluedoObject4 = new QLabel(m_centralwidget);
     m_labelCluedoObject4->setObjectName(QString::fromUtf8("labelCluedoObject4"));
-    m_labelCluedoObject4->setGeometry(QRect(460, 50, 47, 13));
+    m_labelCluedoObject4->setGeometry(QRect(460, 50, 111, 13));
     m_labelCluedoObject5 = new QLabel(m_centralwidget);
     m_labelCluedoObject5->setObjectName(QString::fromUtf8("labelCluedoObject5"));
-    m_labelCluedoObject5->setGeometry(QRect(600, 50, 47, 13));
+    m_labelCluedoObject5->setGeometry(QRect(600, 50, 111, 13));
     m_labelCluedoObject6 = new QLabel(m_centralwidget);
     m_labelCluedoObject6->setObjectName(QString::fromUtf8("labelCluedoObject6"));
-    m_labelCluedoObject6->setGeometry(QRect(740, 50, 47, 13));
+    m_labelCluedoObject6->setGeometry(QRect(740, 50, 111, 13));
 
     m_imageCluedoObject1 = new QLabel(m_centralwidget);
     m_imageCluedoObject1->setObjectName(QString::fromUtf8("imageCluedoObject1"));

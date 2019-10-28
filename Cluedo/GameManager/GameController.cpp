@@ -90,6 +90,8 @@ void GameController::addCluedoObjectsToDistribute(std::vector<CluedoObject*>& p_
 
 void GameController::distributeCluedoObjects()
 {
+    srand(time(NULL));
+
     distributeMurders();
     distributeWeapons();
     distributeRooms();
@@ -98,16 +100,21 @@ void GameController::distributeCluedoObjects()
 void GameController::distributeCluedoObjects(std::vector<CluedoObject*>& p_cluedoObjects)
 {
     int playerSetIndex = m_lastDistributedPlayerSetIndex;
-    for (CluedoObject* cluedoObject : p_cluedoObjects)
+
+    auto it = p_cluedoObjects.begin();
+    while(p_cluedoObjects.end() != it)
     {
-        m_playerSets.at(playerSetIndex)->addCluedoObject(cluedoObject);
+        int cluedoObjectIndex = generateRandomNumber(0, static_cast<int>(p_cluedoObjects.size() - 1));
+        m_playerSets.at(playerSetIndex)->addCluedoObject(p_cluedoObjects.at(cluedoObjectIndex));
+        it = p_cluedoObjects.begin() + cluedoObjectIndex;
+        it = p_cluedoObjects.erase(it);
 
         playerSetIndex++;
         if (m_playerSets.size() == playerSetIndex)
         {
             playerSetIndex = 0;
         }
-    }
+    };
 
     m_lastDistributedPlayerSetIndex = playerSetIndex;
 }
@@ -129,9 +136,12 @@ void GameController::distributeRooms()
 
 int GameController::generateRandomNumber(int p_minNumber, int p_maxNumber)
 {
-    srand(time(NULL));
-
     /* generate secret number between 1 and 10: */
-    int randomNumber = rand() % p_maxNumber + p_minNumber;
+    int randomNumber = 0;
+    if (p_maxNumber > 0)
+    {
+        randomNumber = rand() % p_maxNumber + p_minNumber;
+    }
+
     return randomNumber;
 }
