@@ -11,6 +11,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
+#include <sstream>
 
 StartGameUI::StartGameUI()
 {
@@ -78,12 +79,19 @@ void StartGameUI::buttonStartGame_clicked()
         numberOfComputerPlayers = 0;
     }
 
+    GameController& gameController = GameController::getInstance();
+    gameController.reset();
+
     for (int i = 0; i < numberOfComputerPlayers; i++)
     {
-        (void) GameController::getInstance().createNewPlayerSet();
+        std::stringstream computerName;
+        computerName << "Computer " << (i + 1);
+        (void) gameController.createNewPlayer(computerName.str().c_str());
+        (void) gameController.createNewPlayerSet();
     }
     
-    PlayerSet* playerSet = GameController::getInstance().createNewPlayerSet();
+    (void) gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString());
+    PlayerSet* playerSet = gameController.createNewPlayerSet();
 
     m_playerSetUI = new PlayerSetUI(playerSet);
     m_playerSetUI->setAttribute(Qt::WA_DeleteOnClose);

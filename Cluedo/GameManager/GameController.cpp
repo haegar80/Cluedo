@@ -1,5 +1,6 @@
 #include "GameController.h"
 #include "CluedoObjectLoader.h"
+#include "../Model/Player.h"
 #include "../Model/PlayerSet.h"
 #include <cstdlib>     /* srand, rand */
 #include <ctime>       /* time */
@@ -12,9 +13,28 @@ GameController& GameController::getInstance()
 
 GameController::~GameController()
 {
+    for (Player* player : m_players)
+    {
+        delete player;
+    }
+
     for (PlayerSet* playerSet : m_playerSets)
     {
         delete playerSet;
+    }
+}
+
+void GameController::reset()
+{
+    m_players.clear();
+    m_playerSets.clear();
+}
+
+void GameController::startGameRounds()
+{
+    for (auto callback : m_playerUpdateCallbacks)
+    {
+        callback();
     }
 }
 
@@ -22,6 +42,14 @@ void GameController::selectAndDistributeCluedoObjects()
 {
     selectEffectiveMurderWeaponRoom();
     distributeCluedoObjects();
+}
+
+Player* GameController::createNewPlayer(std::string p_name)
+{
+    Player* player = new Player(std::move(p_name));
+    m_players.push_back(player);
+
+    return player;
 }
 
 PlayerSet* GameController::createNewPlayerSet()
@@ -32,6 +60,11 @@ PlayerSet* GameController::createNewPlayerSet()
     m_playerSets.push_back(playerSet);
 
     return playerSet;
+}
+
+void GameController::registerPlayerUpdateCallback(std::function<void(void)> p_callback)
+{
+    m_playerUpdateCallbacks.push_back(p_callback);
 }
 
 void GameController::selectEffectiveMurderWeaponRoom()

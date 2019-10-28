@@ -1,6 +1,8 @@
 #include "CluedoUI.h"
 #include "StartGameUI.h"
+#include "../Model/Player.h"
 #include "../GameManager/CluedoObjectLoader.h"
+#include "../GameManager/GameController.h"
 #include <QtCore/QDir>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
@@ -71,12 +73,22 @@ void CluedoUI::setupUi()
     m_imageSelectedRoom->setGeometry(QRect(550, 200, 281, 281));
     m_imageSelectedRoom->setFrameShape(QFrame::Box);
     m_imageSelectedRoom->setScaledContents(true);
+    m_labelPlayers = new QLabel(m_centralwidget);
+    m_labelPlayers->setObjectName(QString::fromUtf8("labelPlayers"));
+    m_labelPlayers->setGeometry(QRect(970, 50, 47, 13));
+    m_listPlayers = new QListWidget(m_centralwidget);
+    m_listPlayers->setObjectName(QString::fromUtf8("listPlayers"));
+    m_listPlayers->setGeometry(QRect(970, 80, 256, 131));
+    m_buttonAskPlayers = new QPushButton(m_centralwidget);
+    m_buttonAskPlayers->setObjectName(QString::fromUtf8("buttonAskPlayers"));
+    m_buttonAskPlayers->setGeometry(QRect(970, 230, 121, 23));
+    m_buttonAskPlayers->hide();
     m_buttonStartGame = new QPushButton(m_centralwidget);
     m_buttonStartGame->setObjectName(QString::fromUtf8("buttonStartGame"));
-    m_buttonStartGame->setGeometry(QRect(980, 50, 75, 23));
+    m_buttonStartGame->setGeometry(QRect(60, screenGeometry.height() - 73, 75, 23));
     m_quitButton = new QPushButton(m_centralwidget);
     m_quitButton->setObjectName(QString::fromUtf8("quitButton"));
-    m_quitButton->setGeometry(QRect(20, screenGeometry.height() - 73, 75, 23));
+    m_quitButton->setGeometry(QRect(170, screenGeometry.height() - 73, 75, 23));
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
     m_menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -91,8 +103,12 @@ void CluedoUI::setupUi()
     QObject::connect(m_listMurder, SIGNAL(itemSelectionChanged()), this, SLOT(selectedMurder()));
     QObject::connect(m_listWeapon, SIGNAL(itemSelectionChanged()), this, SLOT(selectedWeapon()));
     QObject::connect(m_listRoom, SIGNAL(itemSelectionChanged()), this, SLOT(selectedRoom()));
+    QObject::connect(m_buttonAskPlayers, SIGNAL(pressed()), this, SLOT(askPlayers_clicked()));
     QObject::connect(m_buttonStartGame, SIGNAL(pressed()), this, SLOT(buttonStartGame_clicked()));
     QObject::connect(m_quitButton, SIGNAL(pressed()), this, SLOT(close()));
+
+    auto playerUpdateCallback = [this]() { updatePlayers(); };
+    GameController::getInstance().registerPlayerUpdateCallback(playerUpdateCallback);
 }
 
 void CluedoUI::retranslateUi()
@@ -102,8 +118,25 @@ void CluedoUI::retranslateUi()
     m_labelMurderList->setText(QApplication::translate("MainWindow", "Auswahl T\303\244ter", 0));
     m_labelWeaponList->setText(QApplication::translate("MainWindow", "Auswahl Waffe", 0));
     m_labelRoomList->setText(QApplication::translate("MainWindow", "Auswahl Raum", 0));
+    m_labelPlayers->setText(QApplication::translate("MainWindow", "Mitspieler", 0));
+    m_buttonAskPlayers->setText(QApplication::translate("MainWindow", "Frage Mitspieler", 0));
     m_buttonStartGame->setText(QApplication::translate("MainWindow", "Starte Spiel", 0));
     m_quitButton->setText(QApplication::translate("MainWindow", "Quit", 0));
+}
+
+void CluedoUI::updatePlayers()
+{
+    std::vector<Player*>& players = GameController::getInstance().getPlayers();
+
+    for (Player* player : players)
+    {
+        m_listPlayers->addItem(QString::fromStdString(player->getName()));
+    }
+
+    if (m_listPlayers->count() > 0)
+    {
+        m_buttonAskPlayers->show();
+    }
 }
 
 void CluedoUI::selectedMurder()
@@ -144,6 +177,19 @@ void CluedoUI::selectedRoom()
         if (!image.isNull())
         {
             m_imageSelectedRoom->setPixmap(QPixmap::fromImage(image));
+        }
+    }
+}
+
+void CluedoUI::askPlayers_clicked()
+{
+    QList<QListWidgetItem*> selectedItems = m_listRoom->selectedItems();
+    if (selectedItems.count() > 0)
+    {
+        QListWidgetItem* item = selectedItems.at(0);
+        if (nullptr != item)
+        {
+
         }
     }
 }

@@ -26,10 +26,13 @@ public:
     void setupUi();
     void retranslateUi();
 
+    void updatePlayers();
+
     public slots:
     void selectedMurder();
     void selectedWeapon();
     void selectedRoom();
+    void askPlayers_clicked();
     void buttonStartGame_clicked();
 
 private:
@@ -44,6 +47,9 @@ private:
     QLabel* m_labelRoomList;
     QListWidget *m_listRoom;
     QLabel* m_imageSelectedRoom;
+    QLabel* m_labelPlayers;
+    QListWidget* m_listPlayers;
+    QPushButton* m_buttonAskPlayers;
     QPushButton* m_buttonStartGame;
     QPushButton* m_quitButton;
     QMenuBar* m_menubar;
