@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Model/CluedoObject.h""
+#include "../Model/CluedoObject.h"
 #include <vector>
 #include <functional>
 

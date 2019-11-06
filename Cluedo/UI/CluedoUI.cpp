@@ -81,8 +81,8 @@ void CluedoUI::setupUi()
     m_listPlayers->setGeometry(QRect(970, 80, 256, 131));
     m_buttonAskPlayers = new QPushButton(m_centralwidget);
     m_buttonAskPlayers->setObjectName(QString::fromUtf8("buttonAskPlayers"));
+    m_buttonAskPlayers->setEnabled(false);
     m_buttonAskPlayers->setGeometry(QRect(970, 230, 121, 23));
-    m_buttonAskPlayers->hide();
     m_buttonStartGame = new QPushButton(m_centralwidget);
     m_buttonStartGame->setObjectName(QString::fromUtf8("buttonStartGame"));
     m_buttonStartGame->setGeometry(QRect(60, screenGeometry.height() - 73, 75, 23));
@@ -135,7 +135,7 @@ void CluedoUI::updatePlayers()
 
     if (m_listPlayers->count() > 0)
     {
-        m_buttonAskPlayers->show();
+        m_buttonAskPlayers->setEnabled(true);
     }
 }
 
@@ -200,6 +200,8 @@ void CluedoUI::buttonStartGame_clicked()
     m_startGameUI->setWindowModality(Qt::ApplicationModal);
     m_startGameUI->setAttribute(Qt::WA_DeleteOnClose);
     m_startGameUI->show();
+
+    m_buttonStartGame->setDisabled(true);
 }
 
 void CluedoUI::fillMurderList()

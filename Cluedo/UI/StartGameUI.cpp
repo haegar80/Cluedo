@@ -68,7 +68,7 @@ void StartGameUI::retranslateUi()
     this->setWindowTitle(QApplication::translate("StartGame", "StartGame", 0));
     m_labelPlayerName->setText(QApplication::translate("StartGame", "Benutzername", 0));
     m_labelNumberOfComputerPlayers->setText(QApplication::translate("StartGame", "Anzahl Computergegner"));
-    m_buttonStartGame->setText(QApplication::translate("StartGame", "Start Game", 0));
+    m_buttonStartGame->setText(QApplication::translate("StartGame", "Starte Spiel", 0));
 }
 
 void StartGameUI::buttonStartGame_clicked()
