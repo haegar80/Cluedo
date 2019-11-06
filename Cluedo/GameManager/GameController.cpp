@@ -17,17 +17,11 @@ GameController::~GameController()
     {
         delete player;
     }
-
-    for (PlayerSet* playerSet : m_playerSets)
-    {
-        delete playerSet;
-    }
 }
 
 void GameController::reset()
 {
     m_players.clear();
-    m_playerSets.clear();
 }
 
 void GameController::startGameRounds()
@@ -46,25 +40,26 @@ void GameController::selectAndDistributeCluedoObjects()
 
 Player* GameController::createNewPlayer(std::string p_name)
 {
-    Player* player = new Player(std::move(p_name));
+    std::shared_ptr<PlayerSet> playerSet = createNewPlayerSet();
+
+    Player* player = new Player(std::move(p_name), playerSet);
     m_players.push_back(player);
 
     return player;
 }
 
-PlayerSet* GameController::createNewPlayerSet()
-{
-    int numberOfPlayerSets = static_cast<int>(m_playerSets.size());
-
-    PlayerSet* playerSet = new PlayerSet(numberOfPlayerSets + 1);
-    m_playerSets.push_back(playerSet);
-
-    return playerSet;
-}
-
 void GameController::registerPlayerUpdateCallback(std::function<void(void)> p_callback)
 {
     m_playerUpdateCallbacks.push_back(p_callback);
+}
+
+std::shared_ptr<PlayerSet> GameController::createNewPlayerSet()
+{
+    int numberOfPlayers = static_cast<int>(m_players.size());
+
+    std::shared_ptr<PlayerSet> playerSet = std::make_shared<PlayerSet>(numberOfPlayers + 1);
+
+    return playerSet;
 }
 
 void GameController::selectEffectiveMurderWeaponRoom()
@@ -138,12 +133,12 @@ void GameController::distributeCluedoObjects(std::vector<CluedoObject*>& p_clued
     while(p_cluedoObjects.end() != it)
     {
         int cluedoObjectIndex = generateRandomNumber(0, static_cast<int>(p_cluedoObjects.size() - 1));
-        m_playerSets.at(playerSetIndex)->addCluedoObject(p_cluedoObjects.at(cluedoObjectIndex));
+        m_players.at(playerSetIndex)->getPlayerSet()->addCluedoObject(p_cluedoObjects.at(cluedoObjectIndex));
         it = p_cluedoObjects.begin() + cluedoObjectIndex;
         it = p_cluedoObjects.erase(it);
 
         playerSetIndex++;
-        if (m_playerSets.size() == playerSetIndex)
+        if (m_players.size() == playerSetIndex)
         {
             playerSetIndex = 0;
         }
@@ -169,7 +164,7 @@ void GameController::distributeRooms()
 
 int GameController::generateRandomNumber(int p_minNumber, int p_maxNumber)
 {
-    /* generate secret number between 1 and 10: */
+    /* generate random number between 1 and 10: */
     int randomNumber = 0;
     if (p_maxNumber > 0)
     {

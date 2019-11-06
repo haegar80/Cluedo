@@ -11,7 +11,7 @@
 #include <QtWidgets/QWidget>
 #include <QImageReader>
 
-PlayerSetUI::PlayerSetUI(PlayerSet* p_playerSet) : m_playerSet(p_playerSet)
+PlayerSetUI::PlayerSetUI(std::shared_ptr<PlayerSet> p_playerSet) : m_playerSet(p_playerSet)
 {
     setupUi();
 }

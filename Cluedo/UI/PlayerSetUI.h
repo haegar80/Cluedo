@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <memory>
 
 class PlayerSet;
 
@@ -18,7 +19,7 @@ class PlayerSetUI : public QMainWindow
     Q_OBJECT
 
 public:
-    PlayerSetUI(PlayerSet* p_playerSet);
+    PlayerSetUI(std::shared_ptr<PlayerSet> p_playerSet);
     virtual ~PlayerSetUI() = default;
 
     void setupUi();
@@ -28,7 +29,7 @@ public:
 
 
 private:
-    PlayerSet* m_playerSet;
+    std::shared_ptr<PlayerSet> m_playerSet;
 
     QWidget* m_centralwidget;
     QLabel* m_labelCluedoObjects;

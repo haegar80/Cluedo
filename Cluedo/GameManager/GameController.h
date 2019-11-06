@@ -3,6 +3,7 @@
 #include "../Model/CluedoObject.h"
 #include <vector>
 #include <functional>
+#include <memory>
 
 class Player;
 class PlayerSet;
@@ -19,7 +20,6 @@ public:
     void selectAndDistributeCluedoObjects();
 
     Player* createNewPlayer(std::string p_name);
-    PlayerSet* createNewPlayerSet();
 
     void registerPlayerUpdateCallback(std::function<void(void)> p_callback);
 
@@ -35,7 +35,6 @@ public:
 
 private:
     std::vector<Player*> m_players;
-    std::vector<PlayerSet*> m_playerSets;
 
     std::vector<CluedoObject*> m_murdersToDistribute;
     std::vector<CluedoObject*> m_weaponsToDistribute;
@@ -52,8 +51,8 @@ private:
     GameController() = default;
     GameController(const GameController& copy) = delete;
     GameController& operator= (const GameController& copy) = delete;
-    GameController(GameController&& other) = delete;
-    GameController& operator= (GameController&& other) = delete;
+
+    std::shared_ptr<PlayerSet> createNewPlayerSet();
 
     void selectEffectiveMurderWeaponRoom();
     void addCluedoObjectsToDistribute(std::vector<CluedoObject*>& p_cluedoObjects, CluedoObject::CluedoObjectType p_type);

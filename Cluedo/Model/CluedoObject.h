@@ -14,8 +14,13 @@ public:
         Room = 3,
     };
 
-    CluedoObject(CluedoObjectType p_cluedoObjectType, std::string p_name);
+    CluedoObject(CluedoObjectType p_cluedoObjectType, const std::string& p_name);
     virtual ~CluedoObject() = default;
+
+    CluedoObjectType getCluedoObjectType()
+    {
+        return m_cluedoObjectType;
+    }
 
     std::string getName()
     {
@@ -23,7 +28,7 @@ public:
     }
 
 private:
-    CluedoObjectType m_cluedoObjectTye{ Undefined };
+    CluedoObjectType m_cluedoObjectType{ Undefined };
     std::string m_name{ "" };
     QImage m_image{};
 
