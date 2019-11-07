@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 
+class QCloseEvent;
 class QWidget;
 class QLabel;
 class QCheckBox;
@@ -23,6 +24,11 @@ public:
     void setupUi();
     void retranslateUi();
 
+signals:
+    void askPlayerWindow_closed();
+
+protected:
+    void closeEvent(QCloseEvent* event) override;
 private:
     QWidget* m_centralwidget;
     QLabel* m_labelSelectedMurder;

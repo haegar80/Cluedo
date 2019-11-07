@@ -8,7 +8,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
-
+#include <QCloseEvent>
 
 AskPlayerUI::AskPlayerUI(const QPixmap* p_selectedMurder, const QPixmap* p_selectedWeapon, const QPixmap* p_selectedRoom) :
     m_selectedMurder(p_selectedMurder),
@@ -129,4 +129,9 @@ void AskPlayerUI::retranslateUi()
     m_labelShowedObject->setText(QApplication::translate("mainWindowAskPlayer", "Gezeigter Murder/Waffe/Raum", nullptr));
     m_imageShowedObject->setText(QString());
     m_buttonQuit->setText(QApplication::translate("mainWindowAskPlayer", "Quit", nullptr));
+}
+
+void AskPlayerUI::closeEvent(QCloseEvent* event)
+{
+    emit askPlayerWindow_closed();
 }

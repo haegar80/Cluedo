@@ -34,6 +34,7 @@ public:
     void selectedWeapon();
     void selectedRoom();
     void askPlayers_clicked();
+    void askPlayerWindow_closed();
     void buttonStartGame_clicked();
 
 private:

@@ -223,6 +223,9 @@ void CluedoUI::askPlayers_clicked()
             m_askPlayerUI = new AskPlayerUI(m_imageSelectedMurder->pixmap(), m_imageSelectedWeapon->pixmap(), m_imageSelectedRoom->pixmap());
             m_askPlayerUI->setWindowModality(Qt::ApplicationModal);
             m_askPlayerUI->setAttribute(Qt::WA_DeleteOnClose);
+
+            QObject::connect(m_askPlayerUI, SIGNAL(askPlayerWindow_closed()), this, SLOT(askPlayerWindow_closed()));
+
             m_askPlayerUI->show();
 
             GameController::getInstance().askPlayer(m_listMurder->currentRow(), m_listWeapon->currentRow(), m_listRoom->currentRow(), m_listPlayers->currentRow());
@@ -232,6 +235,11 @@ void CluedoUI::askPlayers_clicked()
     {
         nextPlayerReady();
     }   
+}
+
+void CluedoUI::askPlayerWindow_closed()
+{
+    nextPlayerReady();
 }
 
 void CluedoUI::buttonStartGame_clicked()
