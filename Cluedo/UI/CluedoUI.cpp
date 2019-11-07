@@ -1,5 +1,6 @@
 #include "CluedoUI.h"
 #include "StartGameUI.h"
+#include "AskPlayerUI.h"
 #include "../Model/Player.h"
 #include "../GameManager/CluedoObjectLoader.h"
 #include "../GameManager/GameController.h"
@@ -78,6 +79,7 @@ void CluedoUI::setupUi()
     m_labelPlayers->setGeometry(QRect(970, 50, 47, 13));
     m_listPlayers = new QListWidget(m_centralwidget);
     m_listPlayers->setObjectName(QString::fromUtf8("listPlayers"));
+    m_listPlayers->setEnabled(false);
     m_listPlayers->setGeometry(QRect(970, 80, 256, 131));
     m_buttonAskPlayers = new QPushButton(m_centralwidget);
     m_buttonAskPlayers->setObjectName(QString::fromUtf8("buttonAskPlayers"));
@@ -135,63 +137,101 @@ void CluedoUI::updatePlayers()
 
     if (m_listPlayers->count() > 0)
     {
+        m_listPlayers->item(m_currentPlayerIndex)->setSelected(true);
         m_buttonAskPlayers->setEnabled(true);
     }
 }
 
+void CluedoUI::nextPlayerReady()
+{
+    m_currentPlayerIndex++;
+    if (m_listPlayers->count() == m_currentPlayerIndex)
+    {
+        m_currentPlayerIndex = 0;
+    }
+    m_listPlayers->item(m_currentPlayerIndex)->setSelected(true);
+}
+
 void CluedoUI::selectedMurder()
 {
-    QListWidgetItem* item = m_listMurder->selectedItems().at(0);
-    if (nullptr != item)
+    m_selectedMurder = false;
+    QList<QListWidgetItem*> selectedItems = m_listMurder->selectedItems();
+    if (selectedItems.count() > 0)
     {
-        QString itemText = item->text();
-        QImage image = getImage(itemText);
-        if (!image.isNull())
+        QListWidgetItem* item = m_listMurder->selectedItems().at(0);
+        if (nullptr != item)
         {
-            m_imageSelectedMurder->setPixmap(QPixmap::fromImage(image));
+            m_selectedMurder = true;
+            QString itemText = item->text();
+            QImage image = getImage(itemText);
+            if (!image.isNull())
+            {
+                m_imageSelectedMurder->setPixmap(QPixmap::fromImage(image));
+            }
         }
     }
 }
 
 void CluedoUI::selectedWeapon()
 {
-    QListWidgetItem* item = m_listWeapon->selectedItems().at(0);
-    if (nullptr != item)
+    m_selectedWeapon = false;
+    QList<QListWidgetItem*> selectedItems = m_listWeapon->selectedItems();
+    if (selectedItems.count() > 0)
     {
-        QString itemText = item->text();
-        QImage image = getImage(itemText);
-        if (!image.isNull())
+        QListWidgetItem* item = m_listWeapon->selectedItems().at(0);
+        if (nullptr != item)
         {
-            m_imageSelectedWeapon->setPixmap(QPixmap::fromImage(image));
+            m_selectedWeapon = true;
+            QString itemText = item->text();
+            QImage image = getImage(itemText);
+            if (!image.isNull())
+            {
+                m_imageSelectedWeapon->setPixmap(QPixmap::fromImage(image));
+            }
         }
     }
 }
 
 void CluedoUI::selectedRoom()
 {
-    QListWidgetItem* item = m_listRoom->selectedItems().at(0);
-    if (nullptr != item)
+    m_selectedRoom = false;
+    QList<QListWidgetItem*> selectedItems = m_listRoom->selectedItems();
+    if (selectedItems.count() > 0)
     {
-        QString itemText = item->text();
-        QImage image = getImage(itemText);
-        if (!image.isNull())
+        QListWidgetItem* item = m_listRoom->selectedItems().at(0);
+        if (nullptr != item)
         {
-            m_imageSelectedRoom->setPixmap(QPixmap::fromImage(image));
+            m_selectedRoom = true;
+            QString itemText = item->text();
+            QImage image = getImage(itemText);
+            if (!image.isNull())
+            {
+                m_imageSelectedRoom->setPixmap(QPixmap::fromImage(image));
+            }
         }
     }
 }
 
 void CluedoUI::askPlayers_clicked()
 {
-    QList<QListWidgetItem*> selectedItems = m_listRoom->selectedItems();
-    if (selectedItems.count() > 0)
+    std::vector<Player*>& players = GameController::getInstance().getPlayers();
+    Player* currentPlayer = players.at(m_currentPlayerIndex);
+    if (currentPlayer->getSelf())
     {
-        QListWidgetItem* item = selectedItems.at(0);
-        if (nullptr != item)
+        if (m_selectedMurder && m_selectedWeapon && m_selectedRoom)
         {
+            m_askPlayerUI = new AskPlayerUI(m_imageSelectedMurder->pixmap(), m_imageSelectedWeapon->pixmap(), m_imageSelectedRoom->pixmap());
+            m_askPlayerUI->setWindowModality(Qt::ApplicationModal);
+            m_askPlayerUI->setAttribute(Qt::WA_DeleteOnClose);
+            m_askPlayerUI->show();
 
+            GameController::getInstance().askPlayer(m_listMurder->currentRow(), m_listWeapon->currentRow(), m_listRoom->currentRow(), m_listPlayers->currentRow());
         }
     }
+    else
+    {
+        nextPlayerReady();
+    }   
 }
 
 void CluedoUI::buttonStartGame_clicked()

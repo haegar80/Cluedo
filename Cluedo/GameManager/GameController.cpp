@@ -24,12 +24,19 @@ void GameController::reset()
     m_players.clear();
 }
 
-void GameController::startGameRounds()
+void GameController::startGame()
 {
+    m_gameRunner = std::make_shared<GameRunner>(m_players);
+
     for (auto callback : m_playerUpdateCallbacks)
     {
         callback();
     }
+}
+
+void GameController::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex, int p_playerIndex)
+{
+    m_gameRunner->askPlayer(p_murderIndex, p_weaponIndex, p_roomIndex, p_playerIndex);
 }
 
 void GameController::selectAndDistributeCluedoObjects()
@@ -38,11 +45,11 @@ void GameController::selectAndDistributeCluedoObjects()
     distributeCluedoObjects();
 }
 
-Player* GameController::createNewPlayer(std::string p_name)
+Player* GameController::createNewPlayer(std::string p_name, bool p_self)
 {
     std::shared_ptr<PlayerSet> playerSet = createNewPlayerSet();
 
-    Player* player = new Player(std::move(p_name), playerSet);
+    Player* player = new Player(std::move(p_name), playerSet, p_self);
     m_players.push_back(player);
 
     return player;
@@ -133,7 +140,8 @@ void GameController::distributeCluedoObjects(std::vector<CluedoObject*>& p_clued
     while(p_cluedoObjects.end() != it)
     {
         int cluedoObjectIndex = generateRandomNumber(0, static_cast<int>(p_cluedoObjects.size() - 1));
-        m_players.at(playerSetIndex)->getPlayerSet()->addCluedoObject(p_cluedoObjects.at(cluedoObjectIndex));
+        PlayerSet* playerSet = m_players.at(playerSetIndex)->getPlayerSet().get();
+        playerSet->addCluedoObject(p_cluedoObjects.at(cluedoObjectIndex));
         it = p_cluedoObjects.begin() + cluedoObjectIndex;
         it = p_cluedoObjects.erase(it);
 

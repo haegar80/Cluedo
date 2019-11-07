@@ -86,10 +86,10 @@ void StartGameUI::buttonStartGame_clicked()
     {
         std::stringstream computerName;
         computerName << "Computer " << (i + 1);
-        (void) gameController.createNewPlayer(computerName.str().c_str());
+        (void) gameController.createNewPlayer(computerName.str().c_str(), false);
     }
     
-    Player* player = gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString());
+    Player* player = gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), true);
     std::shared_ptr<PlayerSet> playerSet = player->getPlayerSet();
 
     m_playerSetUI = new PlayerSetUI(playerSet);

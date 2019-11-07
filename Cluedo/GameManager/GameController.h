@@ -1,5 +1,6 @@
 #pragma once
 
+#include "GameRunner.h"
 #include "../Model/CluedoObject.h"
 #include <vector>
 #include <functional>
@@ -15,11 +16,12 @@ public:
     virtual ~GameController();
 
     void reset();
-    void startGameRounds();
+    void startGame();
+    void askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex, int p_playerIndex);
 
     void selectAndDistributeCluedoObjects();
 
-    Player* createNewPlayer(std::string p_name);
+    Player* createNewPlayer(std::string p_name, bool p_self);
 
     void registerPlayerUpdateCallback(std::function<void(void)> p_callback);
 
@@ -34,6 +36,7 @@ public:
     }
 
 private:
+    std::shared_ptr<GameRunner> m_gameRunner;
     std::vector<Player*> m_players;
 
     std::vector<CluedoObject*> m_murdersToDistribute;

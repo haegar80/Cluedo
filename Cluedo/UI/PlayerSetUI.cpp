@@ -21,7 +21,6 @@ void PlayerSetUI::setupUi()
     if (this->objectName().isEmpty())
         this->setObjectName(QString::fromUtf8("MainWindow"));
     this->resize(946, 600);
-    this->setWindowFlags(Qt::WindowStaysOnTopHint);
 
     m_centralwidget = new QWidget(this);
     m_centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
@@ -94,7 +93,7 @@ void PlayerSetUI::setupUi()
     hideNotUsedCluedoObjects();
     fillCluedoObjects();
 
-    GameController::getInstance().startGameRounds();
+    GameController::getInstance().startGame();
 }
 
 void PlayerSetUI::retranslateUi()
