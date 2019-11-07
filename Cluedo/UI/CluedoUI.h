@@ -49,7 +49,7 @@ private:
     QLabel* m_labelRoomList;
     QListWidget *m_listRoom;
     QLabel* m_imageSelectedRoom;
-    QLabel* m_labelPlayers;
+    QLabel* m_labelCurrentPlayer;
     QListWidget* m_listPlayers;
     QPushButton* m_buttonAskPlayers;
     QPushButton* m_buttonStartGame;

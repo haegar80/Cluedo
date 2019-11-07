@@ -74,9 +74,9 @@ void CluedoUI::setupUi()
     m_imageSelectedRoom->setGeometry(QRect(550, 200, 281, 281));
     m_imageSelectedRoom->setFrameShape(QFrame::Box);
     m_imageSelectedRoom->setScaledContents(true);
-    m_labelPlayers = new QLabel(m_centralwidget);
-    m_labelPlayers->setObjectName(QString::fromUtf8("labelPlayers"));
-    m_labelPlayers->setGeometry(QRect(970, 50, 47, 13));
+    m_labelCurrentPlayer = new QLabel(m_centralwidget);
+    m_labelCurrentPlayer->setObjectName(QString::fromUtf8("labelCurrentPlayer"));
+    m_labelCurrentPlayer->setGeometry(QRect(970, 50, 111, 16));
     m_listPlayers = new QListWidget(m_centralwidget);
     m_listPlayers->setObjectName(QString::fromUtf8("listPlayers"));
     m_listPlayers->setEnabled(false);
@@ -115,15 +115,15 @@ void CluedoUI::setupUi()
 
 void CluedoUI::retranslateUi()
 {
-    this->setWindowTitle(QApplication::translate("MainWindow", "Cluedo", 0));
+    this->setWindowTitle(QApplication::translate("MainWindow", "Cluedo", nullptr));
     m_imageSelectedMurder->setText(QString());
-    m_labelMurderList->setText(QApplication::translate("MainWindow", "Auswahl T\303\244ter", 0));
-    m_labelWeaponList->setText(QApplication::translate("MainWindow", "Auswahl Waffe", 0));
-    m_labelRoomList->setText(QApplication::translate("MainWindow", "Auswahl Raum", 0));
-    m_labelPlayers->setText(QApplication::translate("MainWindow", "Mitspieler", 0));
-    m_buttonAskPlayers->setText(QApplication::translate("MainWindow", "Frage Mitspieler", 0));
-    m_buttonStartGame->setText(QApplication::translate("MainWindow", "Starte Spiel", 0));
-    m_quitButton->setText(QApplication::translate("MainWindow", "Quit", 0));
+    m_labelMurderList->setText(QApplication::translate("MainWindow", "Auswahl T\303\244ter", nullptr));
+    m_labelWeaponList->setText(QApplication::translate("MainWindow", "Auswahl Waffe", nullptr));
+    m_labelRoomList->setText(QApplication::translate("MainWindow", "Auswahl Raum", nullptr));
+    m_labelCurrentPlayer->setText(QApplication::translate("MainWindow", "Aktueller Spieler", nullptr));
+    m_buttonAskPlayers->setText(QApplication::translate("MainWindow", "Frage Mitspieler", nullptr));
+    m_buttonStartGame->setText(QApplication::translate("MainWindow", "Starte Spiel", nullptr));
+    m_quitButton->setText(QApplication::translate("MainWindow", "Quit", nullptr));
 }
 
 void CluedoUI::updatePlayers()
