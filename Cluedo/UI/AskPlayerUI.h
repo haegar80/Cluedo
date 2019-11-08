@@ -23,6 +23,7 @@ public:
 
     void setupUi();
     void retranslateUi();
+    void updateShownCluedoObject();
 
 signals:
     void askPlayerWindow_closed();

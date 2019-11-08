@@ -3,7 +3,7 @@
 #include "SelectObjectsUI.h"
 #include "../Model/Player.h"
 #include "../GameManager/GameController.h"
-#include <QtCore/QDir>
+#include "../Utils/Utils.h"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QWidget>
@@ -12,7 +12,6 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
-#include <QImageReader>
 
 CluedoUI::CluedoUI()
 {
@@ -268,7 +267,7 @@ void CluedoUI::fillCluedoObjects()
             if (1 == index)
             {
                 m_labelCluedoObject1->setText(name);
-                QImage image = getImage(name);
+                QImage image = Utils::getImage(name);
                 if (!image.isNull())
                 {
                     m_imageCluedoObject1->setPixmap(QPixmap::fromImage(image));
@@ -277,7 +276,7 @@ void CluedoUI::fillCluedoObjects()
             else if (2 == index)
             {
                 m_labelCluedoObject2->setText(name);
-                QImage image = getImage(name);
+                QImage image = Utils::getImage(name);
                 if (!image.isNull())
                 {
                     m_imageCluedoObject2->setPixmap(QPixmap::fromImage(image));
@@ -286,7 +285,7 @@ void CluedoUI::fillCluedoObjects()
             else if (3 == index)
             {
                 m_labelCluedoObject3->setText(name);
-                QImage image = getImage(name);
+                QImage image = Utils::getImage(name);
                 if (!image.isNull())
                 {
                     m_imageCluedoObject3->setPixmap(QPixmap::fromImage(image));
@@ -295,7 +294,7 @@ void CluedoUI::fillCluedoObjects()
             else if (4 == index)
             {
                 m_labelCluedoObject4->setText(name);
-                QImage image = getImage(name);
+                QImage image = Utils::getImage(name);
                 if (!image.isNull())
                 {
                     m_imageCluedoObject4->setPixmap(QPixmap::fromImage(image));
@@ -304,7 +303,7 @@ void CluedoUI::fillCluedoObjects()
             else if (5 == index)
             {
                 m_labelCluedoObject5->setText(name);
-                QImage image = getImage(name);
+                QImage image = Utils::getImage(name);
                 if (!image.isNull())
                 {
                     m_imageCluedoObject5->setPixmap(QPixmap::fromImage(image));
@@ -313,7 +312,7 @@ void CluedoUI::fillCluedoObjects()
             else if (6 == index)
             {
                 m_labelCluedoObject6->setText(name);
-                QImage image = getImage(name);
+                QImage image = Utils::getImage(name);
                 if (!image.isNull())
                 {
                     m_imageCluedoObject6->setPixmap(QPixmap::fromImage(image));
@@ -322,29 +321,4 @@ void CluedoUI::fillCluedoObjects()
             index++;
         }
     }
-}
-
-QString CluedoUI::getFilePath(const QString& p_itemText)
-{
-    QString path = p_itemText;
-    QString extension(".jpg");
-    path += extension;
-
-    QDir dirPath(QString("Pics"));
-    if (dirPath.exists())
-    {
-        QFileInfo file(dirPath, path);
-        path = file.absoluteFilePath();
-    }
-
-    return path;
-}
-
-QImage CluedoUI::getImage(const QString& p_itemText)
-{
-    QImageReader imageReader(getFilePath(p_itemText));
-    imageReader.setAutoTransform(true);
-    QImage image = imageReader.read();
-
-    return image;
 }

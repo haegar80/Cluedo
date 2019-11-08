@@ -2,7 +2,7 @@
 #include "AskPlayerUI.h"
 #include "../GameManager/CluedoObjectLoader.h"
 #include "../GameManager/GameController.h"
-#include <QtCore/QDir>
+#include "../Utils/Utils.h"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QWidget>
@@ -11,7 +11,6 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
-#include <QImageReader>
 
 SelectObjectsUI::SelectObjectsUI()
 {
@@ -117,7 +116,7 @@ void SelectObjectsUI::selectedMurder()
         {
             m_selectedMurder = true;
             QString itemText = item->text();
-            QImage image = getImage(itemText);
+            QImage image = Utils::getImage(itemText);
             if (!image.isNull())
             {
                 m_imageSelectedMurder->setPixmap(QPixmap::fromImage(image));
@@ -137,7 +136,7 @@ void SelectObjectsUI::selectedWeapon()
         {
             m_selectedWeapon = true;
             QString itemText = item->text();
-            QImage image = getImage(itemText);
+            QImage image = Utils::getImage(itemText);
             if (!image.isNull())
             {
                 m_imageSelectedWeapon->setPixmap(QPixmap::fromImage(image));
@@ -157,7 +156,7 @@ void SelectObjectsUI::selectedRoom()
         {
             m_selectedRoom = true;
             QString itemText = item->text();
-            QImage image = getImage(itemText);
+            QImage image = Utils::getImage(itemText);
             if (!image.isNull())
             {
                 m_imageSelectedRoom->setPixmap(QPixmap::fromImage(image));
@@ -179,6 +178,8 @@ void SelectObjectsUI::buttonOk_clicked()
         m_askPlayerUI->show();
 
         GameController::getInstance().askPlayer(m_listMurder->currentRow(), m_listWeapon->currentRow(), m_listRoom->currentRow());
+
+        m_askPlayerUI->updateShownCluedoObject();
     }
 }
 
@@ -214,29 +215,4 @@ void SelectObjectsUI::fillRoomList()
     {
         m_listRoom->addItem(QString(room->getName().c_str()));
     }
-}
-
-QString SelectObjectsUI::getFilePath(const QString& p_itemText)
-{
-    QString path = p_itemText;
-    QString extension(".jpg");
-    path += extension;
-
-    QDir dirPath(QString("Pics"));
-    if (dirPath.exists())
-    {
-        QFileInfo file(dirPath, path);
-        path = file.absoluteFilePath();
-    }
-
-    return path;
-}
-
-QImage SelectObjectsUI::getImage(const QString& p_itemText)
-{
-    QImageReader imageReader(getFilePath(p_itemText));
-    imageReader.setAutoTransform(true);
-    QImage image = imageReader.read();
-
-    return image;
 }

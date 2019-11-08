@@ -13,8 +13,6 @@ class QListWidget;
 class QLabel;
 class QMenuBar;
 class QStatusBar;
-class QString;
-class QImage;
 
 /// author: Copyright by Marcel Fuchs
 class CluedoUI : public QMainWindow
@@ -71,6 +69,4 @@ private:
 
     void hideNotUsedCluedoObjects();
     void fillCluedoObjects();
-    QString getFilePath(const QString& p_itemText);
-    QImage getImage(const QString& p_itemText);
 };

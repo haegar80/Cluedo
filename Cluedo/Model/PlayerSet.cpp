@@ -10,7 +10,7 @@ void PlayerSet::addCluedoObject(CluedoObject* p_cluedoObject)
     m_cluedoObjects.push_back(p_cluedoObject);
 }
 
-void PlayerSet::addCluedoObjectFromOtherPlayer(const std::string& p_playerName, CluedoObject* p_cluedoObject)
+void PlayerSet::addCluedoObjectFromOtherPlayers(int p_playerIndex, CluedoObject* p_cluedoObject)
 {
-    m_cluedoObjectsFromOtherPlayers.insert(std::make_pair(p_playerName, p_cluedoObject));
+    m_cluedoObjectsFromOtherPlayers.insert(std::make_pair(p_playerIndex, p_cluedoObject));
 }

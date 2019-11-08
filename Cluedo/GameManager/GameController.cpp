@@ -57,11 +57,25 @@ Player* GameController::createNewPlayer(std::string p_name, bool p_self)
     return player;
 }
 
+std::shared_ptr<PlayerSet> GameController::getPlayerSetOfCurrentPlayer()
+{
+    std::shared_ptr<PlayerSet> playerSet;
+
+    if (m_gameRunner)
+    {
+        int currentPlayerIndex = m_gameRunner->getCurrentPlayerIndex();
+        Player* currentPlayer = m_players.at(currentPlayerIndex);
+        playerSet = currentPlayer->getPlayerSet();
+    }
+
+    return playerSet;
+}
+
 void GameController::setCurrentPlayer(int p_currentPlayerIndex)
 {
     if (m_gameRunner)
     {
-        m_gameRunner->setCurrentPlayer(p_currentPlayerIndex);
+        m_gameRunner->setCurrentPlayerIndex(p_currentPlayerIndex);
     }
 }
 

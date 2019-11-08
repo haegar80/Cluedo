@@ -12,7 +12,7 @@ public:
     virtual ~PlayerSet() = default;
 
     void addCluedoObject(CluedoObject* p_cluedoObject);
-    void addCluedoObjectFromOtherPlayer(const std::string& p_playerName, CluedoObject* p_cluedoObject);
+    void addCluedoObjectFromOtherPlayers(int p_playerIndex, CluedoObject* p_cluedoObject);
 
     int getNumberOfCluedoObjects()
     {
@@ -24,6 +24,21 @@ public:
         return m_cluedoObjects;
     }
 
+    std::multimap<int, CluedoObject*>& getCluedoObjectsFromOtherPlayers()
+    {
+        return m_cluedoObjectsFromOtherPlayers;
+    }
+
+    CluedoObject* getLastShownCluedoObject()
+    {
+        return m_lastShownCluedoObject;
+    }
+
+    void setLastShownCluedoObject(CluedoObject* p_lastShownCluedoObject)
+    {
+        m_lastShownCluedoObject = p_lastShownCluedoObject;
+    }
+
     PlayerSet(const PlayerSet& copy) = default;
     PlayerSet& operator= (const PlayerSet& copy) = default;
     PlayerSet(PlayerSet&& other) = default;
@@ -32,5 +47,6 @@ public:
 private:
     int m_playerNumber{ 0 };
     std::vector<CluedoObject*> m_cluedoObjects;
-    std::map<const std::string, CluedoObject*> m_cluedoObjectsFromOtherPlayers;
+    std::multimap<int, CluedoObject*> m_cluedoObjectsFromOtherPlayers;
+    CluedoObject* m_lastShownCluedoObject{ nullptr };
 };

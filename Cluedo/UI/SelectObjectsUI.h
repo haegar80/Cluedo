@@ -10,8 +10,6 @@ class QListWidget;
 class QLabel;
 class QMenuBar;
 class QStatusBar;
-class QString;
-class QImage;
 
 /// author: Copyright by Marcel Fuchs
 class SelectObjectsUI : public QMainWindow
@@ -62,6 +60,4 @@ private:
     void fillMurderList();
     void fillWeaponList();
     void fillRoomList();
-    QString getFilePath(const QString& p_itemText);
-    QImage getImage(const QString& p_itemText);
 };

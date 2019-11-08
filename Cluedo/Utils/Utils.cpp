@@ -1,4 +1,6 @@
 #include "Utils.h"
+#include <QtCore/QDir>
+#include <QImageReader>
 #include <cstdlib>     /* srand, rand */
 #include <ctime>       /* time */
 
@@ -14,5 +16,30 @@ namespace Utils
         }
 
         return randomNumber;
+    }
+
+    QString getFilePath(const QString& p_itemText)
+    {
+        QString path = p_itemText;
+        QString extension(".jpg");
+        path += extension;
+
+        QDir dirPath(QString("Pics"));
+        if (dirPath.exists())
+        {
+            QFileInfo file(dirPath, path);
+            path = file.absoluteFilePath();
+        }
+
+        return path;
+    }
+
+    QImage getImage(const QString& p_itemText)
+    {
+        QImageReader imageReader(getFilePath(p_itemText));
+        imageReader.setAutoTransform(true);
+        QImage image = imageReader.read();
+
+        return image;
     }
 }

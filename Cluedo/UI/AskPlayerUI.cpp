@@ -1,5 +1,8 @@
 #include "AskPlayerUI.h"
 #include "../GameManager/GameController.h"
+#include "../Model/PlayerSet.h"
+#include "../Model/CluedoObject.h"
+#include "../Utils/Utils.h"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QWidget>
@@ -129,6 +132,34 @@ void AskPlayerUI::retranslateUi()
     m_labelShowedObject->setText(QApplication::translate("mainWindowAskPlayer", "Gezeigter Murder/Waffe/Raum", nullptr));
     m_imageShowedObject->setText(QString());
     m_buttonOk->setText(QApplication::translate("mainWindowAskPlayer", "Ok", nullptr));
+}
+
+void AskPlayerUI::updateShownCluedoObject()
+{
+    std::shared_ptr<PlayerSet> playerSet = GameController::getInstance().getPlayerSetOfCurrentPlayer();
+    if (playerSet)
+    {
+        CluedoObject* cluedoObject = playerSet->getLastShownCluedoObject();
+        if (nullptr != cluedoObject)
+        {
+            QString itemText(cluedoObject->getName().c_str());
+            QImage image = Utils::getImage(itemText);
+            if (!image.isNull())
+            {
+                m_imageShowedObject->setPixmap(QPixmap::fromImage(image));
+            }
+
+            std::multimap<int, CluedoObject*>& cluedoObjectsFromOtherPlayers = playerSet->getCluedoObjectsFromOtherPlayers();
+            for (std::pair<int, CluedoObject*> cluedoObjectFromOtherPlayer : cluedoObjectsFromOtherPlayers)
+            {
+                if (cluedoObject == cluedoObjectFromOtherPlayer.second)
+                {
+                    //m_labelPlayer1->setText(QString(cluedoObjectFromOtherPlayer.first->))
+                    break;
+                }
+            }
+        }
+    }
 }
 
 void AskPlayerUI::closeEvent(QCloseEvent* event)
