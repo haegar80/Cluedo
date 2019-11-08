@@ -34,9 +34,12 @@ void GameController::startGame()
     }
 }
 
-void GameController::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex, int p_playerIndex)
+void GameController::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex)
 {
-    m_gameRunner->askPlayer(p_murderIndex, p_weaponIndex, p_roomIndex, p_playerIndex);
+    if (m_gameRunner)
+    {
+        m_gameRunner->askPlayer(p_murderIndex, p_weaponIndex, p_roomIndex);
+    }
 }
 
 void GameController::selectAndDistributeCluedoObjects()
@@ -53,6 +56,14 @@ Player* GameController::createNewPlayer(std::string p_name, bool p_self)
     m_players.push_back(player);
 
     return player;
+}
+
+void GameController::setCurrentPlayer(Player* p_currentPlayer)
+{
+    if (m_gameRunner)
+    {
+        m_gameRunner->setCurrentPlayer(p_currentPlayer);
+    }
 }
 
 void GameController::registerPlayerUpdateCallback(std::function<void(void)> p_callback)

@@ -17,11 +17,12 @@ public:
 
     void reset();
     void startGame();
-    void askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex, int p_playerIndex);
+    void askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
 
     void selectAndDistributeCluedoObjects();
 
     Player* createNewPlayer(std::string p_name, bool p_self);
+    void setCurrentPlayer(Player* p_currentPlayer);
 
     void registerPlayerUpdateCallback(std::function<void(void)> p_callback);
 

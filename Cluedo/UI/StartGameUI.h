@@ -24,6 +24,9 @@ public:
     void setupUi();
     void retranslateUi();
 
+    signals:
+    void game_started();
+
     public slots:
     void buttonStartGame_clicked();
 
@@ -38,4 +41,6 @@ private:
     QPushButton* m_buttonStartGame;
     QMenuBar* m_menubar;
     QStatusBar* m_statusbar;
+
+    void gameStarted();
 };

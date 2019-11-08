@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>windowCluedo</class>
+ <widget class="QMainWindow" name="windowCluedo">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Images2WavefrontObj</string>
+   <string>Cluedo</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QWidget" name="selectionObjectWidget" native="true">
@@ -23,26 +23,26 @@
       <height>681</height>
      </rect>
     </property>
-    <widget class="QListWidget" name="listMurder">
+    <widget class="QLabel" name="labelCluedoObjects">
      <property name="geometry">
       <rect>
-       <x>50</x>
+       <x>40</x>
        <y>30</y>
-       <width>211</width>
-       <height>131</height>
+       <width>141</width>
+       <height>16</height>
       </rect>
      </property>
-     <property name="selectionMode">
-      <enum>QAbstractItemView::ExtendedSelection</enum>
+     <property name="text">
+      <string>Deine Täter/Waffen/Räume</string>
      </property>
     </widget>
-    <widget class="QLabel" name="imageSelectedMurder">
+    <widget class="QLabel" name="imageCluedoObject5">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>200</y>
-       <width>211</width>
-       <height>281</height>
+       <x>600</x>
+       <y>90</y>
+       <width>120</width>
+       <height>160</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -55,78 +55,13 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="labelMurderList">
+    <widget class="QLabel" name="imageCluedoObject1">
      <property name="geometry">
       <rect>
-       <x>50</x>
-       <y>0</y>
-       <width>81</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Auswahl Täter</string>
-     </property>
-    </widget>
-    <widget class="QListWidget" name="listWeapon">
-     <property name="geometry">
-      <rect>
-       <x>300</x>
-       <y>30</y>
-       <width>211</width>
-       <height>131</height>
-      </rect>
-     </property>
-     <property name="selectionMode">
-      <enum>QAbstractItemView::ExtendedSelection</enum>
-     </property>
-    </widget>
-    <widget class="QLabel" name="labelWeaponList">
-     <property name="geometry">
-      <rect>
-       <x>300</x>
-       <y>0</y>
-       <width>91</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Auswahl Waffe</string>
-     </property>
-    </widget>
-    <widget class="QListWidget" name="listRoom">
-     <property name="geometry">
-      <rect>
-       <x>550</x>
-       <y>30</y>
-       <width>281</width>
-       <height>131</height>
-      </rect>
-     </property>
-     <property name="selectionMode">
-      <enum>QAbstractItemView::ExtendedSelection</enum>
-     </property>
-    </widget>
-    <widget class="QLabel" name="labelRoomList">
-     <property name="geometry">
-      <rect>
-       <x>550</x>
-       <y>0</y>
-       <width>81</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Auswahl Raum</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="imageSelectedWeapon">
-     <property name="geometry">
-      <rect>
-       <x>300</x>
-       <y>200</y>
-       <width>211</width>
-       <height>281</height>
+       <x>40</x>
+       <y>90</y>
+       <width>120</width>
+       <height>160</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -139,13 +74,13 @@
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="imageSelectedRoom">
+    <widget class="QLabel" name="imageCluedoObject2">
      <property name="geometry">
       <rect>
-       <x>550</x>
-       <y>200</y>
-       <width>281</width>
-       <height>281</height>
+       <x>180</x>
+       <y>90</y>
+       <width>120</width>
+       <height>160</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -156,6 +91,141 @@
      </property>
      <property name="scaledContents">
       <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="imageCluedoObject3">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>90</y>
+       <width>120</width>
+       <height>160</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="imageCluedoObject4">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>90</y>
+       <width>120</width>
+       <height>160</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="imageCluedoObject6">
+     <property name="geometry">
+      <rect>
+       <x>740</x>
+       <y>90</y>
+       <width>120</width>
+       <height>160</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelCluedoObject2">
+     <property name="geometry">
+      <rect>
+       <x>180</x>
+       <y>60</y>
+       <width>111</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelCluedoObject6">
+     <property name="geometry">
+      <rect>
+       <x>740</x>
+       <y>60</y>
+       <width>111</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelCluedoObject5">
+     <property name="geometry">
+      <rect>
+       <x>600</x>
+       <y>60</y>
+       <width>111</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelCluedoObject1">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>60</y>
+       <width>111</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelCluedoObject3">
+     <property name="geometry">
+      <rect>
+       <x>320</x>
+       <y>60</y>
+       <width>111</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labelCluedoObject4">
+     <property name="geometry">
+      <rect>
+       <x>460</x>
+       <y>60</y>
+       <width>111</width>
+       <height>13</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </widget>

@@ -1,8 +1,7 @@
 #include "CluedoUI.h"
 #include "StartGameUI.h"
-#include "AskPlayerUI.h"
+#include "SelectObjectsUI.h"
 #include "../Model/Player.h"
-#include "../GameManager/CluedoObjectLoader.h"
 #include "../GameManager/GameController.h"
 #include <QtCore/QDir>
 #include <QtWidgets/QApplication>
@@ -18,15 +17,12 @@
 CluedoUI::CluedoUI()
 {
     setupUi();
-    fillMurderList();
-    fillWeaponList();
-    fillRoomList();
 }
 
 void CluedoUI::setupUi()
 {
     if (this->objectName().isEmpty()) {
-        this->setObjectName(QString::fromUtf8("MainWindow"));
+        this->setObjectName(QString::fromUtf8("windowCluedo"));
     }
 
     QRect screenGeometry = QApplication::desktop()->availableGeometry();
@@ -38,42 +34,57 @@ void CluedoUI::setupUi()
     m_selectionObjectWidget = new QWidget(m_centralwidget);
     m_selectionObjectWidget->setObjectName(QString::fromUtf8("selectionObjectWidget"));
     m_selectionObjectWidget->setGeometry(QRect(60, 50, 891, 681));
-    m_labelMurderList = new QLabel(m_selectionObjectWidget);
-    m_labelMurderList->setObjectName(QString::fromUtf8("labelMurderList"));
-    m_labelMurderList->setGeometry(QRect(50, 0, 81, 16));
-    m_listMurder = new QListWidget(m_selectionObjectWidget);
-    m_listMurder->setObjectName(QString::fromUtf8("listMurder"));
-    m_listMurder->setGeometry(QRect(50, 30, 211, 131));
-    m_listMurder->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    m_imageSelectedMurder = new QLabel(m_selectionObjectWidget);
-    m_imageSelectedMurder->setObjectName(QString::fromUtf8("imageSelectedMurder"));
-    m_imageSelectedMurder->setGeometry(QRect(50, 200, 211, 281));
-    m_imageSelectedMurder->setFrameShape(QFrame::Box);
-    m_imageSelectedMurder->setScaledContents(true);
-    m_labelWeaponList = new QLabel(m_selectionObjectWidget);
-    m_labelWeaponList->setObjectName(QString::fromUtf8("labelWeaponList"));
-    m_labelWeaponList->setGeometry(QRect(300, 0, 91, 16));
-    m_listWeapon = new QListWidget(m_selectionObjectWidget);
-    m_listWeapon->setObjectName(QString::fromUtf8("listWeapon"));
-    m_listWeapon->setGeometry(QRect(300, 30, 211, 131));
-    m_listWeapon->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    m_imageSelectedWeapon = new QLabel(m_selectionObjectWidget);
-    m_imageSelectedWeapon->setObjectName(QString::fromUtf8("imageSelectedWeapon"));
-    m_imageSelectedWeapon->setGeometry(QRect(300, 200, 211, 281));
-    m_imageSelectedWeapon->setFrameShape(QFrame::Box);
-    m_imageSelectedWeapon->setScaledContents(true);
-    m_labelRoomList = new QLabel(m_selectionObjectWidget);
-    m_labelRoomList->setObjectName(QString::fromUtf8("labelRoomList"));
-    m_labelRoomList->setGeometry(QRect(550, 0, 81, 16));
-    m_listRoom = new QListWidget(m_selectionObjectWidget);
-    m_listRoom->setObjectName(QString::fromUtf8("listRoom"));
-    m_listRoom->setGeometry(QRect(550, 30, 281, 131));
-    m_listRoom->setSelectionMode(QAbstractItemView::ExtendedSelection);
-    m_imageSelectedRoom = new QLabel(m_selectionObjectWidget);
-    m_imageSelectedRoom->setObjectName(QString::fromUtf8("imageSelectedRoom"));
-    m_imageSelectedRoom->setGeometry(QRect(550, 200, 281, 281));
-    m_imageSelectedRoom->setFrameShape(QFrame::Box);
-    m_imageSelectedRoom->setScaledContents(true);
+    m_labelCluedoObjects = new QLabel(m_selectionObjectWidget);
+    m_labelCluedoObjects->setObjectName(QStringLiteral("labelCluedoObjects"));
+    m_labelCluedoObjects->setGeometry(QRect(40, 30, 141, 16));
+    m_labelCluedoObject1 = new QLabel(m_selectionObjectWidget);
+    m_labelCluedoObject1->setObjectName(QStringLiteral("labelCluedoObject1"));
+    m_labelCluedoObject1->setGeometry(QRect(40, 60, 111, 16));
+    m_labelCluedoObject2 = new QLabel(m_selectionObjectWidget);
+    m_labelCluedoObject2->setObjectName(QStringLiteral("labelCluedoObject2"));
+    m_labelCluedoObject2->setGeometry(QRect(180, 60, 111, 16));
+    m_labelCluedoObject3 = new QLabel(m_selectionObjectWidget);
+    m_labelCluedoObject3->setObjectName(QStringLiteral("labelCluedoObject3"));
+    m_labelCluedoObject3->setGeometry(QRect(320, 60, 111, 13));
+    m_labelCluedoObject4 = new QLabel(m_selectionObjectWidget);
+    m_labelCluedoObject4->setObjectName(QStringLiteral("labelCluedoObject4"));
+    m_labelCluedoObject4->setGeometry(QRect(460, 60, 111, 13));
+    m_labelCluedoObject5 = new QLabel(m_selectionObjectWidget);
+    m_labelCluedoObject5->setObjectName(QStringLiteral("labelCluedoObject5"));
+    m_labelCluedoObject5->setGeometry(QRect(600, 60, 111, 13));
+    m_labelCluedoObject6 = new QLabel(m_selectionObjectWidget);
+    m_labelCluedoObject6->setObjectName(QStringLiteral("labelCluedoObject6"));
+    m_labelCluedoObject6->setGeometry(QRect(740, 60, 111, 13));
+    m_imageCluedoObject1 = new QLabel(m_selectionObjectWidget);
+    m_imageCluedoObject1->setObjectName(QStringLiteral("imageCluedoObject1"));
+    m_imageCluedoObject1->setGeometry(QRect(40, 90, 120, 160));
+    m_imageCluedoObject1->setFrameShape(QFrame::Box);
+    m_imageCluedoObject1->setScaledContents(true);
+    m_imageCluedoObject2 = new QLabel(m_selectionObjectWidget);
+    m_imageCluedoObject2->setObjectName(QStringLiteral("imageCluedoObject2"));
+    m_imageCluedoObject2->setGeometry(QRect(180, 90, 120, 160));
+    m_imageCluedoObject2->setFrameShape(QFrame::Box);
+    m_imageCluedoObject2->setScaledContents(true);
+    m_imageCluedoObject3 = new QLabel(m_selectionObjectWidget);
+    m_imageCluedoObject3->setObjectName(QStringLiteral("imageCluedoObject3"));
+    m_imageCluedoObject3->setGeometry(QRect(320, 90, 120, 160));
+    m_imageCluedoObject3->setFrameShape(QFrame::Box);
+    m_imageCluedoObject3->setScaledContents(true);
+    m_imageCluedoObject4 = new QLabel(m_selectionObjectWidget);
+    m_imageCluedoObject4->setObjectName(QStringLiteral("imageCluedoObject4"));
+    m_imageCluedoObject4->setGeometry(QRect(460, 90, 120, 160));
+    m_imageCluedoObject4->setFrameShape(QFrame::Box);
+    m_imageCluedoObject4->setScaledContents(true);
+    m_imageCluedoObject5 = new QLabel(m_selectionObjectWidget);
+    m_imageCluedoObject5->setObjectName(QStringLiteral("imageCluedoObject5"));
+    m_imageCluedoObject5->setGeometry(QRect(600, 90, 120, 160));
+    m_imageCluedoObject5->setFrameShape(QFrame::Box);
+    m_imageCluedoObject5->setScaledContents(true);
+    m_imageCluedoObject6 = new QLabel(m_selectionObjectWidget);
+    m_imageCluedoObject6->setObjectName(QStringLiteral("imageCluedoObject6"));
+    m_imageCluedoObject6->setGeometry(QRect(740, 90, 120, 160));
+    m_imageCluedoObject6->setFrameShape(QFrame::Box);
+    m_imageCluedoObject6->setScaledContents(true);
     m_labelCurrentPlayer = new QLabel(m_centralwidget);
     m_labelCurrentPlayer->setObjectName(QString::fromUtf8("labelCurrentPlayer"));
     m_labelCurrentPlayer->setGeometry(QRect(970, 50, 111, 16));
@@ -102,9 +113,6 @@ void CluedoUI::setupUi()
 
     retranslateUi();
 
-    QObject::connect(m_listMurder, SIGNAL(itemSelectionChanged()), this, SLOT(selectedMurder()));
-    QObject::connect(m_listWeapon, SIGNAL(itemSelectionChanged()), this, SLOT(selectedWeapon()));
-    QObject::connect(m_listRoom, SIGNAL(itemSelectionChanged()), this, SLOT(selectedRoom()));
     QObject::connect(m_buttonAskPlayers, SIGNAL(pressed()), this, SLOT(askPlayers_clicked()));
     QObject::connect(m_buttonStartGame, SIGNAL(pressed()), this, SLOT(buttonStartGame_clicked()));
     QObject::connect(m_quitButton, SIGNAL(pressed()), this, SLOT(close()));
@@ -115,15 +123,24 @@ void CluedoUI::setupUi()
 
 void CluedoUI::retranslateUi()
 {
-    this->setWindowTitle(QApplication::translate("MainWindow", "Cluedo", nullptr));
-    m_imageSelectedMurder->setText(QString());
-    m_labelMurderList->setText(QApplication::translate("MainWindow", "Auswahl T\303\244ter", nullptr));
-    m_labelWeaponList->setText(QApplication::translate("MainWindow", "Auswahl Waffe", nullptr));
-    m_labelRoomList->setText(QApplication::translate("MainWindow", "Auswahl Raum", nullptr));
-    m_labelCurrentPlayer->setText(QApplication::translate("MainWindow", "Aktueller Spieler", nullptr));
-    m_buttonAskPlayers->setText(QApplication::translate("MainWindow", "Frage Mitspieler", nullptr));
-    m_buttonStartGame->setText(QApplication::translate("MainWindow", "Starte Spiel", nullptr));
-    m_quitButton->setText(QApplication::translate("MainWindow", "Quit", nullptr));
+    this->setWindowTitle(QApplication::translate("windowCluedo", "Cluedo", nullptr));
+    m_labelCluedoObjects->setText(QApplication::translate("windowCluedo", "Deine T\303\244ter/Waffen/R\303\244ume", nullptr));
+    m_labelCluedoObject1->setText(QString());
+    m_labelCluedoObject2->setText(QString());
+    m_labelCluedoObject3->setText(QString());
+    m_labelCluedoObject4->setText(QString());
+    m_labelCluedoObject5->setText(QString());
+    m_labelCluedoObject6->setText(QString());
+    m_imageCluedoObject1->setText(QString());
+    m_imageCluedoObject2->setText(QString());
+    m_imageCluedoObject3->setText(QString());
+    m_imageCluedoObject4->setText(QString());
+    m_imageCluedoObject5->setText(QString());
+    m_imageCluedoObject6->setText(QString());
+    m_labelCurrentPlayer->setText(QApplication::translate("windowCluedo", "Aktueller Spieler", nullptr));
+    m_buttonAskPlayers->setText(QApplication::translate("windowCluedo", "Frage Mitspieler", nullptr));
+    m_buttonStartGame->setText(QApplication::translate("windowCluedo", "Starte Spiel", nullptr));
+    m_quitButton->setText(QApplication::translate("windowCluedo", "Quit", nullptr));
 }
 
 void CluedoUI::updatePlayers()
@@ -133,6 +150,11 @@ void CluedoUI::updatePlayers()
     for (Player* player : players)
     {
         m_listPlayers->addItem(QString::fromStdString(player->getName()));
+
+        if (player->getSelf())
+        {
+            m_myPlayerSet = player->getPlayerSet();
+        }
     }
 
     if (m_listPlayers->count() > 0)
@@ -152,84 +174,20 @@ void CluedoUI::nextPlayerReady()
     m_listPlayers->item(m_currentPlayerIndex)->setSelected(true);
 }
 
-void CluedoUI::selectedMurder()
-{
-    m_selectedMurder = false;
-    QList<QListWidgetItem*> selectedItems = m_listMurder->selectedItems();
-    if (selectedItems.count() > 0)
-    {
-        QListWidgetItem* item = m_listMurder->selectedItems().at(0);
-        if (nullptr != item)
-        {
-            m_selectedMurder = true;
-            QString itemText = item->text();
-            QImage image = getImage(itemText);
-            if (!image.isNull())
-            {
-                m_imageSelectedMurder->setPixmap(QPixmap::fromImage(image));
-            }
-        }
-    }
-}
-
-void CluedoUI::selectedWeapon()
-{
-    m_selectedWeapon = false;
-    QList<QListWidgetItem*> selectedItems = m_listWeapon->selectedItems();
-    if (selectedItems.count() > 0)
-    {
-        QListWidgetItem* item = m_listWeapon->selectedItems().at(0);
-        if (nullptr != item)
-        {
-            m_selectedWeapon = true;
-            QString itemText = item->text();
-            QImage image = getImage(itemText);
-            if (!image.isNull())
-            {
-                m_imageSelectedWeapon->setPixmap(QPixmap::fromImage(image));
-            }
-        }
-    }
-}
-
-void CluedoUI::selectedRoom()
-{
-    m_selectedRoom = false;
-    QList<QListWidgetItem*> selectedItems = m_listRoom->selectedItems();
-    if (selectedItems.count() > 0)
-    {
-        QListWidgetItem* item = m_listRoom->selectedItems().at(0);
-        if (nullptr != item)
-        {
-            m_selectedRoom = true;
-            QString itemText = item->text();
-            QImage image = getImage(itemText);
-            if (!image.isNull())
-            {
-                m_imageSelectedRoom->setPixmap(QPixmap::fromImage(image));
-            }
-        }
-    }
-}
-
 void CluedoUI::askPlayers_clicked()
 {
-    std::vector<Player*>& players = GameController::getInstance().getPlayers();
+    GameController& gameController = GameController::getInstance();
+    std::vector<Player*>& players = gameController.getPlayers();
     Player* currentPlayer = players.at(m_currentPlayerIndex);
+    gameController.setCurrentPlayer(currentPlayer);
+
     if (currentPlayer->getSelf())
     {
-        if (m_selectedMurder && m_selectedWeapon && m_selectedRoom)
-        {
-            m_askPlayerUI = new AskPlayerUI(m_imageSelectedMurder->pixmap(), m_imageSelectedWeapon->pixmap(), m_imageSelectedRoom->pixmap());
-            m_askPlayerUI->setWindowModality(Qt::ApplicationModal);
-            m_askPlayerUI->setAttribute(Qt::WA_DeleteOnClose);
+        m_selectObjectsUI = new SelectObjectsUI();
+        m_selectObjectsUI->setWindowModality(Qt::ApplicationModal);
+        m_selectObjectsUI->setAttribute(Qt::WA_DeleteOnClose);
 
-            QObject::connect(m_askPlayerUI, SIGNAL(askPlayerWindow_closed()), this, SLOT(askPlayerWindow_closed()));
-
-            m_askPlayerUI->show();
-
-            GameController::getInstance().askPlayer(m_listMurder->currentRow(), m_listWeapon->currentRow(), m_listRoom->currentRow(), m_listPlayers->currentRow());
-        }
+        m_selectObjectsUI->show();
     }
     else
     {
@@ -237,45 +195,121 @@ void CluedoUI::askPlayers_clicked()
     }   
 }
 
-void CluedoUI::askPlayerWindow_closed()
-{
-    nextPlayerReady();
-}
-
 void CluedoUI::buttonStartGame_clicked()
 {
     m_startGameUI = new StartGameUI();
     m_startGameUI->setWindowModality(Qt::ApplicationModal);
     m_startGameUI->setAttribute(Qt::WA_DeleteOnClose);
+
+    QObject::connect(m_startGameUI, SIGNAL(game_started()), this, SLOT(game_started()));
+
     m_startGameUI->show();
 
     m_buttonStartGame->setDisabled(true);
 }
 
-void CluedoUI::fillMurderList()
+void CluedoUI::game_started()
 {
-    std::vector<CluedoObject*> murders = CluedoObjectLoader::getInstance().getMurders();
-    for (CluedoObject* murder : murders)
+    GameController::getInstance().selectAndDistributeCluedoObjects();
+    hideNotUsedCluedoObjects();
+    fillCluedoObjects();
+}
+
+void CluedoUI::hideNotUsedCluedoObjects()
+{
+    int numberOfCluedoObjects = m_myPlayerSet->getNumberOfCluedoObjects();
+
+    switch (numberOfCluedoObjects)
     {
-        m_listMurder->addItem(QString::fromStdString(murder->getName()));
+    case 0:
+        m_labelCluedoObject1->hide();
+        m_imageCluedoObject1->hide();
+    case 1:
+        m_labelCluedoObject2->hide();
+        m_imageCluedoObject2->hide();
+    case 2:
+        m_labelCluedoObject3->hide();
+        m_imageCluedoObject3->hide();
+    case 3:
+        m_labelCluedoObject4->hide();
+        m_imageCluedoObject4->hide();
+    case 4:
+        m_labelCluedoObject5->hide();
+        m_imageCluedoObject5->hide();
+    case 5:
+        m_labelCluedoObject6->hide();
+        m_imageCluedoObject6->hide();
+        break;
+    default:
+        break;
     }
 }
 
-void CluedoUI::fillWeaponList()
+void CluedoUI::fillCluedoObjects()
 {
-    std::vector<CluedoObject*> weapons = CluedoObjectLoader::getInstance().getWeapons();
-    for (CluedoObject* weapon : weapons)
+    if (m_myPlayerSet)
     {
-        m_listWeapon->addItem(QString(weapon->getName().c_str()));
-    }
-}
-
-void CluedoUI::fillRoomList()
-{
-    std::vector<CluedoObject*> rooms = CluedoObjectLoader::getInstance().getRooms();
-    for (CluedoObject* room : rooms)
-    {
-        m_listRoom->addItem(QString(room->getName().c_str()));
+        std::vector<CluedoObject*>& cluedoObjects = m_myPlayerSet->getCluedoObjects();
+        int index = 1;
+        for (CluedoObject* cluedoObject : cluedoObjects)
+        {
+            QString name = QString::fromStdString(cluedoObject->getName());
+            if (1 == index)
+            {
+                m_labelCluedoObject1->setText(name);
+                QImage image = getImage(name);
+                if (!image.isNull())
+                {
+                    m_imageCluedoObject1->setPixmap(QPixmap::fromImage(image));
+                }
+            }
+            else if (2 == index)
+            {
+                m_labelCluedoObject2->setText(name);
+                QImage image = getImage(name);
+                if (!image.isNull())
+                {
+                    m_imageCluedoObject2->setPixmap(QPixmap::fromImage(image));
+                }
+            }
+            else if (3 == index)
+            {
+                m_labelCluedoObject3->setText(name);
+                QImage image = getImage(name);
+                if (!image.isNull())
+                {
+                    m_imageCluedoObject3->setPixmap(QPixmap::fromImage(image));
+                }
+            }
+            else if (4 == index)
+            {
+                m_labelCluedoObject4->setText(name);
+                QImage image = getImage(name);
+                if (!image.isNull())
+                {
+                    m_imageCluedoObject4->setPixmap(QPixmap::fromImage(image));
+                }
+            }
+            else if (5 == index)
+            {
+                m_labelCluedoObject5->setText(name);
+                QImage image = getImage(name);
+                if (!image.isNull())
+                {
+                    m_imageCluedoObject5->setPixmap(QPixmap::fromImage(image));
+                }
+            }
+            else if (6 == index)
+            {
+                m_labelCluedoObject6->setText(name);
+                QImage image = getImage(name);
+                if (!image.isNull())
+                {
+                    m_imageCluedoObject6->setPixmap(QPixmap::fromImage(image));
+                }
+            }
+            index++;
+        }
     }
 }
 

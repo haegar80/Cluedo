@@ -1,5 +1,4 @@
 #include "StartGameUI.h"
-#include "PlayerSetUI.h"
 #include "../Model/Player.h"
 #include "../GameManager/GameController.h"
 #include <QtCore/QVariant>
@@ -90,10 +89,14 @@ void StartGameUI::buttonStartGame_clicked()
     }
     
     Player* player = gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), true);
-    std::shared_ptr<PlayerSet> playerSet = player->getPlayerSet();
 
-    m_playerSetUI = new PlayerSetUI(playerSet);
-    m_playerSetUI->setAttribute(Qt::WA_DeleteOnClose);
-    m_playerSetUI->show();
+    GameController::getInstance().startGame();
+    gameStarted();
+
     this->close();
+}
+
+void StartGameUI::gameStarted()
+{
+    emit game_started();
 }

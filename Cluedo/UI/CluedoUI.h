@@ -1,9 +1,11 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <memory>
 
+class PlayerSet;
 class StartGameUI;
-class AskPlayerUI;
+class SelectObjectsUI;
 
 class QWidget;
 class QPushButton;
@@ -30,25 +32,26 @@ public:
     void nextPlayerReady();
 
     public slots:
-    void selectedMurder();
-    void selectedWeapon();
-    void selectedRoom();
     void askPlayers_clicked();
-    void askPlayerWindow_closed();
     void buttonStartGame_clicked();
+    void game_started();
 
 private:
     QWidget* m_centralwidget;
     QWidget* m_selectionObjectWidget;
-    QLabel* m_labelMurderList;
-    QListWidget* m_listMurder;
-    QLabel* m_imageSelectedMurder;
-    QLabel* m_labelWeaponList;
-    QListWidget* m_listWeapon;
-    QLabel* m_imageSelectedWeapon;
-    QLabel* m_labelRoomList;
-    QListWidget *m_listRoom;
-    QLabel* m_imageSelectedRoom;
+    QLabel* m_labelCluedoObjects;
+    QLabel* m_labelCluedoObject1;
+    QLabel* m_labelCluedoObject2;
+    QLabel* m_labelCluedoObject3;
+    QLabel* m_labelCluedoObject4;
+    QLabel* m_labelCluedoObject5;
+    QLabel* m_labelCluedoObject6;
+    QLabel* m_imageCluedoObject1;
+    QLabel* m_imageCluedoObject2;
+    QLabel* m_imageCluedoObject3;
+    QLabel* m_imageCluedoObject4;
+    QLabel* m_imageCluedoObject5;
+    QLabel* m_imageCluedoObject6;
     QLabel* m_labelCurrentPlayer;
     QListWidget* m_listPlayers;
     QPushButton* m_buttonAskPlayers;
@@ -57,17 +60,15 @@ private:
     QMenuBar* m_menubar;
     QStatusBar* m_statusbar;
 
+    std::shared_ptr<PlayerSet> m_myPlayerSet;
+
     StartGameUI* m_startGameUI;
-    AskPlayerUI* m_askPlayerUI;
+    SelectObjectsUI* m_selectObjectsUI;
 
     int m_currentPlayerIndex{ 0 };
-    bool m_selectedMurder{ false };
-    bool m_selectedWeapon{ false };
-    bool m_selectedRoom{ false };
 
-    void fillMurderList();
-    void fillWeaponList();
-    void fillRoomList();
+    void hideNotUsedCluedoObjects();
+    void fillCluedoObjects();
     QString getFilePath(const QString& p_itemText);
     QImage getImage(const QString& p_itemText);
 };
