@@ -3,6 +3,7 @@
 #include <vector>
 
 class Player;
+class CluedoObject;
 
 class GameRunner
 {
@@ -11,11 +12,7 @@ public:
     virtual ~GameRunner() = default;
 
     void askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
-
-    void setCurrentPlayer(Player* p_currentPlayer)
-    {
-        m_currentPlayer = p_currentPlayer;
-    }
+    void setCurrentPlayer(int p_currentPlayerIndex);
 
     GameRunner(const GameRunner& copy) = default;
     GameRunner& operator= (const GameRunner& copy) = default;
@@ -24,6 +21,8 @@ public:
 
 private:
     std::vector<Player*> m_players;
-    Player* m_currentPlayer{ nullptr };
+    int m_currentPlayerIndex{ -1 };
+
+    void checkObjectAtOtherPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
 };
 

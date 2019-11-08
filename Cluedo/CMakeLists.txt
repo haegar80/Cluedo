@@ -17,7 +17,7 @@ find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/UI ${PROJECT_SOURCE_DIR}/Model ${PROJECT_SOURCE_DIR}/GameManager)
 
-FILE(GLOB SOURCES ${PROJECT_SOURCE_DIR}/UI/*.cpp ${PROJECT_SOURCE_DIR}/Model/*.cpp ${PROJECT_SOURCE_DIR}/GameManager/*.cpp main.cpp)
+FILE(GLOB SOURCES ${PROJECT_SOURCE_DIR}/UI/*.cpp ${PROJECT_SOURCE_DIR}/Model/*.cpp ${PROJECT_SOURCE_DIR}/GameManager/*.cpp ${PROJECT_SOURCE_DIR}/Utils/*.cpp main.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

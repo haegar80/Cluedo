@@ -2,8 +2,7 @@
 #include "CluedoObjectLoader.h"
 #include "../Model/Player.h"
 #include "../Model/PlayerSet.h"
-#include <cstdlib>     /* srand, rand */
-#include <ctime>       /* time */
+#include "../Utils/Utils.h"
 
 GameController& GameController::getInstance()
 {
@@ -58,11 +57,11 @@ Player* GameController::createNewPlayer(std::string p_name, bool p_self)
     return player;
 }
 
-void GameController::setCurrentPlayer(Player* p_currentPlayer)
+void GameController::setCurrentPlayer(int p_currentPlayerIndex)
 {
     if (m_gameRunner)
     {
-        m_gameRunner->setCurrentPlayer(p_currentPlayer);
+        m_gameRunner->setCurrentPlayer(p_currentPlayerIndex);
     }
 }
 
@@ -83,17 +82,17 @@ std::shared_ptr<PlayerSet> GameController::createNewPlayerSet()
 void GameController::selectEffectiveMurderWeaponRoom()
 {
     std::vector<CluedoObject*>& murders = CluedoObjectLoader::getInstance().getMurders();
-    int effectiveMurderIndex = generateRandomNumber(0, static_cast<int>(murders.size() - 1));
+    int effectiveMurderIndex = Utils::generateRandomNumber(0, static_cast<int>(murders.size() - 1));
     m_effectiveMurder = murders.at(effectiveMurderIndex);
     addCluedoObjectsToDistribute(murders, CluedoObject::Murder);
 
     std::vector<CluedoObject*>& weapons = CluedoObjectLoader::getInstance().getWeapons();
-    int effectiveWeaponIndex = generateRandomNumber(0, static_cast<int>(weapons.size() - 1));
+    int effectiveWeaponIndex = Utils::generateRandomNumber(0, static_cast<int>(weapons.size() - 1));
     m_effectiveWeapon = weapons.at(effectiveWeaponIndex);
     addCluedoObjectsToDistribute(weapons, CluedoObject::Weapon);
 
     std::vector<CluedoObject*>& rooms = CluedoObjectLoader::getInstance().getRooms();
-    int effectiveRoomIndex = generateRandomNumber(0, static_cast<int>(rooms.size() - 1));
+    int effectiveRoomIndex = Utils::generateRandomNumber(0, static_cast<int>(rooms.size() - 1));
     m_effectiveRoom = rooms.at(effectiveRoomIndex);
     addCluedoObjectsToDistribute(rooms, CluedoObject::Room);
 }
@@ -150,7 +149,7 @@ void GameController::distributeCluedoObjects(std::vector<CluedoObject*>& p_clued
     auto it = p_cluedoObjects.begin();
     while(p_cluedoObjects.end() != it)
     {
-        int cluedoObjectIndex = generateRandomNumber(0, static_cast<int>(p_cluedoObjects.size() - 1));
+        int cluedoObjectIndex = Utils::generateRandomNumber(0, static_cast<int>(p_cluedoObjects.size() - 1));
         PlayerSet* playerSet = m_players.at(playerSetIndex)->getPlayerSet().get();
         playerSet->addCluedoObject(p_cluedoObjects.at(cluedoObjectIndex));
         it = p_cluedoObjects.begin() + cluedoObjectIndex;
@@ -179,16 +178,4 @@ void GameController::distributeWeapons()
 void GameController::distributeRooms()
 {
     distributeCluedoObjects(m_roomsToDistribute);
-}
-
-int GameController::generateRandomNumber(int p_minNumber, int p_maxNumber)
-{
-    /* generate random number between 1 and 10: */
-    int randomNumber = 0;
-    if (p_maxNumber > 0)
-    {
-        randomNumber = rand() % p_maxNumber + p_minNumber;
-    }
-
-    return randomNumber;
 }

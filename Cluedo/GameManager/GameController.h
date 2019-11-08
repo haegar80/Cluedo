@@ -22,7 +22,7 @@ public:
     void selectAndDistributeCluedoObjects();
 
     Player* createNewPlayer(std::string p_name, bool p_self);
-    void setCurrentPlayer(Player* p_currentPlayer);
+    void setCurrentPlayer(int p_currentPlayerIndex);
 
     void registerPlayerUpdateCallback(std::function<void(void)> p_callback);
 
@@ -66,6 +66,4 @@ private:
     void distributeMurders();
     void distributeWeapons();
     void distributeRooms();
-
-    int generateRandomNumber(int p_minNumber, int p_maxNumber);
 };
