@@ -184,6 +184,8 @@ void SelectObjectsUI::buttonOk_clicked()
 
 void SelectObjectsUI::askPlayerWindow_closed()
 {
+    emit askPlayer_finished();
+
     close();
 }
 

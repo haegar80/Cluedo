@@ -166,16 +166,6 @@ void CluedoUI::updatePlayers()
     }
 }
 
-void CluedoUI::nextPlayerReady()
-{
-    m_currentPlayerIndex++;
-    if (m_listPlayers->count() == m_currentPlayerIndex)
-    {
-        m_currentPlayerIndex = 0;
-    }
-    m_listPlayers->item(m_currentPlayerIndex)->setSelected(true);
-}
-
 void CluedoUI::askPlayers_clicked()
 {
     GameController& gameController = GameController::getInstance();
@@ -188,6 +178,8 @@ void CluedoUI::askPlayers_clicked()
         m_selectObjectsUI = new SelectObjectsUI();
         m_selectObjectsUI->setWindowModality(Qt::ApplicationModal);
         m_selectObjectsUI->setAttribute(Qt::WA_DeleteOnClose);
+
+        QObject::connect(m_selectObjectsUI, SIGNAL(askPlayer_finished()), this, SLOT(askPlayer_finished()));
 
         m_selectObjectsUI->show();
     }
@@ -216,6 +208,21 @@ void CluedoUI::game_started()
     hideNotUsedCluedoObjects();
     fillCluedoObjects();
     m_selectionObjectWidget->show();
+}
+
+void CluedoUI::askPlayer_finished()
+{
+    nextPlayerReady();
+}
+
+void CluedoUI::nextPlayerReady()
+{
+    m_currentPlayerIndex++;
+    if (m_listPlayers->count() == m_currentPlayerIndex)
+    {
+        m_currentPlayerIndex = 0;
+    }
+    m_listPlayers->item(m_currentPlayerIndex)->setSelected(true);
 }
 
 void CluedoUI::hideNotUsedCluedoObjects()

@@ -25,6 +25,9 @@ public:
     void setupUi();
     void retranslateUi();
 
+    signals:
+    void askPlayer_finished();
+
     public slots:
     void selectedMurder();
     void selectedWeapon();

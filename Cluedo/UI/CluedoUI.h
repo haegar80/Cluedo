@@ -29,12 +29,12 @@ public:
     void retranslateUi();
 
     void updatePlayers();
-    void nextPlayerReady();
 
     public slots:
     void askPlayers_clicked();
     void buttonStartGame_clicked();
     void game_started();
+    void askPlayer_finished();
 
 private:
     QWidget* m_centralwidget;
@@ -66,6 +66,8 @@ private:
     SelectObjectsUI* m_selectObjectsUI;
 
     int m_currentPlayerIndex{ 0 };
+
+    void nextPlayerReady();
 
     void hideNotUsedCluedoObjects();
     void fillCluedoObjects();
