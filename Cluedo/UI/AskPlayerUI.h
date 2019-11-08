@@ -46,7 +46,7 @@ private:
     QCheckBox* m_checkBoxPlayer3;
     QLabel* m_labelShowedObject;
     QLabel* m_imageShowedObject;
-    QPushButton* m_buttonQuit;
+    QPushButton* m_buttonOk;
     QMenuBar* m_menubar;
     QStatusBar* m_statusbar;
     

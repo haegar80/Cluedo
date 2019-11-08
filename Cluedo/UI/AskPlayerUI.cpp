@@ -93,9 +93,9 @@ void AskPlayerUI::setupUi()
     m_imageShowedObject->setGeometry(QRect(260, 390, 211, 281));
     m_imageShowedObject->setFrameShape(QFrame::Box);
     m_imageShowedObject->setScaledContents(true);
-    m_buttonQuit = new QPushButton(m_centralwidget);
-    m_buttonQuit->setObjectName(QStringLiteral("buttonQuit"));
-    m_buttonQuit->setGeometry(QRect(20, 650, 75, 23));
+    m_buttonOk = new QPushButton(m_centralwidget);
+    m_buttonOk->setObjectName(QStringLiteral("buttonOk"));
+    m_buttonOk->setGeometry(QRect(20, 650, 75, 23));
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
     m_menubar->setObjectName(QStringLiteral("menubar"));
@@ -107,7 +107,7 @@ void AskPlayerUI::setupUi()
 
     retranslateUi();
 
-    QObject::connect(m_buttonQuit, SIGNAL(pressed()), this, SLOT(close()));
+    QObject::connect(m_buttonOk, SIGNAL(pressed()), this, SLOT(close()));
 }
 
 void AskPlayerUI::retranslateUi()
@@ -128,7 +128,7 @@ void AskPlayerUI::retranslateUi()
     m_checkBoxPlayer3->setText(QString());
     m_labelShowedObject->setText(QApplication::translate("mainWindowAskPlayer", "Gezeigter Murder/Waffe/Raum", nullptr));
     m_imageShowedObject->setText(QString());
-    m_buttonQuit->setText(QApplication::translate("mainWindowAskPlayer", "Quit", nullptr));
+    m_buttonOk->setText(QApplication::translate("mainWindowAskPlayer", "Ok", nullptr));
 }
 
 void AskPlayerUI::closeEvent(QCloseEvent* event)
