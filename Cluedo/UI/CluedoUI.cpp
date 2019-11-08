@@ -117,6 +117,8 @@ void CluedoUI::setupUi()
     QObject::connect(m_buttonStartGame, SIGNAL(pressed()), this, SLOT(buttonStartGame_clicked()));
     QObject::connect(m_quitButton, SIGNAL(pressed()), this, SLOT(close()));
 
+    m_selectionObjectWidget->hide();
+
     auto playerUpdateCallback = [this]() { updatePlayers(); };
     GameController::getInstance().registerPlayerUpdateCallback(playerUpdateCallback);
 }
@@ -213,6 +215,7 @@ void CluedoUI::game_started()
     GameController::getInstance().selectAndDistributeCluedoObjects();
     hideNotUsedCluedoObjects();
     fillCluedoObjects();
+    m_selectionObjectWidget->show();
 }
 
 void CluedoUI::hideNotUsedCluedoObjects()
