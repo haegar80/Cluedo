@@ -6,6 +6,16 @@ GameRunner::GameRunner(std::vector<Player*>& p_players) : m_players(p_players)
 {
 }
 
+void GameRunner::askPlayer(int p_currentPlayerIndex)
+{
+    CluedoObject* murderToAsk{ nullptr };
+    CluedoObject* weaponToAsk{ nullptr };
+    CluedoObject* roomToAsk{ nullptr };
+    getObjectsToAsk(p_currentPlayerIndex, &murderToAsk, &weaponToAsk, &roomToAsk);
+
+    checkObjectsAtOtherPlayers(p_currentPlayerIndex, murderToAsk, weaponToAsk, roomToAsk);
+}
+
 void GameRunner::askPlayer(int p_currentPlayerIndex, int p_murderIndex, int p_weaponIndex, int p_roomIndex)
 {
     CluedoObjectLoader& cluedoObjectLoader = CluedoObjectLoader::getInstance();
@@ -78,7 +88,7 @@ CluedoObject* GameRunner::askObjectsAtOtherPlayer(int p_otherPlayerIndex, Cluedo
     return foundObject;
 }
 
-void GameRunner::getObjectsToAsk(int p_currentPlayerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
+void GameRunner::getObjectsToAsk(int p_currentPlayerIndex, CluedoObject** p_murder, CluedoObject** p_weapon, CluedoObject** p_room)
 {
     CluedoObjectLoader& cluedoObjectLoader = CluedoObjectLoader::getInstance();
     std::vector<CluedoObject*>& murders = cluedoObjectLoader.getMurders();
@@ -104,34 +114,51 @@ void GameRunner::getObjectsToAsk(int p_currentPlayerIndex, CluedoObject* p_murde
     }
 }
 
-bool GameRunner::findUnknownObject(int p_currentPlayerIndex, std::vector<CluedoObject*>& p_cluedoObjectsToCheck, CluedoObject* p_foundObject)
+bool GameRunner::findUnknownObject(int p_currentPlayerIndex, std::vector<CluedoObject*>& p_cluedoObjectsToCheck, CluedoObject** p_foundObject)
 {
-    bool foundObject = false;
+    bool foundUnknownObject = false;
 
     PlayerSet* currentPlayerSet = m_players.at(p_currentPlayerIndex)->getPlayerSet().get();
+    std::vector<CluedoObject*>& cluedoObjects = currentPlayerSet->getCluedoObjects();
     std::multimap<int, CluedoObject*>& cluedoObjectsFromOtherPlayers = currentPlayerSet->getCluedoObjectsFromOtherPlayers();
 
     for (CluedoObject* cluedoObject : p_cluedoObjectsToCheck)
     {
-        auto result = std::find_if(
-            cluedoObjectsFromOtherPlayers.begin(),
-            cluedoObjectsFromOtherPlayers.end(),
-            [cluedoObject](const auto& mapObject) {return mapObject.second == cluedoObject; });
+        auto resultObjectsFromCurrentPlayer = std::find_if(
+            cluedoObjects.begin(),
+            cluedoObjects.end(),
+            [cluedoObject](const CluedoObject* vectorObject) {return vectorObject == cluedoObject; });
 
-        if (cluedoObjectsFromOtherPlayers.end() == result)
+        if (cluedoObjects.end() == resultObjectsFromCurrentPlayer)
         {
-            p_foundObject = cluedoObject;
-            foundObject = true;
-            break;
+            *p_foundObject = cluedoObject;
+            foundUnknownObject = true;
+        }
+
+        if(foundUnknownObject)
+        {
+            foundUnknownObject = false;
+
+            auto resultObjectsFromOtherPlayers = std::find_if(
+                cluedoObjectsFromOtherPlayers.begin(),
+                cluedoObjectsFromOtherPlayers.end(),
+                [cluedoObject](const auto& mapObject) {return mapObject.second == cluedoObject; });
+
+            if (cluedoObjectsFromOtherPlayers.end() == resultObjectsFromOtherPlayers)
+            {
+                *p_foundObject = cluedoObject;
+                foundUnknownObject = true;
+                break;
+            }
         }
     }
 
-    return foundObject;
+    return foundUnknownObject;
 }
 
-bool GameRunner::findKnownObject(int p_currentPlayerIndex, CluedoObject::CluedoObjectType p_objectType, CluedoObject* p_foundObject)
+bool GameRunner::findKnownObject(int p_currentPlayerIndex, CluedoObject::CluedoObjectType p_objectType, CluedoObject** p_foundObject)
 {
-    bool foundObject = false;
+    bool foundKnownObject = false;
 
     PlayerSet* currentPlayerSet = m_players.at(p_currentPlayerIndex)->getPlayerSet().get();
     std::multimap<int, CluedoObject*>& cluedoObjectsFromOtherPlayers = currentPlayerSet->getCluedoObjectsFromOtherPlayers();
@@ -140,11 +167,11 @@ bool GameRunner::findKnownObject(int p_currentPlayerIndex, CluedoObject::CluedoO
     {
         if (p_objectType == knownObject.second->getCluedoObjectType())
         {
-            p_foundObject = knownObject.second;
-            foundObject = true;
+            *p_foundObject = knownObject.second;
+            foundKnownObject = true;
             break;
         }
     }
 
-    return foundObject;
+    return foundKnownObject;
 }

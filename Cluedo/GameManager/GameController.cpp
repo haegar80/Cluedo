@@ -33,6 +33,14 @@ void GameController::startGame()
     }
 }
 
+void GameController::askPlayer()
+{
+    if (m_gameRunner)
+    {
+        m_gameRunner->askPlayer(m_currentPlayerIndex);
+    }
+}
+
 void GameController::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex)
 {
     if (m_gameRunner)

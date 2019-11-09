@@ -17,6 +17,7 @@ public:
 
     void reset();
     void startGame();
+    void askPlayer();
     void askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
     bool tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
 

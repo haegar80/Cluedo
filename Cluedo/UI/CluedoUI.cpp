@@ -186,6 +186,7 @@ void CluedoUI::buttonSelectObjects_clicked()
     }
     else
     {
+        gameController.askPlayer();
         nextPlayerReady();
     }   
 }
