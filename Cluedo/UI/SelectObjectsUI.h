@@ -31,6 +31,7 @@ public:
     void selectedWeapon();
     void selectedRoom();
     void buttonOk_clicked();
+    void buttonTellSuspicion_clicked();
     void askPlayerWindow_closed();
 
 private:
@@ -46,6 +47,7 @@ private:
     QListWidget *m_listRoom;
     QLabel* m_imageSelectedRoom;
     QPushButton* m_buttonOk;
+    QPushButton* m_buttonTellSuspicion;
     QPushButton* m_buttonAbort;
     QPushButton* m_quitButton;
     QMenuBar* m_menubar;

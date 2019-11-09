@@ -24,7 +24,7 @@ public:
     void retranslateUi();
     void updateShownCluedoObject();
 
-signals:
+    signals:
     void askPlayerWindow_closed();
 
 protected:

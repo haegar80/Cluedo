@@ -29,7 +29,7 @@ public:
     void updatePlayers();
 
     public slots:
-    void askPlayers_clicked();
+    void buttonSelectObjects_clicked();
     void buttonStartGame_clicked();
     void game_started();
     void askPlayer_finished();
@@ -52,7 +52,7 @@ private:
     QLabel* m_imageCluedoObject6;
     QLabel* m_labelCurrentPlayer;
     QListWidget* m_listPlayers;
-    QPushButton* m_buttonAskPlayers;
+    QPushButton* m_buttonSelectObjects;
     QPushButton* m_buttonStartGame;
     QPushButton* m_quitButton;
     QMenuBar* m_menubar;

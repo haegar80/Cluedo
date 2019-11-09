@@ -91,10 +91,10 @@ void CluedoUI::setupUi()
     m_listPlayers->setObjectName(QString::fromUtf8("listPlayers"));
     m_listPlayers->setEnabled(false);
     m_listPlayers->setGeometry(QRect(970, 80, 256, 131));
-    m_buttonAskPlayers = new QPushButton(m_centralwidget);
-    m_buttonAskPlayers->setObjectName(QString::fromUtf8("buttonAskPlayers"));
-    m_buttonAskPlayers->setEnabled(false);
-    m_buttonAskPlayers->setGeometry(QRect(970, 230, 121, 23));
+    m_buttonSelectObjects = new QPushButton(m_centralwidget);
+    m_buttonSelectObjects->setObjectName(QStringLiteral("buttonSelectObjects"));
+    m_buttonSelectObjects->setEnabled(false);
+    m_buttonSelectObjects->setGeometry(QRect(970, 230, 261, 41));
     m_buttonStartGame = new QPushButton(m_centralwidget);
     m_buttonStartGame->setObjectName(QString::fromUtf8("buttonStartGame"));
     m_buttonStartGame->setGeometry(QRect(60, screenGeometry.height() - 73, 75, 23));
@@ -112,7 +112,7 @@ void CluedoUI::setupUi()
 
     retranslateUi();
 
-    QObject::connect(m_buttonAskPlayers, SIGNAL(pressed()), this, SLOT(askPlayers_clicked()));
+    QObject::connect(m_buttonSelectObjects, SIGNAL(pressed()), this, SLOT(buttonSelectObjects_clicked()));
     QObject::connect(m_buttonStartGame, SIGNAL(pressed()), this, SLOT(buttonStartGame_clicked()));
     QObject::connect(m_quitButton, SIGNAL(pressed()), this, SLOT(close()));
 
@@ -139,7 +139,8 @@ void CluedoUI::retranslateUi()
     m_imageCluedoObject5->setText(QString());
     m_imageCluedoObject6->setText(QString());
     m_labelCurrentPlayer->setText(QApplication::translate("windowCluedo", "Aktueller Spieler", nullptr));
-    m_buttonAskPlayers->setText(QApplication::translate("windowCluedo", "Frage Mitspieler", nullptr));
+    m_buttonSelectObjects->setText(QApplication::translate("windowCluedo", "Frage Mitspieler / \n"
+        "Verdacht aussprechen", nullptr));
     m_buttonStartGame->setText(QApplication::translate("windowCluedo", "Starte Spiel", nullptr));
     m_quitButton->setText(QApplication::translate("windowCluedo", "Quit", nullptr));
 }
@@ -161,11 +162,11 @@ void CluedoUI::updatePlayers()
     if (m_listPlayers->count() > 0)
     {
         m_listPlayers->item(m_currentPlayerIndex)->setSelected(true);
-        m_buttonAskPlayers->setEnabled(true);
+        m_buttonSelectObjects->setEnabled(true);
     }
 }
 
-void CluedoUI::askPlayers_clicked()
+void CluedoUI::buttonSelectObjects_clicked()
 {
     GameController& gameController = GameController::getInstance();
     std::vector<Player*>& players = gameController.getPlayers();

@@ -18,6 +18,7 @@ public:
     void reset();
     void startGame();
     void askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
+    bool tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
 
     void selectAndDistributeCluedoObjects();
 
@@ -53,6 +54,7 @@ private:
     CluedoObject* m_effectiveWeapon{ nullptr };
     CluedoObject* m_effectiveRoom{ nullptr };
 
+    bool m_gameEnd{ false };
     int m_currentPlayerIndex{ -1 };
     int m_lastDistributedPlayerSetIndex{ 0 };
 

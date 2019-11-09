@@ -41,6 +41,42 @@ void GameController::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomI
     }
 }
 
+bool GameController::tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_roomIndex)
+{
+    bool isSuspicionCorrect = true;
+
+    std::vector<CluedoObject*>& murders = CluedoObjectLoader::getInstance().getMurders();
+    if (murders.at(p_murderIndex) != m_effectiveMurder)
+    {
+        isSuspicionCorrect = false;
+    }
+
+    if (isSuspicionCorrect)
+    {
+        std::vector<CluedoObject*>& weapons = CluedoObjectLoader::getInstance().getWeapons();
+        if (weapons.at(p_weaponIndex) != m_effectiveWeapon)
+        {
+            isSuspicionCorrect = false;
+        }
+    }
+
+    if (isSuspicionCorrect)
+    {
+        std::vector<CluedoObject*>& rooms = CluedoObjectLoader::getInstance().getRooms();
+        if (rooms.at(p_roomIndex) != m_effectiveRoom)
+        {
+            isSuspicionCorrect = false;
+        }
+    }
+
+    if (isSuspicionCorrect)
+    {
+        m_gameEnd = true;
+    }
+
+    return isSuspicionCorrect;
+}
+
 void GameController::selectAndDistributeCluedoObjects()
 {
     selectEffectiveMurderWeaponRoom();

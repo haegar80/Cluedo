@@ -11,6 +11,8 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
+#include <QMessageBox>
+#include <sstream>
 
 SelectObjectsUI::SelectObjectsUI()
 {
@@ -72,10 +74,13 @@ void SelectObjectsUI::setupUi()
     m_imageSelectedRoom->setScaledContents(true);
     m_buttonOk = new QPushButton(m_centralwidget);
     m_buttonOk->setObjectName(QStringLiteral("buttonOk"));
-    m_buttonOk->setGeometry(QRect(60, 580, 75, 23));
+    m_buttonOk->setGeometry(QRect(110, 580, 75, 23));
+    m_buttonTellSuspicion = new QPushButton(m_centralwidget);
+    m_buttonTellSuspicion->setObjectName(QStringLiteral("buttonTellSuspicion"));
+    m_buttonTellSuspicion->setGeometry(QRect(200, 580, 121, 23));
     m_buttonAbort = new QPushButton(m_centralwidget);
     m_buttonAbort->setObjectName(QStringLiteral("buttonAbort"));
-    m_buttonAbort->setGeometry(QRect(160, 580, 75, 23));
+    m_buttonAbort->setGeometry(QRect(360, 580, 75, 23));
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
     m_menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -91,6 +96,7 @@ void SelectObjectsUI::setupUi()
     QObject::connect(m_listWeapon, SIGNAL(itemSelectionChanged()), this, SLOT(selectedWeapon()));
     QObject::connect(m_listRoom, SIGNAL(itemSelectionChanged()), this, SLOT(selectedRoom()));
     QObject::connect(m_buttonOk, SIGNAL(pressed()), this, SLOT(buttonOk_clicked()));
+    QObject::connect(m_buttonTellSuspicion, SIGNAL(pressed()), this, SLOT(buttonTellSuspicion_clicked()));
     QObject::connect(m_buttonAbort, SIGNAL(pressed()), this, SLOT(close()));
 }
 
@@ -101,7 +107,8 @@ void SelectObjectsUI::retranslateUi()
     m_labelMurderList->setText(QApplication::translate("windowSelectObjects", "Auswahl T\303\244ter", nullptr));
     m_labelWeaponList->setText(QApplication::translate("windowSelectObjects", "Auswahl Waffe", nullptr));
     m_labelRoomList->setText(QApplication::translate("windowSelectObjects", "Auswahl Raum", nullptr));
-    m_buttonOk->setText(QApplication::translate("windowSelectObjects", "Ok", nullptr));
+    m_buttonOk->setText(QApplication::translate("windowSelectObjects", "Frage", nullptr));
+    m_buttonTellSuspicion->setText(QApplication::translate("mainWindowAskPlayer", "Verdacht aussprechen", nullptr));
     m_buttonAbort->setText(QApplication::translate("windowSelectObjects", "Abbrechen", nullptr));
 }
 
@@ -180,6 +187,20 @@ void SelectObjectsUI::buttonOk_clicked()
         GameController::getInstance().askPlayer(m_listMurder->currentRow(), m_listWeapon->currentRow(), m_listRoom->currentRow());
 
         m_askPlayerUI->updateShownCluedoObject();
+    }
+}
+
+void SelectObjectsUI::buttonTellSuspicion_clicked()
+{
+    if (m_selectedMurder && m_selectedWeapon && m_selectedRoom)
+    {
+        bool suspicionIsCorrect = GameController::getInstance().tellSuspicion(m_listMurder->currentRow(), m_listWeapon->currentRow(), m_listRoom->currentRow());
+
+        QMessageBox msgBox;
+        std::stringstream resultText;
+        resultText << "Du hast " << (suspicionIsCorrect ? "GEWONNEN!" : "VERLOREN!");
+        msgBox.setText(resultText.str().c_str());
+        msgBox.exec();
     }
 }
 

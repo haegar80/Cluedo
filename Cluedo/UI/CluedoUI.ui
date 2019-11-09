@@ -255,7 +255,7 @@
      </rect>
     </property>
    </widget>
-   <widget class="QPushButton" name="buttonAskPlayers">
+   <widget class="QPushButton" name="buttonSelectObjects">
     <property name="enabled">
      <bool>false</bool>
     </property>
@@ -263,12 +263,13 @@
      <rect>
       <x>970</x>
       <y>230</y>
-      <width>121</width>
-      <height>23</height>
+      <width>261</width>
+      <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>Frage Mitspieler</string>
+     <string>Frage Mitspieler / 
+Verdacht aussprechen</string>
     </property>
    </widget>
    <widget class="QPushButton" name="buttonStartGame">
