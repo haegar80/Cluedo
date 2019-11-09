@@ -62,4 +62,6 @@ private:
     void fillMurderList();
     void fillWeaponList();
     void fillRoomList();
+    void disableSelectingWhenNotCurrentPlayer();
+    void fillSelectedObjectsWhenNotCurrentPlayer();
 };

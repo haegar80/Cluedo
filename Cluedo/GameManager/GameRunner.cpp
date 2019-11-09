@@ -54,6 +54,10 @@ void GameRunner::checkObjectsAtOtherPlayers(int p_currentPlayerIndex, CluedoObje
     }
 
     PlayerSet* currentPlayerSet = m_players.at(p_currentPlayerIndex)->getPlayerSet().get();
+    currentPlayerSet->setLastAskedMurder(p_murder);
+    currentPlayerSet->setLastAskedWeapon(p_weapon);
+    currentPlayerSet->setLastAskedRoom(p_room);
+
     if (nullptr != foundObject)
     {
         currentPlayerSet->setLastShownCluedoObject(foundObject);

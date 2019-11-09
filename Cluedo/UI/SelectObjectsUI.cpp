@@ -2,6 +2,7 @@
 #include "AskPlayerUI.h"
 #include "../GameManager/CluedoObjectLoader.h"
 #include "../GameManager/GameController.h"
+#include "../Model/Player.h"
 #include "../Utils/Utils.h"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
@@ -13,6 +14,7 @@
 #include <QtWidgets/QStatusBar>
 #include <QMessageBox>
 #include <sstream>
+#include <memory>
 
 SelectObjectsUI::SelectObjectsUI()
 {
@@ -74,13 +76,13 @@ void SelectObjectsUI::setupUi()
     m_imageSelectedRoom->setScaledContents(true);
     m_buttonOk = new QPushButton(m_centralwidget);
     m_buttonOk->setObjectName(QStringLiteral("buttonOk"));
-    m_buttonOk->setGeometry(QRect(110, 580, 75, 23));
+    m_buttonOk->setGeometry(QRect(110, 580, 121, 23));
     m_buttonTellSuspicion = new QPushButton(m_centralwidget);
     m_buttonTellSuspicion->setObjectName(QStringLiteral("buttonTellSuspicion"));
-    m_buttonTellSuspicion->setGeometry(QRect(200, 580, 121, 23));
+    m_buttonTellSuspicion->setGeometry(QRect(250, 580, 121, 23));
     m_buttonAbort = new QPushButton(m_centralwidget);
     m_buttonAbort->setObjectName(QStringLiteral("buttonAbort"));
-    m_buttonAbort->setGeometry(QRect(360, 580, 75, 23));
+    m_buttonAbort->setGeometry(QRect(820, 580, 75, 23));
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
     m_menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -98,6 +100,13 @@ void SelectObjectsUI::setupUi()
     QObject::connect(m_buttonOk, SIGNAL(pressed()), this, SLOT(buttonOk_clicked()));
     QObject::connect(m_buttonTellSuspicion, SIGNAL(pressed()), this, SLOT(buttonTellSuspicion_clicked()));
     QObject::connect(m_buttonAbort, SIGNAL(pressed()), this, SLOT(close()));
+
+    Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
+    if (!currentPlayer->getSelf())
+    {
+        disableSelectingWhenNotCurrentPlayer();
+        fillSelectedObjectsWhenNotCurrentPlayer();
+    }
 }
 
 void SelectObjectsUI::retranslateUi()
@@ -174,18 +183,26 @@ void SelectObjectsUI::selectedRoom()
 
 void SelectObjectsUI::buttonOk_clicked()
 {
-    if (m_selectedMurder && m_selectedWeapon && m_selectedRoom)
+    Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
+
+    m_askPlayerUI = new AskPlayerUI(m_imageSelectedMurder->pixmap(), m_imageSelectedWeapon->pixmap(), m_imageSelectedRoom->pixmap());
+    m_askPlayerUI->setWindowModality(Qt::ApplicationModal);
+    m_askPlayerUI->setAttribute(Qt::WA_DeleteOnClose);
+
+    QObject::connect(m_askPlayerUI, SIGNAL(askPlayerWindow_closed()), this, SLOT(askPlayerWindow_closed()));
+
+    if (currentPlayer->getSelf())
     {
-        m_askPlayerUI = new AskPlayerUI(m_imageSelectedMurder->pixmap(), m_imageSelectedWeapon->pixmap(), m_imageSelectedRoom->pixmap());
-        m_askPlayerUI->setWindowModality(Qt::ApplicationModal);
-        m_askPlayerUI->setAttribute(Qt::WA_DeleteOnClose);
-
-        QObject::connect(m_askPlayerUI, SIGNAL(askPlayerWindow_closed()), this, SLOT(askPlayerWindow_closed()));
-
+        if (m_selectedMurder && m_selectedWeapon && m_selectedRoom)
+        {
+            GameController::getInstance().askPlayer(m_listMurder->currentRow(), m_listWeapon->currentRow(), m_listRoom->currentRow());
+            m_askPlayerUI->show();
+            m_askPlayerUI->updateShownCluedoObject();
+        }
+    }
+    else
+    {
         m_askPlayerUI->show();
-
-        GameController::getInstance().askPlayer(m_listMurder->currentRow(), m_listWeapon->currentRow(), m_listRoom->currentRow());
-
         m_askPlayerUI->updateShownCluedoObject();
     }
 }
@@ -236,4 +253,53 @@ void SelectObjectsUI::fillRoomList()
     {
         m_listRoom->addItem(QString(room->getName().c_str()));
     }
+}
+
+void SelectObjectsUI::disableSelectingWhenNotCurrentPlayer()
+{
+    m_listMurder->setEnabled(false);
+    m_listWeapon->setEnabled(false);
+    m_listRoom->setEnabled(false);
+    m_buttonTellSuspicion->hide();
+}
+
+void SelectObjectsUI::fillSelectedObjectsWhenNotCurrentPlayer()
+{
+    Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
+    std::shared_ptr<PlayerSet> currentPlayerSet = currentPlayer->getPlayerSet();
+    
+    CluedoObject* murder = currentPlayerSet->getLastAskedMurder();
+    if (nullptr != murder)
+    {
+        QImage image = Utils::getImage(QString(murder->getName().c_str()));
+        if (!image.isNull())
+        {
+            m_imageSelectedMurder->setPixmap(QPixmap::fromImage(image));
+        }
+    }
+    
+    CluedoObject* weapon = currentPlayerSet->getLastAskedWeapon();
+    if (nullptr != weapon)
+    {
+        QImage image = Utils::getImage(QString(weapon->getName().c_str()));
+        if (!image.isNull())
+        {
+            m_imageSelectedWeapon->setPixmap(QPixmap::fromImage(image));
+        }
+    }
+
+    CluedoObject* room = currentPlayerSet->getLastAskedRoom();
+    if (nullptr != room)
+    {
+        QImage image = Utils::getImage(QString(room->getName().c_str()));
+        if (!image.isNull())
+        {
+            m_imageSelectedRoom->setPixmap(QPixmap::fromImage(image));
+        }
+    }
+
+    std::stringstream buttonText;
+    buttonText << currentPlayer->getName() << " fragt";
+
+    m_buttonOk->setText(QApplication::translate("windowSelectObjects", buttonText.str().c_str(), nullptr));
 }

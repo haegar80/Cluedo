@@ -176,17 +176,7 @@ void CluedoUI::buttonSelectObjects_clicked()
 
     gameController.setCurrentPlayerIndex(m_currentPlayerIndex);
 
-    if (currentPlayer->getSelf())
-    {
-        m_selectObjectsUI = new SelectObjectsUI();
-        m_selectObjectsUI->setWindowModality(Qt::ApplicationModal);
-        m_selectObjectsUI->setAttribute(Qt::WA_DeleteOnClose);
-
-        QObject::connect(m_selectObjectsUI, SIGNAL(askPlayer_finished()), this, SLOT(askPlayer_finished()));
-
-        m_selectObjectsUI->show();
-    }
-    else
+    if (!currentPlayer->getSelf())
     {
         if (gameController.shouldTellSuspicion())
         {
@@ -199,9 +189,16 @@ void CluedoUI::buttonSelectObjects_clicked()
         else
         {
             gameController.askPlayer();
-            nextPlayerReady();
         }
-    }   
+    }
+
+    m_selectObjectsUI = new SelectObjectsUI();
+    m_selectObjectsUI->setWindowModality(Qt::ApplicationModal);
+    m_selectObjectsUI->setAttribute(Qt::WA_DeleteOnClose);
+
+    QObject::connect(m_selectObjectsUI, SIGNAL(askPlayer_finished()), this, SLOT(askPlayer_finished()));
+
+    m_selectObjectsUI->show();
 }
 
 void CluedoUI::buttonStartGame_clicked()
