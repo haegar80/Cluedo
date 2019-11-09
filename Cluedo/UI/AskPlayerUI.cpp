@@ -1,12 +1,11 @@
 #include "AskPlayerUI.h"
 #include "../GameManager/GameController.h"
-#include "../Model/PlayerSet.h"
+#include "../Model/Player.h"
 #include "../Model/CluedoObject.h"
 #include "../Utils/Utils.h"
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QWidget>
-#include <QtWidgets/QCheckBox>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMenuBar>
@@ -62,32 +61,13 @@ void AskPlayerUI::setupUi()
    
     m_labelPlayer = new QLabel(m_centralwidget);
     m_labelPlayer->setObjectName(QStringLiteral("labelPlayer"));
-    m_labelPlayer->setGeometry(QRect(20, 360, 47, 13));
-    m_labelPlayer1 = new QLabel(m_centralwidget);
-    m_labelPlayer1->setObjectName(QStringLiteral("labelPlayer1"));
-    m_labelPlayer1->setGeometry(QRect(20, 390, 141, 16));
-    m_labelPlayer1->setAutoFillBackground(false);
-    m_labelPlayer1->setFrameShape(QFrame::Box);
-    m_labelPlayer1->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
-    m_labelPlayer2 = new QLabel(m_centralwidget);
-    m_labelPlayer2->setObjectName(QStringLiteral("labelPlayer2"));
-    m_labelPlayer2->setGeometry(QRect(20, 420, 141, 16));
-    m_labelPlayer2->setFrameShape(QFrame::Box);
-    m_labelPlayer2->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
-    m_labelPlayer3 = new QLabel(m_centralwidget);
-    m_labelPlayer3->setObjectName(QStringLiteral("labelPlayer3"));
-    m_labelPlayer3->setGeometry(QRect(20, 450, 141, 16));
-    m_labelPlayer3->setFrameShape(QFrame::Box);
-    m_labelPlayer3->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
-    m_checkBoxPlayer1 = new QCheckBox(m_centralwidget);
-    m_checkBoxPlayer1->setObjectName(QStringLiteral("checkBoxPlayer1"));
-    m_checkBoxPlayer1->setGeometry(QRect(170, 390, 70, 17));
-    m_checkBoxPlayer2 = new QCheckBox(m_centralwidget);
-    m_checkBoxPlayer2->setObjectName(QStringLiteral("checkBoxPlayer2"));
-    m_checkBoxPlayer2->setGeometry(QRect(170, 420, 70, 17));
-    m_checkBoxPlayer3 = new QCheckBox(m_centralwidget);
-    m_checkBoxPlayer3->setObjectName(QStringLiteral("checkBoxPlayer3"));
-    m_checkBoxPlayer3->setGeometry(QRect(170, 450, 70, 17));
+    m_labelPlayer->setGeometry(QRect(20, 360, 161, 16));
+    m_labelPlayerName = new QLabel(m_centralwidget);
+    m_labelPlayerName->setObjectName(QStringLiteral("labelPlayerName"));
+    m_labelPlayerName->setGeometry(QRect(20, 390, 201, 16));
+    m_labelPlayerName->setAutoFillBackground(false);
+    m_labelPlayerName->setFrameShape(QFrame::Box);
+    m_labelPlayerName->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelShowedObject = new QLabel(m_centralwidget);
     m_labelShowedObject->setObjectName(QStringLiteral("labelShowedObject"));
     m_labelShowedObject->setGeometry(QRect(260, 360, 171, 16));
@@ -122,13 +102,8 @@ void AskPlayerUI::retranslateUi()
     m_imageSelectedMurder->setText(QString());
     m_imageSelectedWeapon->setText(QString());
     m_imageSelectedRoom->setText(QString());
-    m_labelPlayer->setText(QApplication::translate("mainWindowAskPlayer", "Spieler", nullptr));
-    m_labelPlayer1->setText(QString());
-    m_labelPlayer2->setText(QString());
-    m_labelPlayer3->setText(QString());
-    m_checkBoxPlayer1->setText(QString());
-    m_checkBoxPlayer2->setText(QString());
-    m_checkBoxPlayer3->setText(QString());
+    m_labelPlayer->setText(QApplication::translate("mainWindowAskPlayer", "Spieler/In der/die etwas besitzt", nullptr));
+    m_labelPlayerName->setText(QString());
     m_labelShowedObject->setText(QApplication::translate("mainWindowAskPlayer", "Gezeigter Murder/Waffe/Raum", nullptr));
     m_imageShowedObject->setText(QString());
     m_buttonOk->setText(QApplication::translate("mainWindowAskPlayer", "Ok", nullptr));
@@ -136,7 +111,13 @@ void AskPlayerUI::retranslateUi()
 
 void AskPlayerUI::updateShownCluedoObject()
 {
-    std::shared_ptr<PlayerSet> playerSet = GameController::getInstance().getPlayerSetOfCurrentPlayer();
+    Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
+    std::shared_ptr<PlayerSet> playerSet;
+    if (nullptr != currentPlayer)
+    {
+        playerSet = currentPlayer->getPlayerSet();
+    }
+
     if (playerSet)
     {
         CluedoObject* cluedoObject = playerSet->getLastShownCluedoObject();
@@ -154,10 +135,16 @@ void AskPlayerUI::updateShownCluedoObject()
             {
                 if (cluedoObject == cluedoObjectFromOtherPlayer.second)
                 {
-                    //m_labelPlayer1->setText(QString(cluedoObjectFromOtherPlayer.first->))
+                    std::vector<Player*>& allPlayers = GameController::getInstance().getPlayers();
+                    Player* playerWithOwningObject = allPlayers.at(cluedoObjectFromOtherPlayer.first);
+                    m_labelPlayerName->setText(QString(playerWithOwningObject->getName().c_str()));
                     break;
                 }
             }
+        }
+        else
+        {
+            m_labelPlayerName->setText(QString("Niemand anderes besitzt etwas davon!"));
         }
     }
 }

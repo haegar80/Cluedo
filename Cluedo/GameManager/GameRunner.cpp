@@ -6,7 +6,7 @@ GameRunner::GameRunner(std::vector<Player*>& p_players) : m_players(p_players)
 {
 }
 
-void GameRunner::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex)
+void GameRunner::askPlayer(int p_currentPlayerIndex, int p_murderIndex, int p_weaponIndex, int p_roomIndex)
 {
     CluedoObjectLoader& cluedoObjectLoader = CluedoObjectLoader::getInstance();
     std::vector<CluedoObject*> murders = cluedoObjectLoader.getMurders();
@@ -18,15 +18,15 @@ void GameRunner::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex
     std::vector<CluedoObject*> rooms = cluedoObjectLoader.getRooms();
     CluedoObject* room = rooms.at(p_roomIndex);
 
-    checkObjectsAtOtherPlayers(murder, weapon, room);
+    checkObjectsAtOtherPlayers(p_currentPlayerIndex, murder, weapon, room);
 }
 
-void GameRunner::checkObjectsAtOtherPlayers(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
+void GameRunner::checkObjectsAtOtherPlayers(int p_currentPlayerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
 {
-    int playerIndexToAsk = m_currentPlayerIndex + 1;
+    int playerIndexToAsk = p_currentPlayerIndex + 1;
 
     CluedoObject* foundObject = nullptr;
-    while ((playerIndexToAsk != m_currentPlayerIndex) && (nullptr == foundObject))
+    while ((playerIndexToAsk != p_currentPlayerIndex) && (nullptr == foundObject))
     {
         if (m_players.size() == playerIndexToAsk)
         {
@@ -37,24 +37,24 @@ void GameRunner::checkObjectsAtOtherPlayers(CluedoObject* p_murder, CluedoObject
         playerIndexToAsk++;
     }
 
+    PlayerSet* currentPlayerSet = m_players.at(p_currentPlayerIndex)->getPlayerSet().get();
     if (nullptr != foundObject)
     {
-        PlayerSet* currentPlayerSet = m_players.at(m_currentPlayerIndex)->getPlayerSet().get();
         currentPlayerSet->setLastShownCluedoObject(foundObject);
         currentPlayerSet->addCluedoObjectFromOtherPlayers(--playerIndexToAsk, foundObject);
     }
+    else
+    {
+        currentPlayerSet->setLastShownCluedoObject(nullptr);
+    }
 }
 
-CluedoObject* GameRunner::askObjectsAtOtherPlayer(int p_playerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
+CluedoObject* GameRunner::askObjectsAtOtherPlayer(int p_otherPlayerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
 {
     CluedoObject* foundObject = nullptr;
 
-    PlayerSet* currentPlayerSet = m_players.at(m_currentPlayerIndex)->getPlayerSet().get();
-    std::vector<CluedoObject*>& cluedoObjects = currentPlayerSet->getCluedoObjects();
-
-    bool murderIsAtOtherPlayer = false;
-    bool weaponIsAtOtherPlayer = false;
-    bool roomIsAtOtherPlayer = false;
+    PlayerSet* playerSet = m_players.at(p_otherPlayerIndex)->getPlayerSet().get();
+    std::vector<CluedoObject*>& cluedoObjects = playerSet->getCluedoObjects();
 
     for (CluedoObject* cluedoObject : cluedoObjects)
     {
@@ -78,37 +78,37 @@ CluedoObject* GameRunner::askObjectsAtOtherPlayer(int p_playerIndex, CluedoObjec
     return foundObject;
 }
 
-void GameRunner::getObjectsToAsk(int p_playerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
+void GameRunner::getObjectsToAsk(int p_currentPlayerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
 {
     CluedoObjectLoader& cluedoObjectLoader = CluedoObjectLoader::getInstance();
     std::vector<CluedoObject*>& murders = cluedoObjectLoader.getMurders();
     std::vector<CluedoObject*>& weapons = cluedoObjectLoader.getWeapons();
     std::vector<CluedoObject*>& rooms = cluedoObjectLoader.getRooms();
 
-    bool foundUnknownMurder = findUnknownObject(p_playerIndex, murders, p_murder);
+    bool foundUnknownMurder = findUnknownObject(p_currentPlayerIndex, murders, p_murder);
     if (!foundUnknownMurder)
     {
-        (void) findKnownObject(p_playerIndex, CluedoObject::Murder, p_murder);
+        (void) findKnownObject(p_currentPlayerIndex, CluedoObject::Murder, p_murder);
     }
 
-    bool foundUnknownWeapon = findUnknownObject(p_playerIndex, weapons, p_weapon);
+    bool foundUnknownWeapon = findUnknownObject(p_currentPlayerIndex, weapons, p_weapon);
     if (!foundUnknownWeapon)
     {
-        (void)findKnownObject(p_playerIndex, CluedoObject::Weapon, p_weapon);
+        (void)findKnownObject(p_currentPlayerIndex, CluedoObject::Weapon, p_weapon);
     }
 
-    bool foundUnknownRoom = findUnknownObject(p_playerIndex, rooms, p_room);
+    bool foundUnknownRoom = findUnknownObject(p_currentPlayerIndex, rooms, p_room);
     if (!foundUnknownRoom)
     {
-        (void)findKnownObject(p_playerIndex, CluedoObject::Room, p_room);
+        (void)findKnownObject(p_currentPlayerIndex, CluedoObject::Room, p_room);
     }
 }
 
-bool GameRunner::findUnknownObject(int p_playerIndex, std::vector<CluedoObject*>& p_cluedoObjectsToCheck, CluedoObject* p_foundObject)
+bool GameRunner::findUnknownObject(int p_currentPlayerIndex, std::vector<CluedoObject*>& p_cluedoObjectsToCheck, CluedoObject* p_foundObject)
 {
     bool foundObject = false;
 
-    PlayerSet* currentPlayerSet = m_players.at(m_currentPlayerIndex)->getPlayerSet().get();
+    PlayerSet* currentPlayerSet = m_players.at(p_currentPlayerIndex)->getPlayerSet().get();
     std::multimap<int, CluedoObject*>& cluedoObjectsFromOtherPlayers = currentPlayerSet->getCluedoObjectsFromOtherPlayers();
 
     for (CluedoObject* cluedoObject : p_cluedoObjectsToCheck)
@@ -129,11 +129,11 @@ bool GameRunner::findUnknownObject(int p_playerIndex, std::vector<CluedoObject*>
     return foundObject;
 }
 
-bool GameRunner::findKnownObject(int p_playerIndex, CluedoObject::CluedoObjectType p_objectType, CluedoObject* p_foundObject)
+bool GameRunner::findKnownObject(int p_currentPlayerIndex, CluedoObject::CluedoObjectType p_objectType, CluedoObject* p_foundObject)
 {
     bool foundObject = false;
 
-    PlayerSet* currentPlayerSet = m_players.at(m_currentPlayerIndex)->getPlayerSet().get();
+    PlayerSet* currentPlayerSet = m_players.at(p_currentPlayerIndex)->getPlayerSet().get();
     std::multimap<int, CluedoObject*>& cluedoObjectsFromOtherPlayers = currentPlayerSet->getCluedoObjectsFromOtherPlayers();
 
     for (std::pair<int, CluedoObject*> knownObject : cluedoObjectsFromOtherPlayers)

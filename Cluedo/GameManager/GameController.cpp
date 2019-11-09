@@ -37,7 +37,7 @@ void GameController::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomI
 {
     if (m_gameRunner)
     {
-        m_gameRunner->askPlayer(p_murderIndex, p_weaponIndex, p_roomIndex);
+        m_gameRunner->askPlayer(m_currentPlayerIndex, p_murderIndex, p_weaponIndex, p_roomIndex);
     }
 }
 
@@ -57,26 +57,16 @@ Player* GameController::createNewPlayer(std::string p_name, bool p_self)
     return player;
 }
 
-std::shared_ptr<PlayerSet> GameController::getPlayerSetOfCurrentPlayer()
+Player* GameController::getCurrentPlayer()
 {
-    std::shared_ptr<PlayerSet> playerSet;
+    Player* currentPlayer{ nullptr };
 
-    if (m_gameRunner)
+    if (m_currentPlayerIndex >= 0)
     {
-        int currentPlayerIndex = m_gameRunner->getCurrentPlayerIndex();
-        Player* currentPlayer = m_players.at(currentPlayerIndex);
-        playerSet = currentPlayer->getPlayerSet();
+        currentPlayer = m_players.at(m_currentPlayerIndex);
     }
 
-    return playerSet;
-}
-
-void GameController::setCurrentPlayer(int p_currentPlayerIndex)
-{
-    if (m_gameRunner)
-    {
-        m_gameRunner->setCurrentPlayerIndex(p_currentPlayerIndex);
-    }
+    return currentPlayer;
 }
 
 void GameController::registerPlayerUpdateCallback(std::function<void(void)> p_callback)

@@ -110,12 +110,12 @@
      <string>Ausgewählter Raum</string>
     </property>
    </widget>
-   <widget class="QLabel" name="labelPlayer1">
+   <widget class="QLabel" name="labelPlayerName">
     <property name="geometry">
      <rect>
       <x>20</x>
       <y>390</y>
-      <width>141</width>
+      <width>201</width>
       <height>16</height>
      </rect>
     </property>
@@ -132,55 +132,17 @@
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="labelPlayer2">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>420</y>
-      <width>141</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelPlayer3">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>450</y>
-      <width>141</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
    <widget class="QLabel" name="labelPlayer">
     <property name="geometry">
      <rect>
       <x>20</x>
       <y>360</y>
-      <width>47</width>
-      <height>13</height>
+      <width>161</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Spieler</string>
+     <string>Spieler/In der/die etwas besitzt</string>
     </property>
    </widget>
    <widget class="QLabel" name="imageShowedObject">
@@ -200,45 +162,6 @@
     </property>
     <property name="scaledContents">
      <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkBoxPlayer1">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>390</y>
-      <width>70</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkBoxPlayer2">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>420</y>
-      <width>70</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QCheckBox" name="checkBoxPlayer3">
-    <property name="geometry">
-     <rect>
-      <x>170</x>
-      <y>450</y>
-      <width>70</width>
-      <height>17</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="buttonOk">

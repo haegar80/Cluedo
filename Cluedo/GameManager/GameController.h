@@ -22,8 +22,12 @@ public:
     void selectAndDistributeCluedoObjects();
 
     Player* createNewPlayer(std::string p_name, bool p_self);
-    std::shared_ptr<PlayerSet> getPlayerSetOfCurrentPlayer();
-    void setCurrentPlayer(int p_currentPlayerIndex);
+    Player* getCurrentPlayer();
+
+    void setCurrentPlayerIndex(int p_currentPlayerIndex)
+    {
+        m_currentPlayerIndex = p_currentPlayerIndex;
+    }
 
     void registerPlayerUpdateCallback(std::function<void(void)> p_callback);
 
@@ -49,6 +53,7 @@ private:
     CluedoObject* m_effectiveWeapon{ nullptr };
     CluedoObject* m_effectiveRoom{ nullptr };
 
+    int m_currentPlayerIndex{ -1 };
     int m_lastDistributedPlayerSetIndex{ 0 };
 
     std::vector<std::function<void(void)>> m_playerUpdateCallbacks;

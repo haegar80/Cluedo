@@ -171,7 +171,7 @@ void CluedoUI::askPlayers_clicked()
     std::vector<Player*>& players = gameController.getPlayers();
     Player* currentPlayer = players.at(m_currentPlayerIndex);
 
-    gameController.setCurrentPlayer(m_currentPlayerIndex);
+    gameController.setCurrentPlayerIndex(m_currentPlayerIndex);
 
     if (currentPlayer->getSelf())
     {
