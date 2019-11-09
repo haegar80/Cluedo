@@ -25,8 +25,8 @@ private:
 
     void checkObjectsAtOtherPlayers(int p_currentPlayerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
     CluedoObject* askObjectsAtOtherPlayer(int p_otherPlayerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
+
     void getObjectsToAsk(int p_currentPlayerIndex, CluedoObject** p_murder, CluedoObject** p_weapon, CluedoObject** p_room);
-    bool findUnknownObject(int p_currentPlayerIndex, std::vector<CluedoObject*>& p_cluedoObjectsToCheck, CluedoObject** p_foundObject);
-    bool findKnownObject(int p_currentPlayerIndex, CluedoObject::CluedoObjectType p_objectType, CluedoObject** p_foundObject);
+    void findUnknownObject(int p_currentPlayerIndex, std::vector<CluedoObject*>& p_cluedoObjectsToCheck, CluedoObject** p_foundObject);
 };
 

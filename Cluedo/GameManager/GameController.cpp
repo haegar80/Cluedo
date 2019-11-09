@@ -10,6 +10,11 @@ GameController& GameController::getInstance()
     return instance;
 }
 
+GameController::GameController()
+{
+    srand(time(NULL));
+}
+
 GameController::~GameController()
 {
     for (Player* player : m_players)
@@ -85,6 +90,16 @@ bool GameController::tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_r
     return isSuspicionCorrect;
 }
 
+bool GameController::shouldTellSuspicion()
+{
+    bool shouldTellSuspicion = false;
+
+    Player* currentPlayer = getCurrentPlayer();
+    PlayerSet* currentPlayerSet = currentPlayer->getPlayerSet().get();
+
+    return currentPlayerSet->getShouldTellSuspicion();
+}
+
 void GameController::selectAndDistributeCluedoObjects()
 {
     selectEffectiveMurderWeaponRoom();
@@ -123,8 +138,30 @@ std::shared_ptr<PlayerSet> GameController::createNewPlayerSet()
     int numberOfPlayers = static_cast<int>(m_players.size());
 
     std::shared_ptr<PlayerSet> playerSet = std::make_shared<PlayerSet>(numberOfPlayers + 1);
+    initPlayerSet(playerSet);
 
     return playerSet;
+}
+
+void GameController::initPlayerSet(std::shared_ptr<PlayerSet> playerSet)
+{
+    std::vector<CluedoObject*>& murders = CluedoObjectLoader::getInstance().getMurders();
+    for (CluedoObject* murder : murders)
+    {
+        playerSet->addUnknownCluedoObjects(murder);
+    }
+
+    std::vector<CluedoObject*>& weapons = CluedoObjectLoader::getInstance().getWeapons();
+    for (CluedoObject* weapon : weapons)
+    {
+        playerSet->addUnknownCluedoObjects(weapon);
+    }
+
+    std::vector<CluedoObject*>& rooms = CluedoObjectLoader::getInstance().getRooms();
+    for (CluedoObject* room : rooms)
+    {
+        playerSet->addUnknownCluedoObjects(room);
+    }
 }
 
 void GameController::selectEffectiveMurderWeaponRoom()
@@ -183,8 +220,6 @@ void GameController::addCluedoObjectsToDistribute(std::vector<CluedoObject*>& p_
 
 void GameController::distributeCluedoObjects()
 {
-    srand(time(NULL));
-
     distributeMurders();
     distributeWeapons();
     distributeRooms();

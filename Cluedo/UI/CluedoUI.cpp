@@ -12,6 +12,8 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
+#include <QMessageBox>
+#include <sstream>
 
 CluedoUI::CluedoUI()
 {
@@ -186,8 +188,19 @@ void CluedoUI::buttonSelectObjects_clicked()
     }
     else
     {
-        gameController.askPlayer();
-        nextPlayerReady();
+        if (gameController.shouldTellSuspicion())
+        {
+            QMessageBox msgBox;
+            std::stringstream resultText;
+            resultText << "Spieler " << currentPlayer->getName() << " hat GEWONNEN!";
+            msgBox.setText(resultText.str().c_str());
+            msgBox.exec();
+        }
+        else
+        {
+            gameController.askPlayer();
+            nextPlayerReady();
+        }
     }   
 }
 

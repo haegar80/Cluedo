@@ -20,6 +20,7 @@ public:
     void askPlayer();
     void askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
     bool tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
+    bool shouldTellSuspicion();
 
     void selectAndDistributeCluedoObjects();
 
@@ -61,11 +62,12 @@ private:
 
     std::vector<std::function<void(void)>> m_playerUpdateCallbacks;
 
-    GameController() = default;
+    GameController();
     GameController(const GameController& copy) = delete;
     GameController& operator= (const GameController& copy) = delete;
 
     std::shared_ptr<PlayerSet> createNewPlayerSet();
+    void initPlayerSet(std::shared_ptr<PlayerSet> playerSet);
 
     void selectEffectiveMurderWeaponRoom();
     void addCluedoObjectsToDistribute(std::vector<CluedoObject*>& p_cluedoObjects, CluedoObject::CluedoObjectType p_type);
