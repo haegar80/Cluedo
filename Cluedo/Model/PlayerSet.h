@@ -13,6 +13,10 @@ public:
 
     void addCluedoObject(CluedoObject* p_cluedoObject);
     void addCluedoObjectFromOtherPlayers(int p_playerIndex, CluedoObject* p_cluedoObject);
+    void addMissingCluedoObjectsAtOtherPlayers(int p_playerIndex, CluedoObject* p_cluedoObject);
+    void addPlayerIndexWithNoShownCluedoObjects(int p_playerIndex);
+    void resetPlayerIndicesWithNoShownCluedoObjects();
+
     void addUnknownCluedoObjects(CluedoObject* p_cluedoObject);
     void removeUnknownCluedoObjects(CluedoObject* p_cluedoObject);
 
@@ -29,6 +33,16 @@ public:
     std::multimap<int, CluedoObject*>& getCluedoObjectsFromOtherPlayers()
     {
         return m_cluedoObjectsFromOtherPlayers;
+    }
+
+    std::multimap<int, CluedoObject*>& getMissingCluedoObjectsAtOtherPlayers()
+    {
+        return m_missingCluedoObjectsAtOtherPlayers;
+    }
+
+    std::vector<int>& getPlayerIndicesWithNoShownCluedoObjects()
+    {
+        return m_playerIndicesWithNoShownCluedoObjects;
     }
 
     std::vector<CluedoObject*>& getUnknownCluedoObjects()
@@ -91,6 +105,8 @@ private:
     int m_playerNumber{ 0 };
     std::vector<CluedoObject*> m_cluedoObjects;
     std::multimap<int, CluedoObject*> m_cluedoObjectsFromOtherPlayers;
+    std::multimap<int, CluedoObject*> m_missingCluedoObjectsAtOtherPlayers;
+    std::vector<int> m_playerIndicesWithNoShownCluedoObjects;
     std::vector<CluedoObject*> m_unknownCluedoObjects;
 
     CluedoObject* m_lastShownCluedoObject{ nullptr };

@@ -68,6 +68,45 @@ void AskPlayerUI::setupUi()
     m_labelPlayerName->setAutoFillBackground(false);
     m_labelPlayerName->setFrameShape(QFrame::Box);
     m_labelPlayerName->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
+    m_labelPlayerNoObjects = new QLabel(m_centralwidget);
+    m_labelPlayerNoObjects->setObjectName(QStringLiteral("labelPlayerNoObjects"));
+    m_labelPlayerNoObjects->setGeometry(QRect(20, 450, 201, 16));
+    m_labelPlayerNameNoObjects1 = new QLabel(m_centralwidget);
+    m_labelPlayerNameNoObjects1->setObjectName(QStringLiteral("labelPlayerNameNoObjects1"));
+    m_labelPlayerNameNoObjects1->setGeometry(QRect(20, 480, 201, 16));
+    m_labelPlayerNameNoObjects1->setAutoFillBackground(false);
+    m_labelPlayerNameNoObjects1->setFrameShape(QFrame::Box);
+    m_labelPlayerNameNoObjects1->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
+    m_labelPlayerNameNoObjects2 = new QLabel(m_centralwidget);
+    m_labelPlayerNameNoObjects2->setObjectName(QStringLiteral("labelPlayerNameNoObjects2"));
+    m_labelPlayerNameNoObjects2->setGeometry(QRect(20, 500, 201, 16));
+    m_labelPlayerNameNoObjects2->setAutoFillBackground(false);
+    m_labelPlayerNameNoObjects2->setFrameShape(QFrame::Box);
+    m_labelPlayerNameNoObjects2->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
+    m_labelPlayerNameNoObjects3 = new QLabel(m_centralwidget);
+    m_labelPlayerNameNoObjects3->setObjectName(QStringLiteral("labelPlayerNameNoObjects3"));
+    m_labelPlayerNameNoObjects3->setGeometry(QRect(20, 520, 201, 16));
+    m_labelPlayerNameNoObjects3->setAutoFillBackground(false);
+    m_labelPlayerNameNoObjects3->setFrameShape(QFrame::Box);
+    m_labelPlayerNameNoObjects3->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
+    m_labelPlayerNameNoObjects4 = new QLabel(m_centralwidget);
+    m_labelPlayerNameNoObjects4->setObjectName(QStringLiteral("labelPlayerNameNoObjects4"));
+    m_labelPlayerNameNoObjects4->setGeometry(QRect(20, 540, 201, 16));
+    m_labelPlayerNameNoObjects4->setAutoFillBackground(false);
+    m_labelPlayerNameNoObjects4->setFrameShape(QFrame::Box);
+    m_labelPlayerNameNoObjects4->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
+    m_labelPlayerNameNoObjects5 = new QLabel(m_centralwidget);
+    m_labelPlayerNameNoObjects5->setObjectName(QStringLiteral("labelPlayerNameNoObjects5"));
+    m_labelPlayerNameNoObjects5->setGeometry(QRect(20, 560, 201, 16));
+    m_labelPlayerNameNoObjects5->setAutoFillBackground(false);
+    m_labelPlayerNameNoObjects5->setFrameShape(QFrame::Box);
+    m_labelPlayerNameNoObjects5->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
+    m_labelPlayerNameNoObjects6 = new QLabel(m_centralwidget);
+    m_labelPlayerNameNoObjects6->setObjectName(QStringLiteral("labelPlayerNameNoObjects6"));
+    m_labelPlayerNameNoObjects6->setGeometry(QRect(20, 580, 201, 16));
+    m_labelPlayerNameNoObjects6->setAutoFillBackground(false);
+    m_labelPlayerNameNoObjects6->setFrameShape(QFrame::Box);
+    m_labelPlayerNameNoObjects6->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelShowedObject = new QLabel(m_centralwidget);
     m_labelShowedObject->setObjectName(QStringLiteral("labelShowedObject"));
     m_labelShowedObject->setGeometry(QRect(260, 360, 171, 16));
@@ -91,6 +130,8 @@ void AskPlayerUI::setupUi()
     retranslateUi();
 
     QObject::connect(m_buttonOk, SIGNAL(pressed()), this, SLOT(close()));
+
+    hideLabels();
 }
 
 void AskPlayerUI::retranslateUi()
@@ -104,6 +145,13 @@ void AskPlayerUI::retranslateUi()
     m_imageSelectedRoom->setText(QString());
     m_labelPlayer->setText(QApplication::translate("mainWindowAskPlayer", "Spieler/In der/die etwas besitzt", nullptr));
     m_labelPlayerName->setText(QString());
+    m_labelPlayerNoObjects->setText(QApplication::translate("mainWindowAskPlayer", "<html><head/><body><p>Spieler/In der/die nichts zeigen konnte</p></body></html>", nullptr));
+    m_labelPlayerNameNoObjects1->setText(QString());
+    m_labelPlayerNameNoObjects2->setText(QString());
+    m_labelPlayerNameNoObjects3->setText(QString());
+    m_labelPlayerNameNoObjects4->setText(QString());
+    m_labelPlayerNameNoObjects5->setText(QString());
+    m_labelPlayerNameNoObjects6->setText(QString());
     m_labelShowedObject->setText(QApplication::translate("mainWindowAskPlayer", "Gezeigter Murder/Waffe/Raum", nullptr));
     m_imageShowedObject->setText(QString());
     m_buttonOk->setText(QApplication::translate("mainWindowAskPlayer", "Ok", nullptr));
@@ -130,17 +178,8 @@ void AskPlayerUI::updateShownCluedoObject()
                 m_imageShowedObject->setPixmap(QPixmap::fromImage(image));
             }
 
-            std::multimap<int, CluedoObject*>& cluedoObjectsFromOtherPlayers = playerSet->getCluedoObjectsFromOtherPlayers();
-            for (std::pair<int, CluedoObject*> cluedoObjectFromOtherPlayer : cluedoObjectsFromOtherPlayers)
-            {
-                if (cluedoObject == cluedoObjectFromOtherPlayer.second)
-                {
-                    std::vector<Player*>& allPlayers = GameController::getInstance().getPlayers();
-                    Player* playerWithOwningObject = allPlayers.at(cluedoObjectFromOtherPlayer.first);
-                    m_labelPlayerName->setText(QString(playerWithOwningObject->getName().c_str()));
-                    break;
-                }
-            }
+            updatePlayerLabelWithShownObject(playerSet.get(), cluedoObject);
+            updatePlayerNoObjectLabels(playerSet.get());
         }
         else
         {
@@ -152,4 +191,73 @@ void AskPlayerUI::updateShownCluedoObject()
 void AskPlayerUI::closeEvent(QCloseEvent* event)
 {
     emit askPlayerWindow_closed();
+}
+
+void AskPlayerUI::hideLabels()
+{
+    m_labelPlayerNoObjects->hide();
+    m_labelPlayerNameNoObjects1->hide();
+    m_labelPlayerNameNoObjects2->hide();
+    m_labelPlayerNameNoObjects3->hide();
+    m_labelPlayerNameNoObjects4->hide();
+    m_labelPlayerNameNoObjects5->hide();
+    m_labelPlayerNameNoObjects6->hide();
+}
+
+void AskPlayerUI::updatePlayerLabelWithShownObject(PlayerSet* p_playerSet, CluedoObject* p_shownCluedoObject)
+{
+    std::multimap<int, CluedoObject*>& cluedoObjectsFromOtherPlayers = p_playerSet->getCluedoObjectsFromOtherPlayers();
+    for (std::pair<int, CluedoObject*> cluedoObjectFromOtherPlayer : cluedoObjectsFromOtherPlayers)
+    {
+        if (p_shownCluedoObject == cluedoObjectFromOtherPlayer.second)
+        {
+            std::vector<Player*>& allPlayers = GameController::getInstance().getPlayers();
+            Player* playerWithOwningObject = allPlayers.at(cluedoObjectFromOtherPlayer.first);
+            m_labelPlayerName->setText(QString(playerWithOwningObject->getName().c_str()));
+            break;
+        }
+    }
+}
+
+void AskPlayerUI::updatePlayerNoObjectLabels(PlayerSet* p_playerSet)
+{
+    std::vector<int>& playerIndicesWithNoShownObjects = p_playerSet->getPlayerIndicesWithNoShownCluedoObjects();
+    std::vector<Player*>& allPlayers = GameController::getInstance().getPlayers();
+
+    Player* player{ nullptr };
+
+    if (playerIndicesWithNoShownObjects.size() > 0)
+    {
+        m_labelPlayerNoObjects->show();
+    }
+
+    switch (playerIndicesWithNoShownObjects.size())
+    {
+        case 6:
+            player = allPlayers.at(playerIndicesWithNoShownObjects.at(5));
+            m_labelPlayerNameNoObjects6->setText(QString(player->getName().c_str()));
+            m_labelPlayerNameNoObjects6->show();
+        case 5:
+            player = allPlayers.at(playerIndicesWithNoShownObjects.at(4));
+            m_labelPlayerNameNoObjects5->setText(QString(player->getName().c_str()));
+            m_labelPlayerNameNoObjects5->show();
+        case 4:
+            player = allPlayers.at(playerIndicesWithNoShownObjects.at(3));
+            m_labelPlayerNameNoObjects4->setText(QString(player->getName().c_str()));
+            m_labelPlayerNameNoObjects4->show();
+        case 3:
+            player = allPlayers.at(playerIndicesWithNoShownObjects.at(2));
+            m_labelPlayerNameNoObjects3->setText(QString(player->getName().c_str()));
+            m_labelPlayerNameNoObjects3->show();
+        case 2:
+            player = allPlayers.at(playerIndicesWithNoShownObjects.at(1));
+            m_labelPlayerNameNoObjects2->setText(QString(player->getName().c_str()));
+            m_labelPlayerNameNoObjects2->show();
+        case 1:
+            player = allPlayers.at(playerIndicesWithNoShownObjects.at(0));
+            m_labelPlayerNameNoObjects1->setText(QString(player->getName().c_str()));
+            m_labelPlayerNameNoObjects1->show();
+        default:
+            break;
+    }
 }

@@ -2,6 +2,9 @@
 
 #include <QtWidgets/QMainWindow>
 
+class CluedoObject;
+class PlayerSet;
+
 class QCloseEvent;
 class QWidget;
 class QLabel;
@@ -39,6 +42,13 @@ private:
     QLabel* m_imageSelectedRoom;
     QLabel* m_labelPlayer;
     QLabel* m_labelPlayerName;
+    QLabel* m_labelPlayerNoObjects;
+    QLabel* m_labelPlayerNameNoObjects1;
+    QLabel* m_labelPlayerNameNoObjects2;
+    QLabel* m_labelPlayerNameNoObjects3;
+    QLabel* m_labelPlayerNameNoObjects4;
+    QLabel* m_labelPlayerNameNoObjects5;
+    QLabel* m_labelPlayerNameNoObjects6;
     QLabel* m_labelShowedObject;
     QLabel* m_imageShowedObject;
     QPushButton* m_buttonOk;
@@ -48,4 +58,8 @@ private:
     const QPixmap* m_selectedMurder;
     const QPixmap* m_selectedWeapon;
     const QPixmap* m_selectedRoom;
+
+    void hideLabels();
+    void updatePlayerLabelWithShownObject(PlayerSet* p_playerSet, CluedoObject* p_shownCluedoObject);
+    void updatePlayerNoObjectLabels(PlayerSet* p_playerSet);
 };

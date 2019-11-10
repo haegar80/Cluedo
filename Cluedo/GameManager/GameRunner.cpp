@@ -37,6 +37,12 @@ void GameRunner::checkObjectsAtOtherPlayers(int p_currentPlayerIndex, CluedoObje
 {
     int playerIndexToAsk = p_currentPlayerIndex + 1;
 
+    PlayerSet* currentPlayerSet = m_players.at(p_currentPlayerIndex)->getPlayerSet().get();
+    currentPlayerSet->setLastAskedMurder(p_murder);
+    currentPlayerSet->setLastAskedWeapon(p_weapon);
+    currentPlayerSet->setLastAskedRoom(p_room);
+    currentPlayerSet->resetPlayerIndicesWithNoShownCluedoObjects();
+
     CluedoObject* foundObject = nullptr;
     while ((playerIndexToAsk != p_currentPlayerIndex) && (nullptr == foundObject))
     {
@@ -50,13 +56,16 @@ void GameRunner::checkObjectsAtOtherPlayers(int p_currentPlayerIndex, CluedoObje
         }
         foundObject = askObjectsAtOtherPlayer(playerIndexToAsk, p_murder, p_weapon, p_room);
 
+        if (nullptr == foundObject)
+        {
+            currentPlayerSet->addPlayerIndexWithNoShownCluedoObjects(playerIndexToAsk);
+            currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_murder);
+            currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_weapon);
+            currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_room);
+        }
+
         playerIndexToAsk++;
     }
-
-    PlayerSet* currentPlayerSet = m_players.at(p_currentPlayerIndex)->getPlayerSet().get();
-    currentPlayerSet->setLastAskedMurder(p_murder);
-    currentPlayerSet->setLastAskedWeapon(p_weapon);
-    currentPlayerSet->setLastAskedRoom(p_room);
 
     if (nullptr != foundObject)
     {

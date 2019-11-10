@@ -17,6 +17,21 @@ void PlayerSet::addCluedoObjectFromOtherPlayers(int p_playerIndex, CluedoObject*
     removeUnknownCluedoObjects(p_cluedoObject);
 }
 
+void PlayerSet::addMissingCluedoObjectsAtOtherPlayers(int p_playerIndex, CluedoObject* p_cluedoObject)
+{
+    m_missingCluedoObjectsAtOtherPlayers.insert(std::make_pair(p_playerIndex, p_cluedoObject));
+}
+
+void PlayerSet::addPlayerIndexWithNoShownCluedoObjects(int p_playerIndex)
+{
+    m_playerIndicesWithNoShownCluedoObjects.push_back(p_playerIndex);
+}
+
+void PlayerSet::resetPlayerIndicesWithNoShownCluedoObjects()
+{
+    m_playerIndicesWithNoShownCluedoObjects.clear();
+}
+
 void PlayerSet::addUnknownCluedoObjects(CluedoObject* p_cluedoObject)
 {
     m_unknownCluedoObjects.push_back(p_cluedoObject);
