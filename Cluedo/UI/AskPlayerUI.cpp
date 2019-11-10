@@ -171,19 +171,15 @@ void AskPlayerUI::updateShownCluedoObject()
         CluedoObject* cluedoObject = playerSet->getLastShownCluedoObject();
         if (nullptr != cluedoObject)
         {
-            QString itemText(cluedoObject->getName().c_str());
-            QImage image = Utils::getImage(itemText);
-            if (!image.isNull())
-            {
-                m_imageShowedObject->setPixmap(QPixmap::fromImage(image));
-            }
-
+            checkAndupdateImageWithShownObject(currentPlayer, cluedoObject);
             updatePlayerLabelWithShownObject(playerSet.get(), cluedoObject);
             updatePlayerNoObjectLabels(playerSet.get());
         }
         else
         {
             m_labelPlayerName->setText(QString("Niemand anderes besitzt etwas davon!"));
+            m_labelShowedObject->hide();
+            m_imageShowedObject->hide();
         }
     }
 }
@@ -191,6 +187,39 @@ void AskPlayerUI::updateShownCluedoObject()
 void AskPlayerUI::closeEvent(QCloseEvent* event)
 {
     emit askPlayerWindow_closed();
+}
+
+void AskPlayerUI::checkAndupdateImageWithShownObject(Player* p_currentPlayer, CluedoObject* p_shownCluedoObject)
+{
+    if (p_currentPlayer->getSelf())
+    {
+        updateImageWithShownObject(p_shownCluedoObject);
+    }
+    else
+    {
+        std::vector<Player*>& allPlayers = GameController::getInstance().getPlayers();
+        PlayerSet* currentPlayerSet = p_currentPlayer->getPlayerSet().get();
+        Player* playerWithOwningObject = allPlayers.at(currentPlayerSet->getLastPlayerIndexWhoShowedCluedoObject());
+        if (playerWithOwningObject->getSelf())
+        {
+            updateImageWithShownObject(p_shownCluedoObject);
+        }
+        else
+        {
+            m_labelShowedObject->hide();
+            m_imageShowedObject->hide();
+        }
+    }
+}
+
+void AskPlayerUI::updateImageWithShownObject(CluedoObject* p_shownCluedoObject)
+{
+    QString itemText(p_shownCluedoObject->getName().c_str());
+    QImage image = Utils::getImage(itemText);
+    if (!image.isNull())
+    {
+        m_imageShowedObject->setPixmap(QPixmap::fromImage(image));
+    }
 }
 
 void AskPlayerUI::hideLabels()
@@ -206,17 +235,9 @@ void AskPlayerUI::hideLabels()
 
 void AskPlayerUI::updatePlayerLabelWithShownObject(PlayerSet* p_playerSet, CluedoObject* p_shownCluedoObject)
 {
-    std::multimap<int, CluedoObject*>& cluedoObjectsFromOtherPlayers = p_playerSet->getCluedoObjectsFromOtherPlayers();
-    for (std::pair<int, CluedoObject*> cluedoObjectFromOtherPlayer : cluedoObjectsFromOtherPlayers)
-    {
-        if (p_shownCluedoObject == cluedoObjectFromOtherPlayer.second)
-        {
-            std::vector<Player*>& allPlayers = GameController::getInstance().getPlayers();
-            Player* playerWithOwningObject = allPlayers.at(cluedoObjectFromOtherPlayer.first);
-            m_labelPlayerName->setText(QString(playerWithOwningObject->getName().c_str()));
-            break;
-        }
-    }
+    std::vector<Player*>& allPlayers = GameController::getInstance().getPlayers();
+    Player* playerWithOwningObject = allPlayers.at(p_playerSet->getLastPlayerIndexWhoShowedCluedoObject());
+    m_labelPlayerName->setText(QString(playerWithOwningObject->getName().c_str()));
 }
 
 void AskPlayerUI::updatePlayerNoObjectLabels(PlayerSet* p_playerSet)

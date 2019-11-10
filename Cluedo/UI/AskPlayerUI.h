@@ -3,6 +3,7 @@
 #include <QtWidgets/QMainWindow>
 
 class CluedoObject;
+class Player;
 class PlayerSet;
 
 class QCloseEvent;
@@ -59,6 +60,8 @@ private:
     const QPixmap* m_selectedWeapon;
     const QPixmap* m_selectedRoom;
 
+    void checkAndupdateImageWithShownObject(Player* p_currentPlayer, CluedoObject* p_shownCluedoObject);
+    void updateImageWithShownObject(CluedoObject* p_shownCluedoObject);
     void hideLabels();
     void updatePlayerLabelWithShownObject(PlayerSet* p_playerSet, CluedoObject* p_shownCluedoObject);
     void updatePlayerNoObjectLabels(PlayerSet* p_playerSet);

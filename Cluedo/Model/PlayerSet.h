@@ -50,6 +50,15 @@ public:
         return m_unknownCluedoObjects;
     }
 
+    int getLastPlayerIndexWhoShowedCluedoObject()
+    {
+        return m_lastPlayerIndexWhoShowedCluedoObject;
+    }
+
+    void setLastPlayerIndexWhoShowedCluedoObject(int p_playerIndex)
+    {
+        m_lastPlayerIndexWhoShowedCluedoObject = p_playerIndex;
+    }
 
     CluedoObject* getLastShownCluedoObject()
     {
@@ -109,6 +118,7 @@ private:
     std::vector<int> m_playerIndicesWithNoShownCluedoObjects;
     std::vector<CluedoObject*> m_unknownCluedoObjects;
 
+    int m_lastPlayerIndexWhoShowedCluedoObject{ -1 };
     CluedoObject* m_lastShownCluedoObject{ nullptr };
     CluedoObject* m_lastAskedMurder{ nullptr };
     CluedoObject* m_lastAskedWeapon{ nullptr };

@@ -69,8 +69,10 @@ void GameRunner::checkObjectsAtOtherPlayers(int p_currentPlayerIndex, CluedoObje
 
     if (nullptr != foundObject)
     {
+        int playerIndex = --playerIndexToAsk;
         currentPlayerSet->setLastShownCluedoObject(foundObject);
-        currentPlayerSet->addCluedoObjectFromOtherPlayers(--playerIndexToAsk, foundObject);
+        currentPlayerSet->setLastPlayerIndexWhoShowedCluedoObject(playerIndex);
+        currentPlayerSet->addCluedoObjectFromOtherPlayers(playerIndex, foundObject);
     }
     else
     {
