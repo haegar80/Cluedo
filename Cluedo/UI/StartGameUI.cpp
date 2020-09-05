@@ -1,4 +1,5 @@
 #include "StartGameUI.h"
+#include "WaitRemotePlayerUI.h"
 #include "../Model/Player.h"
 #include "../GameManager/GameController.h"
 #include <QtCore/QVariant>
@@ -23,7 +24,7 @@ void StartGameUI::setupUi()
     {
         this->setObjectName(QString::fromUtf8("MainWindow"));
     }
-    this->resize(570, 211);
+    this->resize(624, 211);
     m_centralwidget = new QWidget(this);
     m_centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
     m_lineEditPlayerName = new QLineEdit(m_centralwidget);
@@ -37,7 +38,13 @@ void StartGameUI::setupUi()
     m_labelNumberOfComputerPlayers->setGeometry(QRect(300, 40, 121, 16));
     m_comboBoxNumberOfComputerPlayers = new QComboBox(m_centralwidget);
     m_comboBoxNumberOfComputerPlayers->setObjectName(QString::fromUtf8("comboBoxNumberOfComputerPlayers"));
-    m_comboBoxNumberOfComputerPlayers->setGeometry(QRect(440, 40, 69, 22));
+    m_comboBoxNumberOfComputerPlayers->setGeometry(QRect(470, 40, 69, 22));
+    m_labelNumberOfRemotePlayers = new QLabel(m_centralwidget);
+    m_labelNumberOfRemotePlayers->setObjectName(QStringLiteral("labelNumberOfRemotePlayers"));
+    m_labelNumberOfRemotePlayers->setGeometry(QRect(300, 80, 161, 16));
+    m_comboBoxNumberOfRemotePlayers = new QComboBox(m_centralwidget);
+    m_comboBoxNumberOfRemotePlayers->setObjectName(QStringLiteral("comboBoxNumberOfRemotePlayers"));
+    m_comboBoxNumberOfRemotePlayers->setGeometry(QRect(470, 80, 69, 22));
     m_buttonStartGame = new QPushButton(m_centralwidget);
     m_buttonStartGame->setObjectName(QString::fromUtf8("buttonStartGame"));
     m_buttonStartGame->setGeometry(QRect(50, 120, 75, 23));
@@ -58,8 +65,11 @@ void StartGameUI::setupUi()
     m_comboBoxNumberOfComputerPlayers->insertItem(1, "1");
     m_comboBoxNumberOfComputerPlayers->insertItem(2, "2");
     m_comboBoxNumberOfComputerPlayers->insertItem(3, "3");
-    m_comboBoxNumberOfComputerPlayers->insertItem(4, "4");
-    m_comboBoxNumberOfComputerPlayers->insertItem(5, "5");
+
+    m_comboBoxNumberOfRemotePlayers->insertItem(0, "Kein");
+    m_comboBoxNumberOfRemotePlayers->insertItem(1, "1");
+    m_comboBoxNumberOfRemotePlayers->insertItem(2, "2");
+    m_comboBoxNumberOfRemotePlayers->insertItem(3, "3");
 }
 
 void StartGameUI::retranslateUi()
@@ -67,11 +77,42 @@ void StartGameUI::retranslateUi()
     this->setWindowTitle(QApplication::translate("StartGame", "StartGame", 0));
     m_labelPlayerName->setText(QApplication::translate("StartGame", "Benutzername", 0));
     m_labelNumberOfComputerPlayers->setText(QApplication::translate("StartGame", "Anzahl Computergegner"));
+    m_labelNumberOfRemotePlayers->setText(QApplication::translate("MainWindow", "Anzahl Gegner \303\274bers Netzwerk", nullptr));
     m_buttonStartGame->setText(QApplication::translate("StartGame", "Starte Spiel", 0));
 }
 
 void StartGameUI::buttonStartGame_clicked()
 {
+    int numberOfRemotePlayers = m_comboBoxNumberOfRemotePlayers->currentIndex();
+    if (numberOfRemotePlayers < 0)
+    {
+        numberOfRemotePlayers = 0;
+    }
+    if (numberOfRemotePlayers > 0) {
+        m_waitRemotePlayerUI = new WaitRemotePlayerUI(numberOfRemotePlayers);
+        m_waitRemotePlayerUI->setWindowModality(Qt::ApplicationModal);
+        m_waitRemotePlayerUI->setAttribute(Qt::WA_DeleteOnClose);
+
+        QObject::connect(m_waitRemotePlayerUI, SIGNAL(game_AllRemoteUsersAvailable()), this, SLOT(game_AllRemoteUsersAvailable()));
+        QObject::connect(m_waitRemotePlayerUI, SIGNAL(game_remoteUserNotAvailable()), this, SLOT(game_remoteUserNotAvailable()));
+
+        m_waitRemotePlayerUI->show();
+    }
+    else {
+        initializeGame();
+    }
+}
+
+void StartGameUI::game_allRemoteUsersAvailable() {
+    initializeGame();
+}
+
+void StartGameUI::game_remoteUserNotAvailable()
+{
+    // Do nothing yet
+}
+
+void StartGameUI::initializeGame() {
     int numberOfComputerPlayers = m_comboBoxNumberOfComputerPlayers->currentIndex();
     if (numberOfComputerPlayers < 0)
     {
@@ -85,10 +126,10 @@ void StartGameUI::buttonStartGame_clicked()
     {
         std::stringstream computerName;
         computerName << "Computer " << (i + 1);
-        (void) gameController.createNewPlayer(computerName.str().c_str(), false);
+        (void)gameController.createNewPlayer(computerName.str().c_str(), Player::PlayerType_Computer);
     }
-    
-    Player* player = gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), true);
+
+    Player* player = gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_Self);
 
     GameController::getInstance().startGame();
     gameStarted();

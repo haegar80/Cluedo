@@ -6,12 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>570</width>
+    <width>624</width>
     <height>211</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>StartGame</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLineEdit" name="lineEditPlayerName">
@@ -53,7 +53,7 @@
    <widget class="QComboBox" name="comboBoxNumberOfComputerPlayers">
     <property name="geometry">
      <rect>
-      <x>440</x>
+      <x>470</x>
       <y>40</y>
       <width>69</width>
       <height>22</height>
@@ -73,13 +73,36 @@
      <string>Starte Spiel</string>
     </property>
    </widget>
+   <widget class="QLabel" name="labelNumberOfRemotePlayers">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>80</y>
+      <width>161</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Anzahl Gegner übers Netzwerk</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBoxNumberOfRemotePlayers">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>80</y>
+      <width>69</width>
+      <height>22</height>
+     </rect>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>570</width>
+     <width>624</width>
      <height>21</height>
     </rect>
    </property>

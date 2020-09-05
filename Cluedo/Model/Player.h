@@ -7,7 +7,14 @@
 class Player
 {
 public:
-    Player(const std::string& p_name, std::shared_ptr<PlayerSet> p_playerSet, bool p_self);
+    enum EPlayerType {
+        PlayerType_Undefined = 0,
+        PlayerType_Self = 1,
+        PlayerType_Remote = 2,
+        PlayerType_Computer = 3
+    };
+
+    Player(const std::string& p_name, std::shared_ptr<PlayerSet> p_playerSet, EPlayerType p_playerType);
     virtual ~Player() = default;
 
     const std::string& getName()
@@ -20,15 +27,16 @@ public:
         return m_playerSet;
     }
 
-    bool getSelf()
+    EPlayerType getPlayerType()
     {
-        return m_self;
+        return m_playerType;
     }
 
 private:
     std::string m_name{ "" };
     std::shared_ptr<PlayerSet> m_playerSet;
-    bool m_self{ false };
+    
+    EPlayerType m_playerType{ PlayerType_Undefined };
 
     Player(const Player& copy) = default;
     Player& operator= (const Player& copy) = default;

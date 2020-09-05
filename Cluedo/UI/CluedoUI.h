@@ -31,6 +31,7 @@ public:
     public slots:
     void buttonSelectObjects_clicked();
     void buttonStartGame_clicked();
+    void buttonConnectGame_clicked();
     void game_started();
     void askPlayer_finished();
 
@@ -54,6 +55,7 @@ private:
     QListWidget* m_listPlayers;
     QPushButton* m_buttonSelectObjects;
     QPushButton* m_buttonStartGame;
+    QPushButton* m_buttonConnectGame;
     QPushButton* m_quitButton;
     QMenuBar* m_menubar;
     QStatusBar* m_statusbar;

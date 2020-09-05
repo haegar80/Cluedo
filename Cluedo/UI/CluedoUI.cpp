@@ -99,10 +99,13 @@ void CluedoUI::setupUi()
     m_buttonSelectObjects->setGeometry(QRect(970, 230, 261, 41));
     m_buttonStartGame = new QPushButton(m_centralwidget);
     m_buttonStartGame->setObjectName(QString::fromUtf8("buttonStartGame"));
-    m_buttonStartGame->setGeometry(QRect(60, screenGeometry.height() - 73, 75, 23));
+    m_buttonStartGame->setGeometry(QRect(60, screenGeometry.height() - 73, 111, 23));
+    m_buttonConnectGame = new QPushButton(m_centralwidget);
+    m_buttonConnectGame->setObjectName(QStringLiteral("buttonConnectGame"));
+    m_buttonConnectGame->setGeometry(QRect(190, screenGeometry.height() - 73, 171, 23));
     m_quitButton = new QPushButton(m_centralwidget);
     m_quitButton->setObjectName(QString::fromUtf8("quitButton"));
-    m_quitButton->setGeometry(QRect(170, screenGeometry.height() - 73, 75, 23));
+    m_quitButton->setGeometry(QRect(1180, screenGeometry.height() - 73, 75, 23));
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
     m_menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -116,6 +119,7 @@ void CluedoUI::setupUi()
 
     QObject::connect(m_buttonSelectObjects, SIGNAL(pressed()), this, SLOT(buttonSelectObjects_clicked()));
     QObject::connect(m_buttonStartGame, SIGNAL(pressed()), this, SLOT(buttonStartGame_clicked()));
+    QObject::connect(m_buttonConnectGame, SIGNAL(pressed()), this, SLOT(buttonConnectGame_clicked()));
     QObject::connect(m_quitButton, SIGNAL(pressed()), this, SLOT(close()));
 
     m_selectionObjectWidget->hide();
@@ -140,10 +144,11 @@ void CluedoUI::retranslateUi()
     m_imageCluedoObject4->setText(QString());
     m_imageCluedoObject5->setText(QString());
     m_imageCluedoObject6->setText(QString());
-    m_labelCurrentPlayer->setText(QApplication::translate("windowCluedo", "Aktueller Spieler", nullptr));
+    m_labelCurrentPlayer->setText(QApplication::translate("windowCluedo", "Spieler", nullptr));
     m_buttonSelectObjects->setText(QApplication::translate("windowCluedo", "Frage Mitspieler / \n"
         "Verdacht aussprechen", nullptr));
     m_buttonStartGame->setText(QApplication::translate("windowCluedo", "Starte Spiel", nullptr));
+    m_buttonConnectGame->setText(QApplication::translate("windowCluedo", "Verbinde zu bestehendem Spiel", nullptr));
     m_quitButton->setText(QApplication::translate("windowCluedo", "Quit", nullptr));
 }
 
@@ -155,7 +160,7 @@ void CluedoUI::updatePlayers()
     {
         m_listPlayers->addItem(QString::fromStdString(player->getName()));
 
-        if (player->getSelf())
+        if (Player::PlayerType_Self == player->getPlayerType())
         {
             m_myPlayerSet = player->getPlayerSet();
         }
@@ -176,7 +181,7 @@ void CluedoUI::buttonSelectObjects_clicked()
 
     gameController.setCurrentPlayerIndex(m_currentPlayerIndex);
 
-    if (!currentPlayer->getSelf())
+    if (Player::PlayerType_Self != currentPlayer->getPlayerType())
     {
         if (gameController.shouldTellSuspicion())
         {
@@ -212,6 +217,11 @@ void CluedoUI::buttonStartGame_clicked()
     m_startGameUI->show();
 
     m_buttonStartGame->setDisabled(true);
+}
+
+void CluedoUI::buttonConnectGame_clicked()
+{
+    // todo
 }
 
 void CluedoUI::game_started()

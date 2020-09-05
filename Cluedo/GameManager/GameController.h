@@ -2,11 +2,11 @@
 
 #include "GameRunner.h"
 #include "../Model/CluedoObject.h"
+#include "../Model/Player.h"
 #include <vector>
 #include <functional>
 #include <memory>
 
-class Player;
 class PlayerSet;
 
 class GameController
@@ -24,7 +24,7 @@ public:
 
     void selectAndDistributeCluedoObjects();
 
-    Player* createNewPlayer(std::string p_name, bool p_self);
+    Player* createNewPlayer(std::string p_name, Player::EPlayerType p_playerType);
     Player* getCurrentPlayer();
 
     void setCurrentPlayerIndex(int p_currentPlayerIndex)

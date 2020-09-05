@@ -1,6 +1,5 @@
 #include "GameController.h"
 #include "CluedoObjectLoader.h"
-#include "../Model/Player.h"
 #include "../Model/PlayerSet.h"
 #include "../Utils/Utils.h"
 
@@ -106,11 +105,11 @@ void GameController::selectAndDistributeCluedoObjects()
     distributeCluedoObjects();
 }
 
-Player* GameController::createNewPlayer(std::string p_name, bool p_self)
+Player* GameController::createNewPlayer(std::string p_name, Player::EPlayerType p_playerType)
 {
     std::shared_ptr<PlayerSet> playerSet = createNewPlayerSet();
 
-    Player* player = new Player(std::move(p_name), playerSet, p_self);
+    Player* player = new Player(std::move(p_name), playerSet, p_playerType);
     m_players.push_back(player);
 
     return player;

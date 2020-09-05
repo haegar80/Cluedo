@@ -191,7 +191,7 @@ void AskPlayerUI::closeEvent(QCloseEvent* event)
 
 void AskPlayerUI::checkAndupdateImageWithShownObject(Player* p_currentPlayer, CluedoObject* p_shownCluedoObject)
 {
-    if (p_currentPlayer->getSelf())
+    if (Player::PlayerType_Self == p_currentPlayer->getPlayerType())
     {
         updateImageWithShownObject(p_shownCluedoObject);
     }
@@ -200,7 +200,7 @@ void AskPlayerUI::checkAndupdateImageWithShownObject(Player* p_currentPlayer, Cl
         std::vector<Player*>& allPlayers = GameController::getInstance().getPlayers();
         PlayerSet* currentPlayerSet = p_currentPlayer->getPlayerSet().get();
         Player* playerWithOwningObject = allPlayers.at(currentPlayerSet->getLastPlayerIndexWhoShowedCluedoObject());
-        if (playerWithOwningObject->getSelf())
+        if (Player::PlayerType_Self == playerWithOwningObject->getPlayerType())
         {
             updateImageWithShownObject(p_shownCluedoObject);
         }

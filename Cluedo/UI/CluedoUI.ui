@@ -232,7 +232,7 @@
    <widget class="QPushButton" name="quitButton">
     <property name="geometry">
      <rect>
-      <x>170</x>
+      <x>1180</x>
       <y>750</y>
       <width>75</width>
       <height>23</height>
@@ -277,12 +277,12 @@ Verdacht aussprechen</string>
      <rect>
       <x>60</x>
       <y>750</y>
-      <width>75</width>
+      <width>111</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
-     <string>Starte Spiel</string>
+     <string>Starte neues Spiel</string>
     </property>
    </widget>
    <widget class="QLabel" name="labelCurrentPlayer">
@@ -295,7 +295,20 @@ Verdacht aussprechen</string>
      </rect>
     </property>
     <property name="text">
-     <string>Aktueller Spieler</string>
+     <string>Spieler</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="buttonConnectGame">
+    <property name="geometry">
+     <rect>
+      <x>190</x>
+      <y>750</y>
+      <width>171</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Verbinde zu bestehendem Spiel</string>
     </property>
    </widget>
   </widget>

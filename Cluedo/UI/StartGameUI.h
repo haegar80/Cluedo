@@ -2,6 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 
+class WaitRemotePlayerUI;
 class PlayerSetUI;
 class QWidget;
 class QPushButton;
@@ -29,18 +30,24 @@ public:
 
     public slots:
     void buttonStartGame_clicked();
+    void game_allRemoteUsersAvailable();
+    void game_remoteUserNotAvailable();
 
 private:
-    PlayerSetUI * m_playerSetUI;
+    WaitRemotePlayerUI* m_waitRemotePlayerUI;
+    PlayerSetUI* m_playerSetUI;
 
     QWidget* m_centralwidget;
     QLineEdit* m_lineEditPlayerName;
     QLabel* m_labelPlayerName;
     QLabel* m_labelNumberOfComputerPlayers;
     QComboBox* m_comboBoxNumberOfComputerPlayers;
+    QLabel* m_labelNumberOfRemotePlayers;
+    QComboBox* m_comboBoxNumberOfRemotePlayers;
     QPushButton* m_buttonStartGame;
     QMenuBar* m_menubar;
     QStatusBar* m_statusbar;
 
+    void initializeGame();
     void gameStarted();
 };
