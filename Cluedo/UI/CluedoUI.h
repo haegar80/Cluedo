@@ -26,7 +26,7 @@ public:
     void setupUi();
     void retranslateUi();
 
-    void updatePlayers();
+    void updatedPlayers();
 
     public slots:
     void buttonSelectObjects_clicked();

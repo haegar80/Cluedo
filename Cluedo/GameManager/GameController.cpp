@@ -35,6 +35,8 @@ void GameController::startGame()
     {
         callback();
     }
+
+    emit gameController_ready();
 }
 
 void GameController::askPlayer()
@@ -103,6 +105,21 @@ void GameController::selectAndDistributeCluedoObjects()
 {
     selectEffectiveMurderWeaponRoom();
     distributeCluedoObjects();
+}
+
+RemotePlayer* GameController::createNewRemotePlayer(std::string p_name) 
+{
+    std::shared_ptr<PlayerSet> playerSet = createNewPlayerSet();
+    
+    RemotePlayer* remotePlayer = new RemotePlayer(std::move(p_name), playerSet);
+    m_players.push_back(remotePlayer);
+
+    for (auto callback : m_playerUpdateCallbacks)
+    {
+        callback();
+    }
+
+    return remotePlayer;
 }
 
 Player* GameController::createNewPlayer(std::string p_name, Player::EPlayerType p_playerType)

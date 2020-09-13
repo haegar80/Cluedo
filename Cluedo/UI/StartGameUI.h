@@ -31,7 +31,8 @@ public:
     public slots:
     void buttonStartGame_clicked();
     void game_allRemoteUsersAvailable();
-    void game_remoteUserNotAvailable();
+    void game_notAllRemoteUsersAvailable();
+    void gameController_ready();
 
 private:
     WaitRemotePlayerUI* m_waitRemotePlayerUI;
@@ -49,5 +50,4 @@ private:
     QStatusBar* m_statusbar;
 
     void initializeGame();
-    void gameStarted();
 };

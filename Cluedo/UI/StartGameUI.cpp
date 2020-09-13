@@ -60,6 +60,7 @@ void StartGameUI::setupUi()
     retranslateUi();
 
     QObject::connect(m_buttonStartGame, SIGNAL(pressed()), this, SLOT(buttonStartGame_clicked()));
+    QObject::connect(&GameController::getInstance(), SIGNAL(gameController_ready()), this, SLOT(gameController_ready()));
 
     m_comboBoxNumberOfComputerPlayers->insertItem(0, "Kein");
     m_comboBoxNumberOfComputerPlayers->insertItem(1, "1");
@@ -93,23 +94,14 @@ void StartGameUI::buttonStartGame_clicked()
         m_waitRemotePlayerUI->setWindowModality(Qt::ApplicationModal);
         m_waitRemotePlayerUI->setAttribute(Qt::WA_DeleteOnClose);
 
-        QObject::connect(m_waitRemotePlayerUI, SIGNAL(game_AllRemoteUsersAvailable()), this, SLOT(game_AllRemoteUsersAvailable()));
-        QObject::connect(m_waitRemotePlayerUI, SIGNAL(game_remoteUserNotAvailable()), this, SLOT(game_remoteUserNotAvailable()));
+        QObject::connect(m_waitRemotePlayerUI, SIGNAL(game_allRemoteUsersAvailable()), this, SLOT(game_allRemoteUsersAvailable()));
+        QObject::connect(m_waitRemotePlayerUI, SIGNAL(game_notAllRemoteUsersAvailable()), this, SLOT(game_notAllRemoteUsersAvailable()));
 
         m_waitRemotePlayerUI->show();
     }
     else {
         initializeGame();
     }
-}
-
-void StartGameUI::game_allRemoteUsersAvailable() {
-    initializeGame();
-}
-
-void StartGameUI::game_remoteUserNotAvailable()
-{
-    // Do nothing yet
 }
 
 void StartGameUI::initializeGame() {
@@ -131,13 +123,20 @@ void StartGameUI::initializeGame() {
 
     Player* player = gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_Self);
 
-    GameController::getInstance().startGame();
-    gameStarted();
+    gameController.startGame();
 
     this->close();
 }
 
-void StartGameUI::gameStarted()
+void StartGameUI::game_allRemoteUsersAvailable() {
+    initializeGame();
+}
+
+void StartGameUI::game_notAllRemoteUsersAvailable()
 {
+    // Do nothing yet
+}
+
+void StartGameUI::gameController_ready() {
     emit game_started();
 }

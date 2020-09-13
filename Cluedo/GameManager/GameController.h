@@ -2,15 +2,16 @@
 
 #include "GameRunner.h"
 #include "../Model/CluedoObject.h"
-#include "../Model/Player.h"
+#include "../Model/RemotePlayer.h"
 #include <vector>
 #include <functional>
 #include <memory>
 
 class PlayerSet;
 
-class GameController
+class GameController : public QObject
 {
+    Q_OBJECT
 public:
     static GameController& getInstance();
     virtual ~GameController();
@@ -24,6 +25,7 @@ public:
 
     void selectAndDistributeCluedoObjects();
 
+    RemotePlayer* createNewRemotePlayer(std::string p_name);
     Player* createNewPlayer(std::string p_name, Player::EPlayerType p_playerType);
     Player* getCurrentPlayer();
 
@@ -43,6 +45,9 @@ public:
     {
         return static_cast<int>(m_players.size());
     }
+
+    signals:
+    void gameController_ready();
 
 private:
     std::shared_ptr<GameRunner> m_gameRunner;

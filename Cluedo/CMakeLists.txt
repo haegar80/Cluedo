@@ -17,11 +17,22 @@ find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
 include_directories(${PROJECT_SOURCE_DIR}/UI ${PROJECT_SOURCE_DIR}/Model ${PROJECT_SOURCE_DIR}/GameManager)
 
-FILE(GLOB SOURCES ${PROJECT_SOURCE_DIR}/UI/*.cpp ${PROJECT_SOURCE_DIR}/Model/*.cpp ${PROJECT_SOURCE_DIR}/GameManager/*.cpp ${PROJECT_SOURCE_DIR}/Utils/*.cpp main.cpp)
+FILE(GLOB SOURCES_ALL_PLATFORM ${PROJECT_SOURCE_DIR}/UI/*.cpp ${PROJECT_SOURCE_DIR}/Model/*.cpp ${PROJECT_SOURCE_DIR}/GameManager/*.cpp ${PROJECT_SOURCE_DIR}/Utils/*.cpp main.cpp)
+FILE(GLOB SOURCES_WIN_PLATFORM ${PROJECT_SOURCE_DIR}/Network/TcpWinSocketServer.cpp)
+
+if (WIN32)
+    set(SOURCES ${SOURCES_ALL_PLATFORM} ${SOURCES_WIN_PLATFORM})
+ELSE()
+    set(SOURCES ${SOURCES_ALL_PLATFORM})
+ENDIF()
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets)
+IF (WIN32)
+    target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets ws2_32.lib)
+ELSE()
+    target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets)
+ENDIF()
 
 #Deploy QT DLLs to Output Dir
 IF (WIN32)

@@ -40,6 +40,11 @@ void WaitRemotePlayerUI::setupUi()
     retranslateUi();
 
     QObject::connect(m_buttonCancel, SIGNAL(pressed()), this, SLOT(buttonCancel_clicked()));
+
+    auto playerUpdateCallback = [this]() { updatedPlayers(); };
+    GameController::getInstance().registerPlayerUpdateCallback(playerUpdateCallback);
+
+    startTcpSocketServer();
 }
 
 void WaitRemotePlayerUI::retranslateUi()
@@ -49,17 +54,25 @@ void WaitRemotePlayerUI::retranslateUi()
     m_buttonCancel->setText(QApplication::translate("MainWindow", "Abbrechen", nullptr));
 }
 
-void WaitRemotePlayerUI::game_newRemoteUserConnected() {
+void WaitRemotePlayerUI::updatedPlayers() {
     GameController& gameController = GameController::getInstance();
     std::vector<Player*>& availablePlayers = gameController.getPlayers();
     int numberOfRemoteUsers = std::count_if(availablePlayers.begin(), availablePlayers.end(), [](Player* player) {return ((nullptr != player) && (Player::PlayerType_Remote == player->getPlayerType())); });
     if (m_numberOfExpectedRemoteUsers == numberOfRemoteUsers) {
         emit game_allRemoteUsersAvailable();
+        this->close();
     }
 }
 
 void WaitRemotePlayerUI::buttonCancel_clicked()
 {
-    emit game_remoteUserNotAvailable();
+    emit game_notAllRemoteUsersAvailable();
     this->close();
+}
+
+void WaitRemotePlayerUI::startTcpSocketServer() {
+#if WIN32
+    m_tcpWinSocketServer.init();
+    m_tcpWinSocketServer.listenToClients(m_numberOfExpectedRemoteUsers);
+#endif
 }

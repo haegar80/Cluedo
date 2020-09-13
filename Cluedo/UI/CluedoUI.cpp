@@ -124,7 +124,7 @@ void CluedoUI::setupUi()
 
     m_selectionObjectWidget->hide();
 
-    auto playerUpdateCallback = [this]() { updatePlayers(); };
+    auto playerUpdateCallback = [this]() { updatedPlayers(); };
     GameController::getInstance().registerPlayerUpdateCallback(playerUpdateCallback);
 }
 
@@ -152,7 +152,7 @@ void CluedoUI::retranslateUi()
     m_quitButton->setText(QApplication::translate("windowCluedo", "Quit", nullptr));
 }
 
-void CluedoUI::updatePlayers()
+void CluedoUI::updatedPlayers()
 {
     std::vector<Player*>& players = GameController::getInstance().getPlayers();
 

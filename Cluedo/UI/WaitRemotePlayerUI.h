@@ -2,6 +2,10 @@
 
 #include <QtWidgets/QMainWindow>
 
+#if WIN32
+#include "../Network/TcpWinSocketServer.h"
+#endif
+
 class QWidget;
 class QPushButton;
 class QLabel;
@@ -20,16 +24,20 @@ public:
 
     void setupUi();
     void retranslateUi();
+    void updatedPlayers();
 
     signals:
     void game_allRemoteUsersAvailable();
-    void game_remoteUserNotAvailable();
+    void game_notAllRemoteUsersAvailable();
 
     public slots:
-    void game_newRemoteUserConnected();
     void buttonCancel_clicked();
 
 private:
+#if WIN32
+    TcpWinSocketServer m_tcpWinSocketServer;
+#endif
+
     int m_numberOfExpectedRemoteUsers{ 0 };
 
     QWidget* m_centralwidget;
@@ -37,4 +45,6 @@ private:
     QPushButton* m_buttonCancel;
     QMenuBar* m_menubar;
     QStatusBar* m_statusbar;
+
+    void startTcpSocketServer();
 };
