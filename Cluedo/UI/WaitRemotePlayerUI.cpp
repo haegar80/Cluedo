@@ -7,6 +7,8 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
+#include <future>
+#include <thread>
 
 WaitRemotePlayerUI::WaitRemotePlayerUI(int p_numberOfExpectedRemoteUsers) : m_numberOfExpectedRemoteUsers(p_numberOfExpectedRemoteUsers)
 {
@@ -39,10 +41,8 @@ void WaitRemotePlayerUI::setupUi()
 
     retranslateUi();
 
+    QObject::connect(&m_tcpWinSocketServer, SIGNAL(remotePlayer_added()), this, SLOT(remotePlayer_added()));
     QObject::connect(m_buttonCancel, SIGNAL(pressed()), this, SLOT(buttonCancel_clicked()));
-
-    auto playerUpdateCallback = [this]() { updatedPlayers(); };
-    GameController::getInstance().registerPlayerUpdateCallback(playerUpdateCallback);
 
     startTcpSocketServer();
 }
@@ -54,11 +54,12 @@ void WaitRemotePlayerUI::retranslateUi()
     m_buttonCancel->setText(QApplication::translate("MainWindow", "Abbrechen", nullptr));
 }
 
-void WaitRemotePlayerUI::updatedPlayers() {
+void WaitRemotePlayerUI::remotePlayer_added() {
     GameController& gameController = GameController::getInstance();
     std::vector<Player*>& availablePlayers = gameController.getPlayers();
     int numberOfRemoteUsers = std::count_if(availablePlayers.begin(), availablePlayers.end(), [](Player* player) {return ((nullptr != player) && (Player::PlayerType_Remote == player->getPlayerType())); });
     if (m_numberOfExpectedRemoteUsers == numberOfRemoteUsers) {
+        m_tcpWinSocketServer.disableWaitingForClients();
         emit game_allRemoteUsersAvailable();
         this->close();
     }
@@ -66,13 +67,18 @@ void WaitRemotePlayerUI::updatedPlayers() {
 
 void WaitRemotePlayerUI::buttonCancel_clicked()
 {
+    m_tcpWinSocketServer.disableWaitingForClients();
     emit game_notAllRemoteUsersAvailable();
     this->close();
 }
 
 void WaitRemotePlayerUI::startTcpSocketServer() {
 #if WIN32
-    m_tcpWinSocketServer.init();
-    m_tcpWinSocketServer.listenToClients(m_numberOfExpectedRemoteUsers);
+    bool initSuccessful = m_tcpWinSocketServer.init();
+
+    if (initSuccessful) {
+        std::thread t(&TcpWinSocketServer::listenToClients, &m_tcpWinSocketServer);
+        t.detach();
+    }
 #endif
 }

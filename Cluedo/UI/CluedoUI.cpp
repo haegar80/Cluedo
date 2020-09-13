@@ -1,4 +1,5 @@
 #include "CluedoUI.h"
+#include "ConnectServerUI.h"
 #include "StartGameUI.h"
 #include "SelectObjectsUI.h"
 #include "../Model/Player.h"
@@ -221,7 +222,11 @@ void CluedoUI::buttonStartGame_clicked()
 
 void CluedoUI::buttonConnectGame_clicked()
 {
-    // todo
+    m_connectServerUI = new ConnectServerUI();
+    m_connectServerUI->setWindowModality(Qt::ApplicationModal);
+    m_connectServerUI->setAttribute(Qt::WA_DeleteOnClose);
+
+    m_connectServerUI->show();
 }
 
 void CluedoUI::game_started()

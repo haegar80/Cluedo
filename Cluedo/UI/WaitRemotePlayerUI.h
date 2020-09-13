@@ -24,13 +24,13 @@ public:
 
     void setupUi();
     void retranslateUi();
-    void updatedPlayers();
 
     signals:
     void game_allRemoteUsersAvailable();
     void game_notAllRemoteUsersAvailable();
 
     public slots:
+    void remotePlayer_added();
     void buttonCancel_clicked();
 
 private:

@@ -4,6 +4,7 @@
 #include <memory>
 
 class PlayerSet;
+class ConnectServerUI;
 class StartGameUI;
 class SelectObjectsUI;
 
@@ -62,6 +63,7 @@ private:
 
     std::shared_ptr<PlayerSet> m_myPlayerSet;
 
+    ConnectServerUI* m_connectServerUI;
     StartGameUI* m_startGameUI;
     SelectObjectsUI* m_selectObjectsUI;
 

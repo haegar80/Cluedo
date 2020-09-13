@@ -9,7 +9,6 @@ const std::string TcpWinSocketServer::m_port = "27015";
 
 bool TcpWinSocketServer::init() { 
     m_serverSocket = INVALID_SOCKET;
-    SOCKET clientSocket = INVALID_SOCKET;
 
     struct addrinfo* addressResult = nullptr;
     struct addrinfo hints;
@@ -60,8 +59,8 @@ bool TcpWinSocketServer::init() {
     return true;
 }
 
-bool TcpWinSocketServer::listenToClients(int p_numberOfExpectedClients) {
-    int socketResult = listen(m_serverSocket, p_numberOfExpectedClients);
+bool TcpWinSocketServer::listenToClients() {
+    int socketResult = listen(m_serverSocket, MaxConnectionQueue);
     if (SOCKET_ERROR == socketResult) {
         printf("listen failed with error: %d\n", WSAGetLastError());
         closesocket(m_serverSocket);
@@ -75,8 +74,7 @@ bool TcpWinSocketServer::listenToClients(int p_numberOfExpectedClients) {
 
     printf("Listen to clients ready");
 
-    int numberOfConnectedClients = 0;
-    while (m_disableWaiting || (numberOfConnectedClients < p_numberOfExpectedClients))
+    while (!m_disableWaiting)
     {
         SOCKET clientSocket = accept(m_serverSocket, NULL, NULL);
         if (INVALID_SOCKET != clientSocket) {
@@ -84,8 +82,10 @@ bool TcpWinSocketServer::listenToClients(int p_numberOfExpectedClients) {
             m_clientSockets.push_back(clientSocket);
 
             (void) GameController::getInstance().createNewRemotePlayer("Remote 1");
+            emit remotePlayer_added();
         }
     }
+    printf("Finished listening to clients!");
 
     return true;
 }

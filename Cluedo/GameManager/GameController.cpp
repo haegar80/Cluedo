@@ -114,11 +114,6 @@ RemotePlayer* GameController::createNewRemotePlayer(std::string p_name)
     RemotePlayer* remotePlayer = new RemotePlayer(std::move(p_name), playerSet);
     m_players.push_back(remotePlayer);
 
-    for (auto callback : m_playerUpdateCallbacks)
-    {
-        callback();
-    }
-
     return remotePlayer;
 }
 
