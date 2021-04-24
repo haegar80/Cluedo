@@ -102,7 +102,7 @@ void SelectObjectsUI::setupUi()
     QObject::connect(m_buttonAbort, SIGNAL(pressed()), this, SLOT(close()));
 
     Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
-    if (Player::PlayerType_Self != currentPlayer->getPlayerType())
+    if ((Player::PlayerType_SelfServer != currentPlayer->getPlayerType()) && (Player::PlayerType_SelfClient != currentPlayer->getPlayerType()))
     {
         disableSelectingWhenNotCurrentPlayer();
         fillSelectedObjectsWhenNotCurrentPlayer();
@@ -191,7 +191,7 @@ void SelectObjectsUI::buttonOk_clicked()
 
     QObject::connect(m_askPlayerUI, SIGNAL(askPlayerWindow_closed()), this, SLOT(askPlayerWindow_closed()));
 
-    if (Player::PlayerType_Self == currentPlayer->getPlayerType())
+    if ((Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) || (Player::PlayerType_SelfClient == currentPlayer->getPlayerType()))
     {
         if (m_selectedMurder && m_selectedWeapon && m_selectedRoom)
         {

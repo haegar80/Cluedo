@@ -3,6 +3,7 @@
 #include <ws2tcpip.h>
 #include <cstdlib>
 #include <cstdio>
+#include <thread>
 
 const std::string TcpWinSocketClient::m_port = "27015";
 
@@ -63,5 +64,34 @@ bool TcpWinSocketClient::connectToServer() {
         return false;
     }
 
+    m_readingActive = true;
+    std::thread t(&TcpWinSocketClient::readDataThread, this);
+    t.detach();
+
     return true;
+}
+
+void TcpWinSocketClient::shutdownSocket() {
+    m_readingActive = false;
+    if (m_clientSocket) {
+        closesocket(m_clientSocket);
+    }
+    WSACleanup();
+}
+
+void TcpWinSocketClient::readDataThread() {
+    while (m_readingActive)
+    {
+        char recvbuf[BufferLength];
+        int readResult = recv(m_clientSocket, recvbuf, BufferLength, 0);
+        if (readResult > 0) {
+            printf("Bytes received: %d\n", readResult);
+        }
+        else if (0 == readResult) {
+            printf("Connection closed\n");
+        }
+        else {
+            printf("recv failed with error: %d\n", WSAGetLastError());
+        }
+    }
 }

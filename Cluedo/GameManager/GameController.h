@@ -3,6 +3,10 @@
 #include "GameRunner.h"
 #include "../Model/CluedoObject.h"
 #include "../Model/RemotePlayer.h"
+#if WIN32
+#include "../Network/TcpWinSocketClient.h"
+#include "../Network/TcpWinSocketServer.h"
+#endif
 #include <vector>
 #include <functional>
 #include <memory>
@@ -48,6 +52,18 @@ public:
         return static_cast<int>(m_players.size());
     }
 
+#if WIN32
+    void setTcpWinSocketClient(std::shared_ptr<TcpWinSocketClient> p_winSocketClient) {
+        m_tcpWinSocketClient = p_winSocketClient;
+    }
+    void setTcpWinSocketServer(std::shared_ptr<TcpWinSocketServer> p_winSocketServer) {
+        m_tcpWinSocketServer = p_winSocketServer;
+        if (m_gameRunner) {
+            m_gameRunner->setTcpWinSocketServer(p_winSocketServer);
+        }
+    }
+#endif
+
     signals:
     void gameController_ready();
 
@@ -68,6 +84,11 @@ private:
     int m_lastDistributedPlayerSetIndex{ 0 };
 
     std::vector<std::function<void(void)>> m_playerUpdateCallbacks;
+
+#if WIN32
+    std::shared_ptr<TcpWinSocketClient> m_tcpWinSocketClient;
+    std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;
+#endif
 
     GameController();
 

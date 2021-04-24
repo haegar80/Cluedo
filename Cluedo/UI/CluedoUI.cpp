@@ -121,7 +121,7 @@ void CluedoUI::setupUi()
     QObject::connect(m_buttonSelectObjects, SIGNAL(pressed()), this, SLOT(buttonSelectObjects_clicked()));
     QObject::connect(m_buttonStartGame, SIGNAL(pressed()), this, SLOT(buttonStartGame_clicked()));
     QObject::connect(m_buttonConnectGame, SIGNAL(pressed()), this, SLOT(buttonConnectGame_clicked()));
-    QObject::connect(m_quitButton, SIGNAL(pressed()), this, SLOT(close()));
+    QObject::connect(m_quitButton, SIGNAL(pressed()), this, SLOT(buttonQuitGame_clicked()));
 
     m_selectionObjectWidget->hide();
 
@@ -161,7 +161,7 @@ void CluedoUI::updatedPlayers()
     {
         m_listPlayers->addItem(QString::fromStdString(player->getName()));
 
-        if (Player::PlayerType_Self == player->getPlayerType())
+        if ((Player::PlayerType_SelfServer == player->getPlayerType()) || (Player::PlayerType_SelfClient == player->getPlayerType()))
         {
             m_myPlayerSet = player->getPlayerSet();
         }
@@ -182,7 +182,7 @@ void CluedoUI::buttonSelectObjects_clicked()
 
     gameController.setCurrentPlayerIndex(m_currentPlayerIndex);
 
-    if (Player::PlayerType_Self != currentPlayer->getPlayerType())
+    if ((Player::PlayerType_SelfServer != currentPlayer->getPlayerType()) && (Player::PlayerType_SelfClient != currentPlayer->getPlayerType()))
     {
         if (gameController.shouldTellSuspicion())
         {
@@ -213,7 +213,12 @@ void CluedoUI::buttonStartGame_clicked()
     m_startGameUI->setWindowModality(Qt::ApplicationModal);
     m_startGameUI->setAttribute(Qt::WA_DeleteOnClose);
 
-    QObject::connect(m_startGameUI, SIGNAL(game_started()), this, SLOT(game_started()));
+#if WIN32
+    m_tcpWinSocketServer = std::make_shared<TcpWinSocketServer>();
+    m_startGameUI->setTcpWinSocketServer(m_tcpWinSocketServer);
+#endif
+
+    QObject::connect(m_startGameUI, SIGNAL(game_started_server()), this, SLOT(game_started_server()));
 
     m_startGameUI->show();
 
@@ -226,14 +231,39 @@ void CluedoUI::buttonConnectGame_clicked()
     m_connectServerUI->setWindowModality(Qt::ApplicationModal);
     m_connectServerUI->setAttribute(Qt::WA_DeleteOnClose);
 
+#if WIN32
+    m_tcpWinSocketClient = std::make_shared<TcpWinSocketClient>();
+    m_connectServerUI->setTcpWinSocketClient(m_tcpWinSocketClient);
+#endif
+
+    QObject::connect(m_connectServerUI, SIGNAL(game_started_client()), this, SLOT(game_started_client()));
+
     m_connectServerUI->show();
 }
 
-void CluedoUI::game_started()
+void CluedoUI::buttonQuitGame_clicked() {
+#if WIN32
+    if (m_tcpWinSocketClient) {
+        m_tcpWinSocketClient->shutdownSocket();
+    }
+    if (m_tcpWinSocketServer) {
+        m_tcpWinSocketServer->shutdownSockets();
+    }
+#endif
+    close();
+}
+
+void CluedoUI::game_started_server()
 {
+    GameController::getInstance().setTcpWinSocketServer(m_tcpWinSocketServer);
     GameController::getInstance().selectAndDistributeCluedoObjects();
     hideNotUsedCluedoObjects();
     fillCluedoObjects();
+    m_selectionObjectWidget->show();
+}
+
+void CluedoUI::game_started_client() {
+    GameController::getInstance().setTcpWinSocketClient(m_tcpWinSocketClient);
     m_selectionObjectWidget->show();
 }
 

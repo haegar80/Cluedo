@@ -111,7 +111,7 @@ RemotePlayer* GameController::createNewRemotePlayer(SOCKET p_clientSocket)
 {
     std::shared_ptr<PlayerSet> playerSet = createNewPlayerSet();
     
-    RemotePlayer* remotePlayer = new RemotePlayer(playerSet);
+    RemotePlayer* remotePlayer = new RemotePlayer(p_clientSocket, playerSet);
     m_players.push_back(remotePlayer);
 
     return remotePlayer;
@@ -244,7 +244,16 @@ void GameController::distributeCluedoObjects(std::vector<CluedoObject*>& p_clued
     while(p_cluedoObjects.end() != it)
     {
         int cluedoObjectIndex = Utils::generateRandomNumber(0, static_cast<int>(p_cluedoObjects.size() - 1));
-        PlayerSet* playerSet = m_players.at(playerSetIndex)->getPlayerSet().get();
+        Player* player = m_players.at(playerSetIndex);
+        if (Player::PlayerType_Remote == player->getPlayerType()) {
+            RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(player);
+            if (remotePlayer) {
+                SOCKET clientSocket = remotePlayer->getClientSocket();
+                m_tcpWinSocketServer->sendData(clientSocket, "Deine Karte: " + p_cluedoObjects.at(cluedoObjectIndex)->getName());
+            }
+        }
+
+        PlayerSet* playerSet =player->getPlayerSet().get();
         playerSet->addCluedoObject(p_cluedoObjects.at(cluedoObjectIndex));
         it = p_cluedoObjects.begin() + cluedoObjectIndex;
         it = p_cluedoObjects.erase(it);

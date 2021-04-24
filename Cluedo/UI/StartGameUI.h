@@ -28,9 +28,14 @@ public:
 
     void setupUi();
     void retranslateUi();
+#if WIN32
+    void setTcpWinSocketServer(std::shared_ptr<TcpWinSocketServer> p_winSocketServer) {
+        m_tcpWinSocketServer = p_winSocketServer;
+    }
+#endif
 
     signals:
-    void game_started();
+    void game_started_server();
 
     public slots:
     void buttonStartGame_clicked();

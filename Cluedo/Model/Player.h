@@ -9,9 +9,10 @@ class Player
 public:
     enum EPlayerType {
         PlayerType_Undefined = 0,
-        PlayerType_Self = 1,
-        PlayerType_Remote = 2,
-        PlayerType_Computer = 3
+        PlayerType_SelfServer = 1,
+        PlayerType_SelfClient = 2,
+        PlayerType_Remote = 3,
+        PlayerType_Computer = 4
     };
 
     Player(const std::string& p_name, std::shared_ptr<PlayerSet> p_playerSet, EPlayerType p_playerType);

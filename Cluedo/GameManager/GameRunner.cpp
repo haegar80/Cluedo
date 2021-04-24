@@ -1,5 +1,5 @@
 #include "GameRunner.h"
-#include "../Model/Player.h"
+#include "../Model/RemotePlayer.h"
 #include <map>
 #include <algorithm>
 #include <random>
@@ -54,6 +54,16 @@ void GameRunner::checkObjectsAtOtherPlayers(int p_currentPlayerIndex, CluedoObje
                 break;
             }
         }
+
+        Player* playerToAsk = m_players.at(playerIndexToAsk);
+        if (Player::PlayerType_Remote == playerToAsk->getPlayerType()) {
+            RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(playerToAsk);
+            if (remotePlayer) {
+                SOCKET clientSocket = remotePlayer->getClientSocket();
+                m_tcpWinSocketServer->sendData(clientSocket, "Hast du etwas von " + p_murder->getName() + "?");
+            }
+        }
+
         foundObject = askObjectsAtOtherPlayer(playerIndexToAsk, p_murder, p_weapon, p_room);
 
         if (nullptr == foundObject)

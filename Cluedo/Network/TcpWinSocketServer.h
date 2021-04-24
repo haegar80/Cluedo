@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <winsock2.h>
+#include <atomic>
 #include <string>
 #include <vector>
 
@@ -18,6 +19,7 @@ public:
     bool listenToClients();
     void shutdownSockets();
     void disableWaitingForClients();
+    void sendData(SOCKET p_socket, const std::string& p_data);
 
     std::vector<SOCKET>& getClientSockets()
     {
@@ -32,7 +34,7 @@ private:
     static constexpr int BufferLength = 512;
     static const std::string m_port;
     SOCKET m_serverSocket;
-    bool m_disableWaiting{ false };
+    std::atomic<bool> m_disableWaiting{ false };
     std::vector<SOCKET> m_clientSockets;
 };
 

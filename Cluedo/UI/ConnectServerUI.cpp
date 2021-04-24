@@ -78,18 +78,20 @@ void ConnectServerUI::buttonCancel_clicked()
 
 void ConnectServerUI::connectToServer() {
 #if WIN32
-    bool initSuccessful = m_tcpWinSocketClient.init(m_lineEditIPAddressServer->text().toStdString());
-    if (initSuccessful) {
-        bool connectSuccessful = m_tcpWinSocketClient.connectToServer();
-        if (connectSuccessful) {
-            GameController& gameController = GameController::getInstance();
-            (void)gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_SelfClient);
-            // todo send signal
+    if (m_tcpWinSocketClient) {
+        bool initSuccessful = m_tcpWinSocketClient->init(m_lineEditIPAddressServer->text().toStdString());
+        if (initSuccessful) {
+            bool connectSuccessful = m_tcpWinSocketClient->connectToServer();
+            if (connectSuccessful) {
+                GameController& gameController = GameController::getInstance();
+                (void)gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_SelfClient);
+                emit game_started_client();
+            }
+            else {
+                // todo send signal
+            }
+            this->close();
         }
-        else {
-            // todo send signal
-        }
-        this->close();
     }
 #endif
 }

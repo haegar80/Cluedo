@@ -1,6 +1,10 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#if WIN32
+#include "../Network/TcpWinSocketClient.h"
+#include "../Network/TcpWinSocketServer.h"
+#endif
 #include <memory>
 
 class PlayerSet;
@@ -33,7 +37,9 @@ public:
     void buttonSelectObjects_clicked();
     void buttonStartGame_clicked();
     void buttonConnectGame_clicked();
-    void game_started();
+    void buttonQuitGame_clicked();
+    void game_started_server();
+    void game_started_client();
     void askPlayer_finished();
 
 private:
@@ -66,6 +72,11 @@ private:
     ConnectServerUI* m_connectServerUI;
     StartGameUI* m_startGameUI;
     SelectObjectsUI* m_selectObjectsUI;
+
+#if WIN32
+    std::shared_ptr<TcpWinSocketClient> m_tcpWinSocketClient;
+    std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;
+#endif
 
     int m_currentPlayerIndex{ 0 };
 

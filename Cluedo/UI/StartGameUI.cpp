@@ -71,10 +71,6 @@ void StartGameUI::setupUi()
     m_comboBoxNumberOfRemotePlayers->insertItem(1, "1");
     m_comboBoxNumberOfRemotePlayers->insertItem(2, "2");
     m_comboBoxNumberOfRemotePlayers->insertItem(3, "3");
-
-#if WIN32
-    m_tcpWinSocketServer = std::make_shared<TcpWinSocketServer>();
-#endif
 }
 
 void StartGameUI::retranslateUi()
@@ -130,7 +126,7 @@ void StartGameUI::initializeGame() {
         (void)gameController.createNewPlayer(computerName.str().c_str(), Player::PlayerType_Computer);
     }
 
-    (void) gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_Self);
+    (void) gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_SelfServer);
 
     for (SOCKET clientSocket : m_tcpWinSocketServer->getClientSockets()) {
         (void)gameController.createNewRemotePlayer(clientSocket);
@@ -151,5 +147,5 @@ void StartGameUI::game_notAllRemoteUsersAvailable()
 }
 
 void StartGameUI::gameController_ready() {
-    emit game_started();
+    emit game_started_server();
 }

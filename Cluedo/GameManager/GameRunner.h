@@ -1,6 +1,11 @@
 #pragma once
 
 #include "CluedoObjectLoader.h"
+#if WIN32
+#include "../Network/TcpWinSocketClient.h"
+#include "../Network/TcpWinSocketServer.h"
+#endif
+#include <memory>
 #include <vector>
 
 class Player;
@@ -20,8 +25,18 @@ public:
     GameRunner(GameRunner&& other) = default;
     GameRunner& operator= (GameRunner&& other) = default;
 
+#if WIN32
+    void setTcpWinSocketServer(std::shared_ptr<TcpWinSocketServer> p_winSocketServer) {
+        m_tcpWinSocketServer = p_winSocketServer;
+    }
+#endif
+
 private:
     std::vector<Player*> m_players;
+
+#if WIN32
+    std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;
+#endif
 
     void checkObjectsAtOtherPlayers(int p_currentPlayerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
     CluedoObject* askObjectsAtOtherPlayer(int p_otherPlayerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);

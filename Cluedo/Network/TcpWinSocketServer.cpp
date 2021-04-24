@@ -102,3 +102,13 @@ void TcpWinSocketServer::shutdownSockets() {
 void TcpWinSocketServer::disableWaitingForClients() {
     m_disableWaiting = true;
 }
+
+void TcpWinSocketServer::sendData(SOCKET p_socket, const std::string& p_data) {
+    int sendResult = send(p_socket, p_data.c_str(), static_cast<int>(p_data.length()), 0);
+    if (SOCKET_ERROR == sendResult) {
+        printf("send failed with error: %d\n", WSAGetLastError());
+        closesocket(p_socket);
+        WSACleanup();
+    }
+    printf("Bytes sent: %d\n", sendResult);
+}
