@@ -1,4 +1,5 @@
 #include "ConnectServerUI.h"
+#include "../GameManager/GameController.h"
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QLabel>
@@ -20,7 +21,7 @@ void ConnectServerUI::setupUi()
     {
         this->setObjectName(QString::fromUtf8("MainWindow"));
     }
-    this->resize(318, 132);
+    this->resize(333, 194);
     m_centralwidget = new QWidget(this);
     m_centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
     m_labelIPAddressServer = new QLabel(m_centralwidget);
@@ -28,13 +29,19 @@ void ConnectServerUI::setupUi()
     m_labelIPAddressServer->setGeometry(QRect(30, 20, 101, 16));
     m_lineEditIPAddressServer = new QLineEdit(m_centralwidget);
     m_lineEditIPAddressServer->setObjectName(QString::fromUtf8("lineEditIPAddressServer"));
-    m_lineEditIPAddressServer->setGeometry(QRect(130, 20, 113, 20));
+    m_lineEditIPAddressServer->setGeometry(QRect(130, 20, 111, 20));
+    m_labelPlayerName = new QLabel(m_centralwidget);
+    m_labelPlayerName->setObjectName(QStringLiteral("labelPlayerName"));
+    m_labelPlayerName->setGeometry(QRect(30, 60, 81, 16));
+    m_lineEditPlayerName = new QLineEdit(m_centralwidget);
+    m_lineEditPlayerName->setObjectName(QStringLiteral("lineEditPlayerName"));
+    m_lineEditPlayerName->setGeometry(QRect(130, 60, 111, 20));
     m_buttonOk = new QPushButton(m_centralwidget);
     m_buttonOk->setObjectName(QString::fromUtf8("buttonOk"));
-    m_buttonOk->setGeometry(QRect(30, 70, 75, 21));
+    m_buttonOk->setGeometry(QRect(30, 110, 75, 21));
     m_buttonCancel = new QPushButton(m_centralwidget);
     m_buttonCancel->setObjectName(QString::fromUtf8("buttonCancel"));
-    m_buttonCancel->setGeometry(QRect(130, 70, 81, 21));
+    m_buttonCancel->setGeometry(QRect(160, 110, 81, 21));
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
     m_menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -54,6 +61,7 @@ void ConnectServerUI::retranslateUi()
 {
     this->setWindowTitle(QApplication::translate("MainWindow", "WaitRemotePlayer", 0));
     m_labelIPAddressServer->setText(QApplication::translate("MainWindow", "IP Addresse Server", 0));
+    m_labelPlayerName->setText(QApplication::translate("MainWindow", "Benutzername", 0));
     m_buttonOk->setText(QApplication::translate("MainWindow", "Ok", 0));
     m_buttonCancel->setText(QApplication::translate("MainWindow", "Abbrechen", 0));
 }
@@ -74,6 +82,8 @@ void ConnectServerUI::connectToServer() {
     if (initSuccessful) {
         bool connectSuccessful = m_tcpWinSocketClient.connectToServer();
         if (connectSuccessful) {
+            GameController& gameController = GameController::getInstance();
+            (void)gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_SelfClient);
             // todo send signal
         }
         else {
