@@ -19,6 +19,11 @@ public:
     void shutdownSockets();
     void disableWaitingForClients();
 
+    std::vector<SOCKET>& getClientSockets()
+    {
+        return m_clientSockets;
+    }
+
 signals:
     void remotePlayer_added();
 

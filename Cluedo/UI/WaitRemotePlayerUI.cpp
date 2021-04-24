@@ -1,5 +1,8 @@
 #include "WaitRemotePlayerUI.h"
 #include "../GameManager/GameController.h"
+#if WIN32
+#include "../Network/TcpWinSocketServer.h"
+#endif
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QLabel>
@@ -41,10 +44,7 @@ void WaitRemotePlayerUI::setupUi()
 
     retranslateUi();
 
-    QObject::connect(&m_tcpWinSocketServer, SIGNAL(remotePlayer_added()), this, SLOT(remotePlayer_added()));
     QObject::connect(m_buttonCancel, SIGNAL(pressed()), this, SLOT(buttonCancel_clicked()));
-
-    startTcpSocketServer();
 }
 
 void WaitRemotePlayerUI::retranslateUi()
@@ -54,12 +54,27 @@ void WaitRemotePlayerUI::retranslateUi()
     m_buttonCancel->setText(QApplication::translate("MainWindow", "Abbrechen", nullptr));
 }
 
+#if WIN32
+void WaitRemotePlayerUI::initTcpWinSocketServer(std::shared_ptr<TcpWinSocketServer> p_winSocketServer) {
+    m_tcpWinSocketServer = p_winSocketServer;
+
+    if (m_tcpWinSocketServer) {
+        QObject::connect(m_tcpWinSocketServer.get(), SIGNAL(remotePlayer_added()), this, SLOT(remotePlayer_added()));
+    }
+
+    startTcpSocketServer();
+}
+#endif
+
 void WaitRemotePlayerUI::remotePlayer_added() {
-    GameController& gameController = GameController::getInstance();
-    std::vector<Player*>& availablePlayers = gameController.getPlayers();
-    int numberOfRemoteUsers = std::count_if(availablePlayers.begin(), availablePlayers.end(), [](Player* player) {return ((nullptr != player) && (Player::PlayerType_Remote == player->getPlayerType())); });
-    if (m_numberOfExpectedRemoteUsers == numberOfRemoteUsers) {
-        m_tcpWinSocketServer.disableWaitingForClients();
+    m_addedRemoteUsers++;
+
+    if (m_numberOfExpectedRemoteUsers == m_addedRemoteUsers) {
+#if WIN32
+        if (m_tcpWinSocketServer) {
+            m_tcpWinSocketServer->disableWaitingForClients();
+        }
+#endif
         emit game_allRemoteUsersAvailable();
         this->close();
     }
@@ -67,18 +82,25 @@ void WaitRemotePlayerUI::remotePlayer_added() {
 
 void WaitRemotePlayerUI::buttonCancel_clicked()
 {
-    m_tcpWinSocketServer.disableWaitingForClients();
+#if WIN32
+    if (m_tcpWinSocketServer) {
+        m_tcpWinSocketServer->disableWaitingForClients();
+    }
+#endif
+
     emit game_notAllRemoteUsersAvailable();
     this->close();
 }
 
 void WaitRemotePlayerUI::startTcpSocketServer() {
 #if WIN32
-    bool initSuccessful = m_tcpWinSocketServer.init();
+    if (m_tcpWinSocketServer) {
+        bool initSuccessful = m_tcpWinSocketServer->init();
 
-    if (initSuccessful) {
-        std::thread t(&TcpWinSocketServer::listenToClients, &m_tcpWinSocketServer);
-        t.detach();
+        if (initSuccessful) {
+            std::thread t(&TcpWinSocketServer::listenToClients, m_tcpWinSocketServer);
+            t.detach();
+        }
     }
 #endif
 }

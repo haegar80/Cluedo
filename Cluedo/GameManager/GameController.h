@@ -15,6 +15,8 @@ class GameController : public QObject
 public:
     static GameController& getInstance();
     virtual ~GameController();
+    GameController(GameController const&) = delete;
+    GameController& operator=(GameController const&) = delete;
 
     void reset();
     void startGame();
@@ -25,7 +27,7 @@ public:
 
     void selectAndDistributeCluedoObjects();
 
-    RemotePlayer* createNewRemotePlayer(std::string p_name);
+    RemotePlayer* createNewRemotePlayer(SOCKET p_clientSocket);
     Player* createNewPlayer(std::string p_name, Player::EPlayerType p_playerType);
     Player* getCurrentPlayer();
 
@@ -68,8 +70,6 @@ private:
     std::vector<std::function<void(void)>> m_playerUpdateCallbacks;
 
     GameController();
-    GameController(const GameController& copy) = delete;
-    GameController& operator= (const GameController& copy) = delete;
 
     std::shared_ptr<PlayerSet> createNewPlayerSet();
     void initPlayerSet(std::shared_ptr<PlayerSet> playerSet);

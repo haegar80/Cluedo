@@ -1,6 +1,10 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#if WIN32
+#include "../Network/TcpWinSocketServer.h"
+#endif
+#include <memory>
 
 class WaitRemotePlayerUI;
 class PlayerSetUI;
@@ -35,6 +39,10 @@ public:
     void gameController_ready();
 
 private:
+#if WIN32
+    std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;
+#endif
+
     WaitRemotePlayerUI* m_waitRemotePlayerUI;
     PlayerSetUI* m_playerSetUI;
 

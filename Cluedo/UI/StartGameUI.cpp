@@ -71,6 +71,10 @@ void StartGameUI::setupUi()
     m_comboBoxNumberOfRemotePlayers->insertItem(1, "1");
     m_comboBoxNumberOfRemotePlayers->insertItem(2, "2");
     m_comboBoxNumberOfRemotePlayers->insertItem(3, "3");
+
+#if WIN32
+    m_tcpWinSocketServer = std::make_shared<TcpWinSocketServer>();
+#endif
 }
 
 void StartGameUI::retranslateUi()
@@ -84,6 +88,8 @@ void StartGameUI::retranslateUi()
 
 void StartGameUI::buttonStartGame_clicked()
 {
+    GameController::getInstance().reset();
+
     int numberOfRemotePlayers = m_comboBoxNumberOfRemotePlayers->currentIndex();
     if (numberOfRemotePlayers < 0)
     {
@@ -93,6 +99,10 @@ void StartGameUI::buttonStartGame_clicked()
         m_waitRemotePlayerUI = new WaitRemotePlayerUI(numberOfRemotePlayers);
         m_waitRemotePlayerUI->setWindowModality(Qt::ApplicationModal);
         m_waitRemotePlayerUI->setAttribute(Qt::WA_DeleteOnClose);
+
+#if WIN32
+        m_waitRemotePlayerUI->initTcpWinSocketServer(m_tcpWinSocketServer);
+#endif
 
         QObject::connect(m_waitRemotePlayerUI, SIGNAL(game_allRemoteUsersAvailable()), this, SLOT(game_allRemoteUsersAvailable()));
         QObject::connect(m_waitRemotePlayerUI, SIGNAL(game_notAllRemoteUsersAvailable()), this, SLOT(game_notAllRemoteUsersAvailable()));
@@ -112,7 +122,6 @@ void StartGameUI::initializeGame() {
     }
 
     GameController& gameController = GameController::getInstance();
-    gameController.reset();
 
     for (int i = 0; i < numberOfComputerPlayers; i++)
     {
@@ -121,7 +130,11 @@ void StartGameUI::initializeGame() {
         (void)gameController.createNewPlayer(computerName.str().c_str(), Player::PlayerType_Computer);
     }
 
-    Player* player = gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_Self);
+    (void) gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_Self);
+
+    for (SOCKET clientSocket : m_tcpWinSocketServer->getClientSockets()) {
+        (void)gameController.createNewRemotePlayer(clientSocket);
+    }
 
     gameController.startGame();
 

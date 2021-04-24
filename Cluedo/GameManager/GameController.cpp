@@ -107,11 +107,11 @@ void GameController::selectAndDistributeCluedoObjects()
     distributeCluedoObjects();
 }
 
-RemotePlayer* GameController::createNewRemotePlayer(std::string p_name) 
+RemotePlayer* GameController::createNewRemotePlayer(SOCKET p_clientSocket)
 {
     std::shared_ptr<PlayerSet> playerSet = createNewPlayerSet();
     
-    RemotePlayer* remotePlayer = new RemotePlayer(std::move(p_name), playerSet);
+    RemotePlayer* remotePlayer = new RemotePlayer(playerSet);
     m_players.push_back(remotePlayer);
 
     return remotePlayer;

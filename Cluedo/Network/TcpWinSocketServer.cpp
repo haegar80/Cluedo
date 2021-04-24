@@ -81,7 +81,6 @@ bool TcpWinSocketServer::listenToClients() {
             printf("Client connected!");
             m_clientSockets.push_back(clientSocket);
 
-            (void) GameController::getInstance().createNewRemotePlayer("Remote 1");
             emit remotePlayer_added();
         }
     }

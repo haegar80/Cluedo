@@ -1,9 +1,10 @@
 #pragma once
 
 #include <QtWidgets/QMainWindow>
+#include <memory>
 
 #if WIN32
-#include "../Network/TcpWinSocketServer.h"
+class TcpWinSocketServer;
 #endif
 
 class QWidget;
@@ -24,6 +25,9 @@ public:
 
     void setupUi();
     void retranslateUi();
+#if WIN32
+    void initTcpWinSocketServer(std::shared_ptr<TcpWinSocketServer> p_winSocketServer);
+#endif
 
     signals:
     void game_allRemoteUsersAvailable();
@@ -35,10 +39,11 @@ public:
 
 private:
 #if WIN32
-    TcpWinSocketServer m_tcpWinSocketServer;
+    std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;
 #endif
 
     int m_numberOfExpectedRemoteUsers{ 0 };
+    int m_addedRemoteUsers{ 0 };
 
     QWidget* m_centralwidget;
     QLabel* m_labelWaitRemotePlayer;
