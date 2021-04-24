@@ -14,7 +14,7 @@ bool TcpWinSocketClient::init(std::string p_serverAddress) {
 
     // Initialize Winsock
     WSADATA wsaData;
-    int socketResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
+    int socketResult = ::WSAStartup(MAKEWORD(2, 2), &wsaData);
     if (0 != socketResult) {
         printf("WSAStartup failed with error: %d\n", socketResult);
         return false;
@@ -26,19 +26,19 @@ bool TcpWinSocketClient::init(std::string p_serverAddress) {
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    socketResult = getaddrinfo(p_serverAddress.c_str(), m_port.c_str(), &hints, &m_addressInfo);
+    socketResult = ::getaddrinfo(p_serverAddress.c_str(), m_port.c_str(), &hints, &m_addressInfo);
     if (0 != socketResult) {
         printf("getaddrinfo failed with error: %d\n", socketResult);
-        WSACleanup();
+        ::WSACleanup();
         return false;
     }
 
     // Create a SOCKET for connecting to server
-    m_clientSocket = socket(m_addressInfo->ai_family, m_addressInfo->ai_socktype, m_addressInfo->ai_protocol);
+    m_clientSocket = ::socket(m_addressInfo->ai_family, m_addressInfo->ai_socktype, m_addressInfo->ai_protocol);
     if (INVALID_SOCKET == m_clientSocket) {
         printf("Socket failed with error: %ld\n", WSAGetLastError());
-        freeaddrinfo(m_addressInfo);
-        WSACleanup();
+        ::freeaddrinfo(m_addressInfo);
+        ::WSACleanup();
         return false;
     }
 
@@ -47,20 +47,20 @@ bool TcpWinSocketClient::init(std::string p_serverAddress) {
 
 bool TcpWinSocketClient::connectToServer() {
     for (struct addrinfo* ptr = m_addressInfo; ptr != NULL; ptr = ptr->ai_next) {
-        int socketResult = connect(m_clientSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+        int socketResult = ::connect(m_clientSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
         if (SOCKET_ERROR == socketResult) {
-            closesocket(m_clientSocket);
+            ::closesocket(m_clientSocket);
             m_clientSocket = INVALID_SOCKET;
             continue;
         }
         break;
     }
 
-    freeaddrinfo(m_addressInfo);
+    ::freeaddrinfo(m_addressInfo);
 
     if (INVALID_SOCKET == m_clientSocket) {
         printf("Unable to connect to server!\n");
-        WSACleanup();
+        ::WSACleanup();
         return false;
     }
 
@@ -74,18 +74,21 @@ bool TcpWinSocketClient::connectToServer() {
 void TcpWinSocketClient::shutdownSocket() {
     m_readingActive = false;
     if (m_clientSocket) {
-        closesocket(m_clientSocket);
+        ::closesocket(m_clientSocket);
     }
-    WSACleanup();
+    ::WSACleanup();
 }
 
 void TcpWinSocketClient::readDataThread() {
     while (m_readingActive)
     {
         char recvbuf[BufferLength];
-        int readResult = recv(m_clientSocket, recvbuf, BufferLength, 0);
+        int readResult = ::recv(m_clientSocket, recvbuf, BufferLength, 0);
         if (readResult > 0) {
             printf("Bytes received: %d\n", readResult);
+
+            const QString& message = QString::fromUtf8(recvbuf, readResult);
+            emit remote_message_received(message);
         }
         else if (0 == readResult) {
             printf("Connection closed\n");
