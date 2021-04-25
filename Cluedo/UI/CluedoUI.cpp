@@ -233,7 +233,6 @@ void CluedoUI::buttonConnectGame_clicked()
 
 #if WIN32
     m_tcpWinSocketClient = std::make_shared<TcpWinSocketClient>();
-    QObject::connect(m_tcpWinSocketClient.get(), SIGNAL(remote_message_received(const QString&)), this, SLOT(remote_message_received(const QString&)));
     m_connectServerUI->setTcpWinSocketClient(m_tcpWinSocketClient);
 #endif
 
@@ -268,16 +267,13 @@ void CluedoUI::game_started_server()
 
 void CluedoUI::game_started_client() {
     GameController::getInstance().setTcpWinSocketClient(m_tcpWinSocketClient);
+    GameController::getInstance().registerRemoteServerMessages();
     m_selectionObjectWidget->show();
 }
 
 void CluedoUI::askPlayer_finished()
 {
     nextPlayerReady();
-}
-
-void CluedoUI::remote_message_received(const QString& message) {
-    printf("Message received: %s", message.toStdString().c_str());
 }
 
 void CluedoUI::nextPlayerReady()

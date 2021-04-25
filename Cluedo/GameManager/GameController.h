@@ -30,6 +30,7 @@ public:
     bool shouldTellSuspicion();
 
     void selectAndDistributeCluedoObjects();
+    void registerRemoteServerMessages();
 
     RemotePlayer* createNewRemotePlayer(SOCKET p_clientSocket);
     Player* createNewPlayer(std::string p_name, Player::EPlayerType p_playerType);
@@ -103,4 +104,5 @@ private:
     void distributeMurders();
     void distributeWeapons();
     void distributeRooms();
+    void receiveRemoteCluedoObject(const std::string& message);
 };

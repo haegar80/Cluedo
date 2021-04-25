@@ -1,8 +1,10 @@
 #include "TcpWinSocketClient.h"
+#include "../Message/MessageHandler.h"
 #include <windows.h>
 #include <ws2tcpip.h>
 #include <cstdlib>
 #include <cstdio>
+#include <sstream>
 #include <thread>
 
 const std::string TcpWinSocketClient::m_port = "27015";
@@ -82,19 +84,47 @@ void TcpWinSocketClient::shutdownSocket() {
 void TcpWinSocketClient::readDataThread() {
     while (m_readingActive)
     {
-        char recvbuf[BufferLength];
-        int readResult = ::recv(m_clientSocket, recvbuf, BufferLength, 0);
-        if (readResult > 0) {
-            printf("Bytes received: %d\n", readResult);
-
-            const QString& message = QString::fromUtf8(recvbuf, readResult);
-            emit remote_message_received(message);
-        }
-        else if (0 == readResult) {
-            printf("Connection closed\n");
-        }
-        else {
-            printf("recv failed with error: %d\n", WSAGetLastError());
+        int dataLength;
+        bool dataLengthSuccessful = readDataLength(dataLength);
+        if (dataLengthSuccessful) {
+            char recvbuf[BufferLength];
+            int readResult = ::recv(m_clientSocket, recvbuf, dataLength, 0);
+            if (readResult > 0) {
+                std::string message(recvbuf, readResult);
+                MessageHandler::getInstance().handleMessage(message);
+            }
+            else if (0 == readResult) {
+                printf("Connection closed\n");
+            }
+            else {
+                printf("recv failed with error: %d\n", WSAGetLastError());
+                shutdownSocket();
+            }
         }
     }
+}
+
+bool TcpWinSocketClient::readDataLength(int& length) {
+    bool readSuccessful = false;
+
+    constexpr size_t NumberOfLengthChars = 4;
+    char recvbufLength[NumberOfLengthChars];
+    int readResultLength = ::recv(m_clientSocket, recvbufLength, NumberOfLengthChars, 0);
+
+    if (readResultLength > 0) {
+        std::string stringLength(recvbufLength, readResultLength);
+        std::stringstream ssLength;
+        ssLength << stringLength;
+        ssLength >> length;
+        readSuccessful = true;
+    }
+    else if (0 == readResultLength) {
+        printf("Connection closed\n");
+    }
+    else {
+        printf("recv failed with error: %d\n", WSAGetLastError());
+        shutdownSocket();
+    }
+
+    return readSuccessful;
 }

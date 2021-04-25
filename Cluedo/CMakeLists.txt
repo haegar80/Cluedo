@@ -15,9 +15,9 @@ ENDIF()
 
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 
-include_directories(${PROJECT_SOURCE_DIR}/UI ${PROJECT_SOURCE_DIR}/Model ${PROJECT_SOURCE_DIR}/GameManager)
+include_directories(${PROJECT_SOURCE_DIR}/UI ${PROJECT_SOURCE_DIR}/Model ${PROJECT_SOURCE_DIR}/GameManager ${PROJECT_SOURCE_DIR}/Network ${PROJECT_SOURCE_DIR}/Message)
 
-FILE(GLOB SOURCES_ALL_PLATFORM ${PROJECT_SOURCE_DIR}/UI/*.cpp ${PROJECT_SOURCE_DIR}/Model/*.cpp ${PROJECT_SOURCE_DIR}/GameManager/*.cpp ${PROJECT_SOURCE_DIR}/Utils/*.cpp main.cpp)
+FILE(GLOB SOURCES_ALL_PLATFORM ${PROJECT_SOURCE_DIR}/UI/*.cpp ${PROJECT_SOURCE_DIR}/Model/*.cpp ${PROJECT_SOURCE_DIR}/GameManager/*.cpp ${PROJECT_SOURCE_DIR}/Utils/*.cpp ${PROJECT_SOURCE_DIR}/Message/*.cpp main.cpp)
 FILE(GLOB SOURCES_WIN_PLATFORM ${PROJECT_SOURCE_DIR}/Network/TcpWinSocketServer.cpp ${PROJECT_SOURCE_DIR}/Network/TcpWinSocketClient.cpp)
 
 if (WIN32)

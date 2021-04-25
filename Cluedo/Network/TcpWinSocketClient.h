@@ -1,13 +1,11 @@
 #pragma once
 
-#include <QObject>
 #include <winsock2.h>
 #include <atomic>
 #include <string>
 
-class TcpWinSocketClient : public QObject
+class TcpWinSocketClient
 {
-    Q_OBJECT
 public:
     TcpWinSocketClient() = default;
     virtual ~TcpWinSocketClient() = default;
@@ -18,9 +16,6 @@ public:
     bool connectToServer();
     void shutdownSocket();
 
-    signals:
-    void remote_message_received(const QString& message);
-
 private:
     static constexpr int BufferLength = 512;
     static const std::string m_port;
@@ -29,5 +24,6 @@ private:
     std::atomic<bool> m_readingActive{ false };
 
     void readDataThread();
+    bool readDataLength(int& length);
 };
 

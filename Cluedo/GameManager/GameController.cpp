@@ -1,7 +1,10 @@
 #include "GameController.h"
 #include "CluedoObjectLoader.h"
+#include "../Message/MessageHandler.h"
+#include "../Message/MessageIds.h"
 #include "../Model/PlayerSet.h"
 #include "../Utils/Utils.h"
+#include <sstream>
 
 GameController& GameController::getInstance()
 {
@@ -105,6 +108,11 @@ void GameController::selectAndDistributeCluedoObjects()
 {
     selectEffectiveMurderWeaponRoom();
     distributeCluedoObjects();
+}
+
+void GameController::registerRemoteServerMessages() {
+    auto receiveRemoteCluedoObjectCallback = [this](const std::string& p_message) { receiveRemoteCluedoObject(p_message); };
+    MessageHandler::getInstance().registerMessageHandler(MessageIds::DistributeCluedoObject, receiveRemoteCluedoObjectCallback);
 }
 
 RemotePlayer* GameController::createNewRemotePlayer(SOCKET p_clientSocket)
@@ -249,12 +257,17 @@ void GameController::distributeCluedoObjects(std::vector<CluedoObject*>& p_clued
             RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(player);
             if (remotePlayer) {
                 SOCKET clientSocket = remotePlayer->getClientSocket();
-                m_tcpWinSocketServer->sendData(clientSocket, "Deine Karte: " + p_cluedoObjects.at(cluedoObjectIndex)->getName());
+                printf("Send cluedo object: %s\n", p_cluedoObjects.at(cluedoObjectIndex)->getName().c_str());
+                std::stringstream ss;
+                ss << MessageIds::DistributeCluedoObject << ":" + p_cluedoObjects.at(cluedoObjectIndex)->getName();
+                m_tcpWinSocketServer->sendData(clientSocket, ss.str());
             }
         }
+        else {
+            PlayerSet* playerSet = player->getPlayerSet().get();
+            playerSet->addCluedoObject(p_cluedoObjects.at(cluedoObjectIndex));
+        }
 
-        PlayerSet* playerSet =player->getPlayerSet().get();
-        playerSet->addCluedoObject(p_cluedoObjects.at(cluedoObjectIndex));
         it = p_cluedoObjects.begin() + cluedoObjectIndex;
         it = p_cluedoObjects.erase(it);
 
@@ -281,4 +294,8 @@ void GameController::distributeWeapons()
 void GameController::distributeRooms()
 {
     distributeCluedoObjects(m_roomsToDistribute);
+}
+
+void GameController::receiveRemoteCluedoObject(const std::string& message) {
+    printf("Received cluedo object: %s\n", message.c_str());
 }

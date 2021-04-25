@@ -4,6 +4,8 @@
 #include <ws2tcpip.h>
 #include <cstdlib>
 #include <cstdio>
+#include <cstring>
+#include <sstream>
 
 const std::string TcpWinSocketServer::m_port = "27015";
 
@@ -104,7 +106,21 @@ void TcpWinSocketServer::disableWaitingForClients() {
 }
 
 void TcpWinSocketServer::sendData(SOCKET p_socket, const std::string& p_data) {
-    int sendResult = ::send(p_socket, p_data.c_str(), static_cast<int>(p_data.length()), 0);
+    int remainingLength = static_cast<int>(p_data.length());
+    constexpr size_t NumberOfLengthChars = 4;
+    char bytes[NumberOfLengthChars];
+
+    int divisor = 1000;
+    for (int i = 3; i >= 0; i--) {
+        int lengthPart = remainingLength / divisor;
+        bytes[i] = static_cast<char>(lengthPart) + '0';
+        remainingLength -= lengthPart * divisor;
+        divisor /= 10;
+    }
+
+    std::stringstream dataWithLength;
+    dataWithLength << bytes[3] << bytes[2] << bytes[1] << bytes[0] << p_data;
+    int sendResult = ::send(p_socket, dataWithLength.str().c_str(), static_cast<int>(dataWithLength.str().length()), 0);
     if (SOCKET_ERROR == sendResult) {
         printf("send failed with error: %d\n", WSAGetLastError());
         ::closesocket(p_socket);

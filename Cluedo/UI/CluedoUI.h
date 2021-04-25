@@ -41,7 +41,6 @@ public:
     void game_started_server();
     void game_started_client();
     void askPlayer_finished();
-    void remote_message_received(const QString& message);
 
 private:
     QWidget* m_centralwidget;
