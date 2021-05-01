@@ -34,6 +34,7 @@ public:
 
     RemotePlayer* createNewRemotePlayer(SOCKET p_clientSocket);
     Player* createNewPlayer(std::string p_name, Player::EPlayerType p_playerType);
+    Player* getSelfPlayer();
     Player* getCurrentPlayer();
 
     void setCurrentPlayerIndex(int p_currentPlayerIndex)

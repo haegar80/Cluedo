@@ -9,6 +9,8 @@ public:
     static CluedoObjectLoader& getInstance();
     virtual ~CluedoObjectLoader();
 
+    CluedoObject* findCluedoObjectByNumber(int p_number);
+
     std::vector<CluedoObject*>& getMurders()
     {
         return m_murders;

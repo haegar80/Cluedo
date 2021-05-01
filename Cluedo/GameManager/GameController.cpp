@@ -135,6 +135,20 @@ Player* GameController::createNewPlayer(std::string p_name, Player::EPlayerType 
     return player;
 }
 
+Player* GameController::getSelfPlayer() {
+    Player* selfPlayer = nullptr;
+
+    for (Player* player : m_players)
+    {
+        if ((Player::PlayerType_SelfServer == player->getPlayerType()) || (Player::PlayerType_SelfClient == player->getPlayerType())) {
+            selfPlayer = player;
+            break;
+        }
+    }
+
+    return selfPlayer;
+}
+
 Player* GameController::getCurrentPlayer()
 {
     Player* currentPlayer{ nullptr };
@@ -259,7 +273,8 @@ void GameController::distributeCluedoObjects(std::vector<CluedoObject*>& p_clued
                 SOCKET clientSocket = remotePlayer->getClientSocket();
                 printf("Send cluedo object: %s\n", p_cluedoObjects.at(cluedoObjectIndex)->getName().c_str());
                 std::stringstream ss;
-                ss << MessageIds::DistributeCluedoObject << ":" + p_cluedoObjects.at(cluedoObjectIndex)->getName();
+                ss << MessageIds::DistributeCluedoObject << ":";
+                ss << p_cluedoObjects.at(cluedoObjectIndex)->getNumber();
                 m_tcpWinSocketServer->sendData(clientSocket, ss.str());
             }
         }
@@ -297,5 +312,14 @@ void GameController::distributeRooms()
 }
 
 void GameController::receiveRemoteCluedoObject(const std::string& message) {
-    printf("Received cluedo object: %s\n", message.c_str());
+    std::stringstream ss{ message };
+    int number;
+    ss >> number;
+
+    PlayerSet* playerSet = getSelfPlayer()->getPlayerSet().get();
+    CluedoObject* cluedoObject = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(number);
+    if (cluedoObject) {
+        printf("Add cluedo object to client: %s\n", cluedoObject->getName().c_str());
+        playerSet->addCluedoObject(cluedoObject);
+    }
 }

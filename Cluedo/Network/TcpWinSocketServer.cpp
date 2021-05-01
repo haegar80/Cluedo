@@ -126,5 +126,4 @@ void TcpWinSocketServer::sendData(SOCKET p_socket, const std::string& p_data) {
         ::closesocket(p_socket);
         ::WSACleanup();
     }
-    printf("Bytes sent: %d\n", sendResult);
 }

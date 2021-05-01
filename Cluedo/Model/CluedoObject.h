@@ -14,6 +14,8 @@ public:
         Room = 3,
     };
 
+    static int maxNumber;
+
     CluedoObject(CluedoObjectType p_cluedoObjectType, const std::string& p_name);
     virtual ~CluedoObject() = default;
 
@@ -27,9 +29,18 @@ public:
         return m_name;
     }
 
+    int getNumber() {
+        return m_number;
+    }
+
+    void setNumber(int p_number) {
+        m_number = p_number;
+    }
+
 private:
     CluedoObjectType m_cluedoObjectType{ Undefined };
     std::string m_name{ "" };
+    int m_number{ 0 };
     QImage m_image{};
 
     CluedoObject(const CluedoObject& copy) = default;
