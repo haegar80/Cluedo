@@ -7,7 +7,7 @@ class RemotePlayer : public Player
 {
 public:
     RemotePlayer(SOCKET p_clientSocket, std::shared_ptr<PlayerSet> p_playerSet);
-    RemotePlayer(std::shared_ptr<PlayerSet> p_playerSet);
+    RemotePlayer(const std::string& p_name, std::shared_ptr<PlayerSet> p_playerSet);
     virtual ~RemotePlayer() = default;
     RemotePlayer(const RemotePlayer& copy) = default;
     RemotePlayer& operator= (const RemotePlayer& copy) = default;

@@ -31,8 +31,6 @@ public:
     void setupUi();
     void retranslateUi();
 
-    void updatedPlayers();
-
     public slots:
     void buttonSelectObjects_clicked();
     void buttonStartGame_clicked();
@@ -40,6 +38,7 @@ public:
     void buttonQuitGame_clicked();
     void game_started_server();
     void game_started_client();
+    void playersList_updated();
     void allCluedoObjects_distributed();
     void askPlayer_finished();
 

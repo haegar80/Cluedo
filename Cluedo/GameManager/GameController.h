@@ -8,7 +8,6 @@
 #include "../Network/TcpWinSocketServer.h"
 #endif
 #include <vector>
-#include <functional>
 #include <memory>
 
 class PlayerSet;
@@ -58,8 +57,6 @@ public:
         m_currentPlayerIndex = p_currentPlayerIndex;
     }
 
-    void registerPlayerUpdateCallback(std::function<void(void)> p_callback);
-
     std::vector<Player*>& getPlayers()
     {
         return m_players;
@@ -72,6 +69,7 @@ public:
 
     signals:
     void gameController_ready();
+    void playersList_updated();
     void allCluedoObjects_distributed();
 
 private:
@@ -90,8 +88,6 @@ private:
     int m_currentPlayerIndex{ -1 };
     int m_lastDistributedPlayerSetIndex{ 0 };
 
-    std::vector<std::function<void(void)>> m_playerUpdateCallbacks;
-
 #if WIN32
     std::shared_ptr<TcpWinSocketClient> m_tcpWinSocketClient;
     std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;
@@ -104,7 +100,7 @@ private:
 
     Player* getSelfPlayer();
     std::vector<RemotePlayer*> getRemotePlayers();
-    RemotePlayer* createNewRemotePlayerOnClient();
+    RemotePlayer* createNewRemotePlayerOnClient(std::string p_name);
 
     void selectEffectiveMurderWeaponRoom();
     void addCluedoObjectsToDistribute(std::vector<CluedoObject*>& p_cluedoObjects, CluedoObject::CluedoObjectType p_type);

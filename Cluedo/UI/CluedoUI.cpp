@@ -122,12 +122,10 @@ void CluedoUI::setupUi()
     QObject::connect(m_buttonStartGame, SIGNAL(pressed()), this, SLOT(buttonStartGame_clicked()));
     QObject::connect(m_buttonConnectGame, SIGNAL(pressed()), this, SLOT(buttonConnectGame_clicked()));
     QObject::connect(m_quitButton, SIGNAL(pressed()), this, SLOT(buttonQuitGame_clicked()));
+    QObject::connect(&GameController::getInstance(), SIGNAL(playersList_updated()), this, SLOT(playersList_updated()));
     QObject::connect(&GameController::getInstance(), SIGNAL(allCluedoObjects_distributed()), this, SLOT(allCluedoObjects_distributed()));
 
     m_selectionObjectWidget->hide();
-
-    auto playerUpdateCallback = [this]() { updatedPlayers(); };
-    GameController::getInstance().registerPlayerUpdateCallback(playerUpdateCallback);
 }
 
 void CluedoUI::retranslateUi()
@@ -152,27 +150,6 @@ void CluedoUI::retranslateUi()
     m_buttonStartGame->setText(QApplication::translate("windowCluedo", "Starte Spiel", nullptr));
     m_buttonConnectGame->setText(QApplication::translate("windowCluedo", "Verbinde zu bestehendem Spiel", nullptr));
     m_quitButton->setText(QApplication::translate("windowCluedo", "Quit", nullptr));
-}
-
-void CluedoUI::updatedPlayers()
-{
-    std::vector<Player*>& players = GameController::getInstance().getPlayers();
-
-    for (Player* player : players)
-    {
-        m_listPlayers->addItem(QString::fromStdString(player->getName()));
-
-        if ((Player::PlayerType_SelfServer == player->getPlayerType()) || (Player::PlayerType_SelfClient == player->getPlayerType()))
-        {
-            m_myPlayerSet = player->getPlayerSet();
-        }
-    }
-
-    if (m_listPlayers->count() > 0)
-    {
-        m_listPlayers->item(m_currentPlayerIndex)->setSelected(true);
-        m_buttonSelectObjects->setEnabled(true);
-    }
 }
 
 void CluedoUI::buttonSelectObjects_clicked()
@@ -267,6 +244,27 @@ void CluedoUI::game_started_server()
 void CluedoUI::game_started_client() {
     GameController::getInstance().setTcpWinSocketClient(m_tcpWinSocketClient);
     GameController::getInstance().registerRemoteServerMessages();
+}
+
+void CluedoUI::playersList_updated()
+{
+    std::vector<Player*>& players = GameController::getInstance().getPlayers();
+
+    for (Player* player : players)
+    {
+        m_listPlayers->addItem(QString::fromStdString(player->getName()));
+
+        if ((Player::PlayerType_SelfServer == player->getPlayerType()) || (Player::PlayerType_SelfClient == player->getPlayerType()))
+        {
+            m_myPlayerSet = player->getPlayerSet();
+        }
+    }
+
+    if (m_listPlayers->count() > 0)
+    {
+        m_listPlayers->item(m_currentPlayerIndex)->setSelected(true);
+        m_buttonSelectObjects->setEnabled(true);
+    }
 }
 
 void CluedoUI::allCluedoObjects_distributed() {

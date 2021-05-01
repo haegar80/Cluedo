@@ -4,6 +4,6 @@ RemotePlayer::RemotePlayer(SOCKET p_clientSocket, std::shared_ptr<PlayerSet> p_p
 {
 }
 
-RemotePlayer::RemotePlayer(std::shared_ptr<PlayerSet> p_playerSet) : Player("Remote player", p_playerSet, Player::PlayerType_Remote)
+RemotePlayer::RemotePlayer(const std::string& p_name, std::shared_ptr<PlayerSet> p_playerSet) : Player(p_name, p_playerSet, Player::PlayerType_Remote)
 {
 }

@@ -34,11 +34,7 @@ void GameController::startGame()
 {
     m_gameRunner = std::make_shared<GameRunner>(m_players);
 
-    for (auto callback : m_playerUpdateCallbacks)
-    {
-        callback();
-    }
-
+    emit playersList_updated();
     emit gameController_ready();
 }
 
@@ -126,7 +122,7 @@ void GameController::sendPlayersListToClients() {
         std::stringstream ss;
         ss << MessageIds::PlayersList << ":";
         for (Player* anyPlayer : getPlayers()) {
-            if (Player::PlayerType_Remote != anyPlayer->getPlayerType()) {
+            if (remotePlayer != anyPlayer) {
                 ss << anyPlayer->getName() << ";";
             }
         }
@@ -165,11 +161,6 @@ Player* GameController::getCurrentPlayer()
     }
 
     return currentPlayer;
-}
-
-void GameController::registerPlayerUpdateCallback(std::function<void(void)> p_callback)
-{
-    m_playerUpdateCallbacks.push_back(p_callback);
 }
 
 std::shared_ptr<PlayerSet> GameController::createNewPlayerSet()
@@ -233,10 +224,10 @@ std::vector<RemotePlayer*> GameController::getRemotePlayers() {
     return remotePlayers;
 }
 
-RemotePlayer* GameController::createNewRemotePlayerOnClient() {
+RemotePlayer* GameController::createNewRemotePlayerOnClient(std::string p_name) {
     std::shared_ptr<PlayerSet> playerSet = createNewPlayerSet();
 
-    RemotePlayer* remotePlayer = new RemotePlayer(playerSet);
+    RemotePlayer* remotePlayer = new RemotePlayer(std::move(p_name), playerSet);
     m_players.push_back(remotePlayer);
 
     return remotePlayer;
@@ -391,7 +382,9 @@ void GameController::receiveRemotePlayersList(const std::string& message) {
     while(std::string::npos != (delimiterPos = message.find(";", startPos))) {
         std::string name = message.substr(startPos, delimiterPos - startPos);
         printf("Add remote player: %s\n", name.c_str());
-        createNewPlayer(std::move(name), Player::PlayerType_Remote);
+        createNewRemotePlayerOnClient(std::move(name));
         startPos = delimiterPos + 1;
     }
+
+    emit playersList_updated();
 }
