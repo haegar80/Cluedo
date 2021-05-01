@@ -40,6 +40,7 @@ public:
     void buttonQuitGame_clicked();
     void game_started_server();
     void game_started_client();
+    void allCluedoObjects_distributed();
     void askPlayer_finished();
 
 private:

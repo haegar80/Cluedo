@@ -122,6 +122,7 @@ void CluedoUI::setupUi()
     QObject::connect(m_buttonStartGame, SIGNAL(pressed()), this, SLOT(buttonStartGame_clicked()));
     QObject::connect(m_buttonConnectGame, SIGNAL(pressed()), this, SLOT(buttonConnectGame_clicked()));
     QObject::connect(m_quitButton, SIGNAL(pressed()), this, SLOT(buttonQuitGame_clicked()));
+    QObject::connect(&GameController::getInstance(), SIGNAL(allCluedoObjects_distributed()), this, SLOT(allCluedoObjects_distributed()));
 
     m_selectionObjectWidget->hide();
 
@@ -260,14 +261,16 @@ void CluedoUI::game_started_server()
 #endif
 
     GameController::getInstance().selectAndDistributeCluedoObjects();
-    hideNotUsedCluedoObjects();
-    fillCluedoObjects();
-    m_selectionObjectWidget->show();
 }
 
 void CluedoUI::game_started_client() {
     GameController::getInstance().setTcpWinSocketClient(m_tcpWinSocketClient);
     GameController::getInstance().registerRemoteServerMessages();
+}
+
+void CluedoUI::allCluedoObjects_distributed() {
+    hideNotUsedCluedoObjects();
+    fillCluedoObjects();
     m_selectionObjectWidget->show();
 }
 

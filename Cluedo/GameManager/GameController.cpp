@@ -113,6 +113,9 @@ void GameController::selectAndDistributeCluedoObjects()
 void GameController::registerRemoteServerMessages() {
     auto receiveRemoteCluedoObjectCallback = [this](const std::string& p_message) { receiveRemoteCluedoObject(p_message); };
     MessageHandler::getInstance().registerMessageHandler(MessageIds::DistributeCluedoObject, receiveRemoteCluedoObjectCallback);
+
+    auto receiveRemoteAllCluedoObjectsDistributedCallback = [this](const std::string&) { receiveRemoteAllCluedoObjectsDistributed(); };
+    MessageHandler::getInstance().registerMessageHandler(MessageIds::AllCluedoObjectsDistributed, receiveRemoteAllCluedoObjectsDistributedCallback);
 }
 
 RemotePlayer* GameController::createNewRemotePlayer(SOCKET p_clientSocket)
@@ -133,20 +136,6 @@ Player* GameController::createNewPlayer(std::string p_name, Player::EPlayerType 
     m_players.push_back(player);
 
     return player;
-}
-
-Player* GameController::getSelfPlayer() {
-    Player* selfPlayer = nullptr;
-
-    for (Player* player : m_players)
-    {
-        if ((Player::PlayerType_SelfServer == player->getPlayerType()) || (Player::PlayerType_SelfClient == player->getPlayerType())) {
-            selfPlayer = player;
-            break;
-        }
-    }
-
-    return selfPlayer;
 }
 
 Player* GameController::getCurrentPlayer()
@@ -197,6 +186,35 @@ void GameController::initPlayerSet(std::shared_ptr<PlayerSet> playerSet)
     }
 }
 
+Player* GameController::getSelfPlayer() {
+    Player* selfPlayer = nullptr;
+
+    for (Player* player : m_players)
+    {
+        if ((Player::PlayerType_SelfServer == player->getPlayerType()) || (Player::PlayerType_SelfClient == player->getPlayerType())) {
+            selfPlayer = player;
+            break;
+        }
+    }
+
+    return selfPlayer;
+}
+
+std::vector<RemotePlayer*> GameController::getRemotePlayers() {
+    std::vector<RemotePlayer*> remotePlayers;
+
+    for (Player* player : m_players)
+    {
+        if (Player::PlayerType_Remote == player->getPlayerType()) {
+            RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(player);
+            if (remotePlayer) {
+                remotePlayers.push_back(remotePlayer);
+            }
+        }
+    }
+
+    return remotePlayers;
+}
 void GameController::selectEffectiveMurderWeaponRoom()
 {
     std::vector<CluedoObject*>& murders = CluedoObjectLoader::getInstance().getMurders();
@@ -256,6 +274,16 @@ void GameController::distributeCluedoObjects()
     distributeMurders();
     distributeWeapons();
     distributeRooms();
+
+    for (RemotePlayer* remotePlayer : getRemotePlayers()) {
+        SOCKET clientSocket = remotePlayer->getClientSocket();
+        printf("Send all cluedo objects are distributed\n");
+        std::stringstream ss;
+        ss << MessageIds::AllCluedoObjectsDistributed << ":";
+        m_tcpWinSocketServer->sendData(clientSocket, ss.str());
+    }
+
+    emit allCluedoObjects_distributed();
 }
 
 void GameController::distributeCluedoObjects(std::vector<CluedoObject*>& p_cluedoObjects)
@@ -322,4 +350,9 @@ void GameController::receiveRemoteCluedoObject(const std::string& message) {
         printf("Add cluedo object to client: %s\n", cluedoObject->getName().c_str());
         playerSet->addCluedoObject(cluedoObject);
     }
+}
+
+void GameController::receiveRemoteAllCluedoObjectsDistributed() {
+    printf("All cluedo objects distributed, ready for starting.");
+    emit allCluedoObjects_distributed();
 }

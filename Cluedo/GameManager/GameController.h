@@ -34,7 +34,6 @@ public:
 
     RemotePlayer* createNewRemotePlayer(SOCKET p_clientSocket);
     Player* createNewPlayer(std::string p_name, Player::EPlayerType p_playerType);
-    Player* getSelfPlayer();
     Player* getCurrentPlayer();
 
     void setCurrentPlayerIndex(int p_currentPlayerIndex)
@@ -68,6 +67,7 @@ public:
 
     signals:
     void gameController_ready();
+    void allCluedoObjects_distributed();
 
 private:
     std::shared_ptr<GameRunner> m_gameRunner;
@@ -97,6 +97,9 @@ private:
     std::shared_ptr<PlayerSet> createNewPlayerSet();
     void initPlayerSet(std::shared_ptr<PlayerSet> playerSet);
 
+    Player* getSelfPlayer();
+    std::vector<RemotePlayer*> getRemotePlayers();
+
     void selectEffectiveMurderWeaponRoom();
     void addCluedoObjectsToDistribute(std::vector<CluedoObject*>& p_cluedoObjects, CluedoObject::CluedoObjectType p_type);
 
@@ -106,4 +109,5 @@ private:
     void distributeWeapons();
     void distributeRooms();
     void receiveRemoteCluedoObject(const std::string& message);
+    void receiveRemoteAllCluedoObjectsDistributed();
 };
