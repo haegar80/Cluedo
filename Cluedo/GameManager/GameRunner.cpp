@@ -59,8 +59,8 @@ void GameRunner::checkObjectsAtOtherPlayers(int p_currentPlayerIndex, CluedoObje
         if (Player::PlayerType_Remote == playerToAsk->getPlayerType()) {
             RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(playerToAsk);
             if (remotePlayer) {
-                SOCKET clientSocket = remotePlayer->getClientSocket();
-                m_tcpWinSocketServer->sendData(clientSocket, "Hast du etwas von " + p_murder->getName() + "?");
+                SOCKET remoteSocket = remotePlayer->getRemoteSocket();
+                m_tcpWinSocketServer->sendData(remoteSocket, "Hast du etwas von " + p_murder->getName() + "?");
             }
         }
 

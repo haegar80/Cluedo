@@ -7,11 +7,11 @@ MessageHandler& MessageHandler::getInstance()
     return instance;
 }
 
-void MessageHandler::registerMessageHandler(int p_messageId, std::function<void(const std::string&)> p_messageHandlerFunction) {
+void MessageHandler::registerMessageHandler(int p_messageId, std::function<void(SOCKET, const std::string&)> p_messageHandlerFunction) {
     m_messageHandlerCallbacks.insert(std::make_pair(p_messageId, p_messageHandlerFunction));
 }
 
-bool MessageHandler::handleMessage(std::string p_message) {
+bool MessageHandler::handleMessage(SOCKET p_remoteSocket, std::string p_message) {
     printf("Message received: %s\n", p_message.c_str());
 
     bool handledMessage = false;
@@ -26,7 +26,7 @@ bool MessageHandler::handleMessage(std::string p_message) {
         std::string payload = p_message.substr(ExpectedDelimiterPos + 1);
         auto itFound = m_messageHandlerCallbacks.find(commandId);
         if (m_messageHandlerCallbacks.end() != itFound) {
-            itFound->second(payload);
+            itFound->second(p_remoteSocket, payload);
         }
     }
 

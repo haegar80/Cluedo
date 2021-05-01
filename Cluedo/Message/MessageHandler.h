@@ -3,6 +3,9 @@
 #include <functional>
 #include <map>
 #include <string>
+#if WIN32
+#include <winsock2.h>
+#endif
 
 class MessageHandler
 {
@@ -14,12 +17,12 @@ public:
     MessageHandler(MessageHandler&& other) = default;
     MessageHandler& operator= (MessageHandler&& other) = default;
 
-    void registerMessageHandler(int p_messageId, std::function<void(const std::string&)> p_messageHandlerFunction);
-    bool handleMessage(std::string p_message);
+    void registerMessageHandler(int p_messageId, std::function<void(SOCKET, const std::string&)> p_messageHandlerFunction);
+    bool handleMessage(SOCKET p_remoteSocket, std::string p_message);
     void convertMessageLengthToCharArray(int p_length, char* p_charArray);
 
 private:
-    std::map<int, std::function<void(const std::string&)>> m_messageHandlerCallbacks;
+    std::map<int, std::function<void(SOCKET, const std::string&)>> m_messageHandlerCallbacks;
 
     MessageHandler() = default;
 };

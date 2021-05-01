@@ -198,6 +198,8 @@ void CluedoUI::buttonStartGame_clicked()
 
     QObject::connect(m_startGameUI, SIGNAL(game_started_server()), this, SLOT(game_started_server()));
 
+    GameController::getInstance().registerRemoteServerMessages(false);
+
     m_startGameUI->show();
 
     m_buttonStartGame->setDisabled(true);
@@ -236,14 +238,15 @@ void CluedoUI::game_started_server()
 #if WIN32
     GameController::getInstance().setTcpWinSocketServer(m_tcpWinSocketServer);
 #endif
-
     GameController::getInstance().sendPlayersListToClients();
     GameController::getInstance().selectAndDistributeCluedoObjects();
 }
 
 void CluedoUI::game_started_client() {
+#if WIN32
     GameController::getInstance().setTcpWinSocketClient(m_tcpWinSocketClient);
-    GameController::getInstance().registerRemoteServerMessages();
+#endif
+    GameController::getInstance().registerRemoteServerMessages(true);
 }
 
 void CluedoUI::playersList_updated()

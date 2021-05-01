@@ -30,7 +30,6 @@ public:
 
     // Server functions
     void selectAndDistributeCluedoObjects();
-    RemotePlayer* createNewRemotePlayerOnServer(SOCKET p_clientSocket);
     void sendPlayersListToClients();
 #if WIN32
     void setTcpWinSocketServer(std::shared_ptr<TcpWinSocketServer> p_winSocketServer) {
@@ -42,7 +41,7 @@ public:
 #endif
 
     // Client functions
-    void registerRemoteServerMessages();
+    void registerRemoteServerMessages(bool p_client);
 #if WIN32
     void setTcpWinSocketClient(std::shared_ptr<TcpWinSocketClient> p_winSocketClient) {
         m_tcpWinSocketClient = p_winSocketClient;
@@ -100,7 +99,7 @@ private:
 
     Player* getSelfPlayer();
     std::vector<RemotePlayer*> getRemotePlayers();
-    RemotePlayer* createNewRemotePlayerOnClient(std::string p_name);
+    RemotePlayer* createNewRemotePlayer(std::string p_name, SOCKET p_remoteSocket);
 
     void selectEffectiveMurderWeaponRoom();
     void addCluedoObjectsToDistribute(std::vector<CluedoObject*>& p_cluedoObjects, CluedoObject::CluedoObjectType p_type);
@@ -113,5 +112,5 @@ private:
 
     void receiveRemoteCluedoObject(const std::string& message);
     void receiveRemoteAllCluedoObjectsDistributed();
-    void receiveRemotePlayersList(const std::string& message);
+    void receiveRemotePlayersList(SOCKET p_sourceSocket, const std::string& message);
 };

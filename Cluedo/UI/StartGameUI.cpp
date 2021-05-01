@@ -128,10 +128,6 @@ void StartGameUI::initializeGame() {
 
     (void) gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_SelfServer);
 
-    for (SOCKET clientSocket : m_tcpWinSocketServer->getClientSockets()) {
-        (void)gameController.createNewRemotePlayerOnServer(clientSocket);
-    }
-
     gameController.startGame();
 
     this->close();

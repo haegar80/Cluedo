@@ -139,7 +139,7 @@ void TcpWinSocketServer::readDataThread(SOCKET p_clientSocket) {
             int readResult = ::recv(p_clientSocket, recvbuf, dataLength, 0);
             if (readResult > 0) {
                 std::string message(recvbuf, readResult);
-                MessageHandler::getInstance().handleMessage(message);
+                MessageHandler::getInstance().handleMessage(p_clientSocket, message);
             }
             else if (0 == readResult) {
                 printf("Connection closed\n");

@@ -1,12 +1,14 @@
 #pragma once
 
 #include "../Model/Player.h"
+#if WIN32
 #include <winsock2.h>
+#endif
 
 class RemotePlayer : public Player
 {
 public:
-    RemotePlayer(SOCKET p_clientSocket, std::shared_ptr<PlayerSet> p_playerSet);
+    RemotePlayer(const std::string& p_name, std::shared_ptr<PlayerSet> p_playerSet, SOCKET p_remoteSocket);
     RemotePlayer(const std::string& p_name, std::shared_ptr<PlayerSet> p_playerSet);
     virtual ~RemotePlayer() = default;
     RemotePlayer(const RemotePlayer& copy) = default;
@@ -14,10 +16,10 @@ public:
     RemotePlayer(RemotePlayer&& other) = default;
     RemotePlayer& operator= (RemotePlayer&& other) = default;
 
-    SOCKET getClientSocket() {
-        return m_clientSocket;
+    SOCKET getRemoteSocket() {
+        return m_remoteSocket;
     }
 
 private:
-    SOCKET m_clientSocket;
+    SOCKET m_remoteSocket;
 };
