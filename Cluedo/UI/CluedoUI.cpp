@@ -260,6 +260,7 @@ void CluedoUI::game_started_server()
     GameController::getInstance().setTcpWinSocketServer(m_tcpWinSocketServer);
 #endif
 
+    GameController::getInstance().sendPlayersListToClients();
     GameController::getInstance().selectAndDistributeCluedoObjects();
 }
 

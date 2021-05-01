@@ -29,10 +29,27 @@ public:
     bool tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
     bool shouldTellSuspicion();
 
+    // Server functions
     void selectAndDistributeCluedoObjects();
-    void registerRemoteServerMessages();
+    RemotePlayer* createNewRemotePlayerOnServer(SOCKET p_clientSocket);
+    void sendPlayersListToClients();
+#if WIN32
+    void setTcpWinSocketServer(std::shared_ptr<TcpWinSocketServer> p_winSocketServer) {
+        m_tcpWinSocketServer = p_winSocketServer;
+        if (m_gameRunner) {
+            m_gameRunner->setTcpWinSocketServer(p_winSocketServer);
+        }
+    }
+#endif
 
-    RemotePlayer* createNewRemotePlayer(SOCKET p_clientSocket);
+    // Client functions
+    void registerRemoteServerMessages();
+#if WIN32
+    void setTcpWinSocketClient(std::shared_ptr<TcpWinSocketClient> p_winSocketClient) {
+        m_tcpWinSocketClient = p_winSocketClient;
+    }
+#endif
+
     Player* createNewPlayer(std::string p_name, Player::EPlayerType p_playerType);
     Player* getCurrentPlayer();
 
@@ -52,18 +69,6 @@ public:
     {
         return static_cast<int>(m_players.size());
     }
-
-#if WIN32
-    void setTcpWinSocketClient(std::shared_ptr<TcpWinSocketClient> p_winSocketClient) {
-        m_tcpWinSocketClient = p_winSocketClient;
-    }
-    void setTcpWinSocketServer(std::shared_ptr<TcpWinSocketServer> p_winSocketServer) {
-        m_tcpWinSocketServer = p_winSocketServer;
-        if (m_gameRunner) {
-            m_gameRunner->setTcpWinSocketServer(p_winSocketServer);
-        }
-    }
-#endif
 
     signals:
     void gameController_ready();
@@ -99,6 +104,7 @@ private:
 
     Player* getSelfPlayer();
     std::vector<RemotePlayer*> getRemotePlayers();
+    RemotePlayer* createNewRemotePlayerOnClient();
 
     void selectEffectiveMurderWeaponRoom();
     void addCluedoObjectsToDistribute(std::vector<CluedoObject*>& p_cluedoObjects, CluedoObject::CluedoObjectType p_type);
@@ -108,6 +114,8 @@ private:
     void distributeMurders();
     void distributeWeapons();
     void distributeRooms();
+
     void receiveRemoteCluedoObject(const std::string& message);
     void receiveRemoteAllCluedoObjectsDistributed();
+    void receiveRemotePlayersList(const std::string& message);
 };
