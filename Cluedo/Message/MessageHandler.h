@@ -16,6 +16,8 @@ public:
 
     void registerMessageHandler(int p_messageId, std::function<void(const std::string&)> p_messageHandlerFunction);
     bool handleMessage(std::string p_message);
+    void convertMessageLengthToCharArray(int p_length, char* p_charArray);
+
 private:
     std::map<int, std::function<void(const std::string&)>> m_messageHandlerCallbacks;
 

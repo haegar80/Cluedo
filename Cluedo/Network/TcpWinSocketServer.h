@@ -18,6 +18,7 @@ public:
     bool init();
     bool listenToClients();
     void shutdownSockets();
+    void shutdownSocket(SOCKET p_clientSocket);
     void disableWaitingForClients();
     void sendData(SOCKET p_socket, const std::string& p_data);
 
@@ -35,6 +36,10 @@ private:
     static const std::string m_port;
     SOCKET m_serverSocket;
     std::atomic<bool> m_disableWaiting{ false };
+    std::atomic<bool> m_readingActive{ false };
     std::vector<SOCKET> m_clientSockets;
+
+    void readDataThread(SOCKET p_clientSocket);
+    bool readDataLength(SOCKET p_clientSocket, int& length);
 };
 

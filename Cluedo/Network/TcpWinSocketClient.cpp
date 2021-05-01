@@ -10,7 +10,7 @@
 const std::string TcpWinSocketClient::m_port = "27015";
 
 bool TcpWinSocketClient::init(std::string p_serverAddress) {
-    m_clientSocket = INVALID_SOCKET;
+    m_serverSocket = INVALID_SOCKET;
 
     struct addrinfo hints;
 
@@ -36,8 +36,8 @@ bool TcpWinSocketClient::init(std::string p_serverAddress) {
     }
 
     // Create a SOCKET for connecting to server
-    m_clientSocket = ::socket(m_addressInfo->ai_family, m_addressInfo->ai_socktype, m_addressInfo->ai_protocol);
-    if (INVALID_SOCKET == m_clientSocket) {
+    m_serverSocket = ::socket(m_addressInfo->ai_family, m_addressInfo->ai_socktype, m_addressInfo->ai_protocol);
+    if (INVALID_SOCKET == m_serverSocket) {
         printf("Socket failed with error: %ld\n", WSAGetLastError());
         ::freeaddrinfo(m_addressInfo);
         ::WSACleanup();
@@ -49,10 +49,10 @@ bool TcpWinSocketClient::init(std::string p_serverAddress) {
 
 bool TcpWinSocketClient::connectToServer() {
     for (struct addrinfo* ptr = m_addressInfo; ptr != NULL; ptr = ptr->ai_next) {
-        int socketResult = ::connect(m_clientSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
+        int socketResult = ::connect(m_serverSocket, ptr->ai_addr, (int)ptr->ai_addrlen);
         if (SOCKET_ERROR == socketResult) {
-            ::closesocket(m_clientSocket);
-            m_clientSocket = INVALID_SOCKET;
+            ::closesocket(m_serverSocket);
+            m_serverSocket = INVALID_SOCKET;
             continue;
         }
         break;
@@ -60,7 +60,7 @@ bool TcpWinSocketClient::connectToServer() {
 
     ::freeaddrinfo(m_addressInfo);
 
-    if (INVALID_SOCKET == m_clientSocket) {
+    if (INVALID_SOCKET == m_serverSocket) {
         printf("Unable to connect to server!\n");
         ::WSACleanup();
         return false;
@@ -75,10 +75,25 @@ bool TcpWinSocketClient::connectToServer() {
 
 void TcpWinSocketClient::shutdownSocket() {
     m_readingActive = false;
-    if (m_clientSocket) {
-        ::closesocket(m_clientSocket);
+    if (m_serverSocket) {
+        ::closesocket(m_serverSocket);
     }
     ::WSACleanup();
+}
+
+void TcpWinSocketClient::sendData(const std::string& p_data) {
+    constexpr size_t NumberOfLengthChars = 4;
+    char bytes[NumberOfLengthChars];
+
+    MessageHandler::getInstance().convertMessageLengthToCharArray(static_cast<int>(p_data.length()), bytes);
+    std::stringstream dataWithLength;
+    dataWithLength << bytes[3] << bytes[2] << bytes[1] << bytes[0] << p_data;
+    int sendResult = ::send(m_serverSocket, dataWithLength.str().c_str(), static_cast<int>(dataWithLength.str().length()), 0);
+    if (SOCKET_ERROR == sendResult) {
+        printf("send failed with error: %d\n", WSAGetLastError());
+        ::closesocket(m_serverSocket);
+        ::WSACleanup();
+    }
 }
 
 void TcpWinSocketClient::readDataThread() {
@@ -88,7 +103,7 @@ void TcpWinSocketClient::readDataThread() {
         bool dataLengthSuccessful = readDataLength(dataLength);
         if (dataLengthSuccessful) {
             char recvbuf[BufferLength];
-            int readResult = ::recv(m_clientSocket, recvbuf, dataLength, 0);
+            int readResult = ::recv(m_serverSocket, recvbuf, dataLength, 0);
             if (readResult > 0) {
                 std::string message(recvbuf, readResult);
                 MessageHandler::getInstance().handleMessage(message);
@@ -101,6 +116,9 @@ void TcpWinSocketClient::readDataThread() {
                 shutdownSocket();
             }
         }
+        else {
+            break;
+        }
     }
 }
 
@@ -109,7 +127,7 @@ bool TcpWinSocketClient::readDataLength(int& length) {
 
     constexpr size_t NumberOfLengthChars = 4;
     char recvbufLength[NumberOfLengthChars];
-    int readResultLength = ::recv(m_clientSocket, recvbufLength, NumberOfLengthChars, 0);
+    int readResultLength = ::recv(m_serverSocket, recvbufLength, NumberOfLengthChars, 0);
 
     if (readResultLength > 0) {
         std::string stringLength(recvbufLength, readResultLength);

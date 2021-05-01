@@ -1,5 +1,6 @@
 #include "ConnectServerUI.h"
 #include "../GameManager/GameController.h"
+#include "../Message/MessageIds.h"
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QLabel>
@@ -84,7 +85,13 @@ void ConnectServerUI::connectToServer() {
             bool connectSuccessful = m_tcpWinSocketClient->connectToServer();
             if (connectSuccessful) {
                 GameController& gameController = GameController::getInstance();
-                (void)gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_SelfClient);
+                Player* player = gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_SelfClient);
+
+                std::stringstream ss;
+                ss << MessageIds::PlayersList << ":";
+                ss << player->getName() << ";";
+                m_tcpWinSocketClient->sendData(ss.str());
+
                 emit game_started_client();
             }
             else {

@@ -32,3 +32,15 @@ bool MessageHandler::handleMessage(std::string p_message) {
 
     return handledMessage;
 }
+
+void MessageHandler::convertMessageLengthToCharArray(int p_length, char* p_charArray) {
+    constexpr size_t NumberOfLengthChars = 4;
+
+    int divisor = 1000;
+    for (int i = 3; i >= 0; i--) {
+        int lengthPart = p_length / divisor;
+        p_charArray[i] = static_cast<char>(lengthPart) + '0';
+        p_length -= lengthPart * divisor;
+        divisor /= 10;
+    }
+}
