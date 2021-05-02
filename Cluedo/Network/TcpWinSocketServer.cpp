@@ -84,8 +84,6 @@ bool TcpWinSocketServer::listenToClients() {
             m_readingActive = true;
             std::thread t(&TcpWinSocketServer::readDataThread, this, clientSocket);
             t.detach();
-
-            emit remotePlayer_added();
         }
     }
     printf("Finished listening to clients!");

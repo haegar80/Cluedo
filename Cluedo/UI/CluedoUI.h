@@ -39,7 +39,9 @@ public:
     void game_started_server();
     void game_started_client();
     void playersList_updated();
+    void playersListNextPlayer_ready();
     void allCluedoObjects_distributed();
+    void askPlayer_ready();
     void askPlayer_finished();
 
 private:
@@ -78,10 +80,7 @@ private:
     std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;
 #endif
 
-    int m_currentPlayerIndex{ 0 };
-
-    void nextPlayerReady();
-
+    void selectCurrentPlayer();
     void hideNotUsedCluedoObjects();
     void fillCluedoObjects();
 };

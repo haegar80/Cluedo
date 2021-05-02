@@ -32,9 +32,11 @@ void GameController::reset()
 
 void GameController::startGame()
 {
-    m_gameRunner = std::make_shared<GameRunner>(m_players);
-
     emit playersList_updated();
+
+    m_gameRunner = std::make_shared<GameRunner>(m_players);
+    m_gameRunner->startGame();
+
     emit gameController_ready();
 }
 
@@ -42,7 +44,7 @@ void GameController::askPlayer()
 {
     if (m_gameRunner)
     {
-        m_gameRunner->askPlayer(m_currentPlayerIndex);
+        m_gameRunner->askPlayer();
     }
 }
 
@@ -50,7 +52,7 @@ void GameController::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomI
 {
     if (m_gameRunner)
     {
-        m_gameRunner->askPlayer(m_currentPlayerIndex, p_murderIndex, p_weaponIndex, p_roomIndex);
+        m_gameRunner->askPlayer(p_murderIndex, p_weaponIndex, p_roomIndex);
     }
 }
 
@@ -146,16 +148,36 @@ Player* GameController::createNewPlayer(std::string p_name, Player::EPlayerType 
     return player;
 }
 
+int GameController::getCurrentPlayerIndex() {
+    if (m_gameRunner) {
+        return m_gameRunner->getCurrentPlayerIndex();
+    }
+    else {
+        return -1;
+    }
+}
+
 Player* GameController::getCurrentPlayer()
 {
     Player* currentPlayer{ nullptr };
 
-    if (m_currentPlayerIndex >= 0)
+    int currentPlayerIndex = getCurrentPlayerIndex();
+    if (currentPlayerIndex >= 0)
     {
-        currentPlayer = m_players.at(m_currentPlayerIndex);
+        currentPlayer = m_players.at(currentPlayerIndex);
     }
 
     return currentPlayer;
+}
+
+void GameController::moveToNextPlayer() {
+    Player* currentPlayer = getCurrentPlayer();
+    if (Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) {
+        m_gameRunner->moveToNextPlayer();
+    }
+    else if (Player::PlayerType_Remote == currentPlayer->getPlayerType()) {
+        printf("Move to next player...\n");
+    }
 }
 
 std::shared_ptr<PlayerSet> GameController::createNewPlayerSet()
@@ -384,6 +406,8 @@ void GameController::receiveRemotePlayersList(SOCKET p_sourceSocket, const std::
         std::string name = message.substr(startPos + 1, delimiterPos - (startPos + 1));
         printf("Add remote player: %s with index number: %d\n", name.c_str(), indexNumber);
         createNewRemotePlayer(indexNumber, std::move(name), p_sourceSocket);
+        emit remotePlayer_added();
+
         startPos = delimiterPos + 1;
     }
 

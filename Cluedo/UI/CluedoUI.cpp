@@ -156,9 +156,7 @@ void CluedoUI::buttonSelectObjects_clicked()
 {
     GameController& gameController = GameController::getInstance();
     std::vector<Player*>& players = gameController.getPlayers();
-    Player* currentPlayer = players.at(m_currentPlayerIndex);
-
-    gameController.setCurrentPlayerIndex(m_currentPlayerIndex);
+    Player* currentPlayer = gameController.getCurrentPlayer();
 
     if ((Player::PlayerType_SelfServer != currentPlayer->getPlayerType()) && (Player::PlayerType_SelfClient != currentPlayer->getPlayerType()))
     {
@@ -200,6 +198,10 @@ void CluedoUI::buttonStartGame_clicked()
 
     QObject::connect(m_startGameUI, SIGNAL(game_started_server()), this, SLOT(game_started_server()));
 
+#if WIN32
+    GameController::getInstance().setTcpWinSocketServer(m_tcpWinSocketServer);
+#endif
+
     GameController::getInstance().registerRemoteServerMessages(false);
 
     m_startGameUI->show();
@@ -237,9 +239,9 @@ void CluedoUI::buttonQuitGame_clicked() {
 
 void CluedoUI::game_started_server()
 {
-#if WIN32
-    GameController::getInstance().setTcpWinSocketServer(m_tcpWinSocketServer);
-#endif
+    QObject::connect(GameController::getInstance().getGameRunner().get(), SIGNAL(playersListNextPlayer_ready()), this, SLOT(playersListNextPlayer_ready()));
+    QObject::connect(GameController::getInstance().getGameRunner().get(), SIGNAL(askPlayer_ready()), this, SLOT(askPlayer_ready()));
+
     GameController::getInstance().sendPlayersListToClients();
     GameController::getInstance().selectAndDistributeCluedoObjects();
 }
@@ -270,11 +272,11 @@ void CluedoUI::playersList_updated()
         }
     }
 
-    if (m_listPlayers->count() > 0)
-    {
-        m_listPlayers->item(m_currentPlayerIndex)->setSelected(true);
-        m_buttonSelectObjects->setEnabled(true);
-    }
+    selectCurrentPlayer();
+}
+
+void CluedoUI::playersListNextPlayer_ready() {
+    selectCurrentPlayer();
 }
 
 void CluedoUI::allCluedoObjects_distributed() {
@@ -283,19 +285,25 @@ void CluedoUI::allCluedoObjects_distributed() {
     m_selectionObjectWidget->show();
 }
 
-void CluedoUI::askPlayer_finished()
+void CluedoUI::askPlayer_ready()
 {
-    nextPlayerReady();
+    m_buttonSelectObjects->setEnabled(true);
 }
 
-void CluedoUI::nextPlayerReady()
+void CluedoUI::askPlayer_finished() 
 {
-    m_currentPlayerIndex++;
-    if (m_listPlayers->count() == m_currentPlayerIndex)
+    m_buttonSelectObjects->setEnabled(false);
+    GameController::getInstance().moveToNextPlayer();
+}
+
+void CluedoUI::selectCurrentPlayer() {
+    if (m_listPlayers->count() > 0)
     {
-        m_currentPlayerIndex = 0;
+        int currentPlayerIndex = GameController::getInstance().getCurrentPlayerIndex();
+        if (currentPlayerIndex >= 0) {
+            m_listPlayers->item(GameController::getInstance().getCurrentPlayerIndex())->setSelected(true);
+        }
     }
-    m_listPlayers->item(m_currentPlayerIndex)->setSelected(true);
 }
 
 void CluedoUI::hideNotUsedCluedoObjects()

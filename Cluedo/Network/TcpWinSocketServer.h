@@ -1,14 +1,12 @@
 #pragma once
 
-#include <QObject>
 #include <winsock2.h>
 #include <atomic>
 #include <string>
 #include <vector>
 
-class TcpWinSocketServer : public QObject
+class TcpWinSocketServer
 {
-    Q_OBJECT
 public:
     TcpWinSocketServer() = default;
     virtual ~TcpWinSocketServer() = default;
@@ -26,9 +24,6 @@ public:
     {
         return m_clientSockets;
     }
-
-signals:
-    void remotePlayer_added();
 
 private:
     static constexpr int MaxConnectionQueue = 5;

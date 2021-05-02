@@ -8,17 +8,21 @@ GameRunner::GameRunner(std::vector<Player*>& p_players) : m_players(p_players)
 {
 }
 
-void GameRunner::askPlayer(int p_currentPlayerIndex)
+void GameRunner::startGame() {
+    m_currentPlayerIndex = 0;
+}
+
+void GameRunner::askPlayer()
 {
     CluedoObject* murderToAsk{ nullptr };
     CluedoObject* weaponToAsk{ nullptr };
     CluedoObject* roomToAsk{ nullptr };
-    getObjectsToAsk(p_currentPlayerIndex, &murderToAsk, &weaponToAsk, &roomToAsk);
+    getObjectsToAsk(&murderToAsk, &weaponToAsk, &roomToAsk);
 
-    checkObjectsAtOtherPlayers(p_currentPlayerIndex, murderToAsk, weaponToAsk, roomToAsk);
+    checkObjectsAtOtherPlayers(murderToAsk, weaponToAsk, roomToAsk);
 }
 
-void GameRunner::askPlayer(int p_currentPlayerIndex, int p_murderIndex, int p_weaponIndex, int p_roomIndex)
+void GameRunner::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex)
 {
     CluedoObjectLoader& cluedoObjectLoader = CluedoObjectLoader::getInstance();
     std::vector<CluedoObject*> murders = cluedoObjectLoader.getMurders();
@@ -30,26 +34,43 @@ void GameRunner::askPlayer(int p_currentPlayerIndex, int p_murderIndex, int p_we
     std::vector<CluedoObject*> rooms = cluedoObjectLoader.getRooms();
     CluedoObject* room = rooms.at(p_roomIndex);
 
-    checkObjectsAtOtherPlayers(p_currentPlayerIndex, murder, weapon, room);
+    checkObjectsAtOtherPlayers(murder, weapon, room);
 }
 
-void GameRunner::checkObjectsAtOtherPlayers(int p_currentPlayerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
-{
-    int playerIndexToAsk = p_currentPlayerIndex + 1;
+void GameRunner::moveToNextPlayer() {
+    m_currentPlayerIndex++;
+    if (m_players.size() == m_currentPlayerIndex)
+    {
+        m_currentPlayerIndex = 0;
+    }
 
-    PlayerSet* currentPlayerSet = m_players.at(p_currentPlayerIndex)->getPlayerSet().get();
+    Player* currentPlayer = m_players.at(m_currentPlayerIndex);
+    
+    emit playersListNextPlayer_ready();
+    printf("Update players list that next player is ready\n");
+
+    if (Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) {
+        emit askPlayer_ready();
+    }
+}
+
+void GameRunner::checkObjectsAtOtherPlayers(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
+{
+    int playerIndexToAsk = m_currentPlayerIndex + 1;
+
+    PlayerSet* currentPlayerSet = m_players.at(m_currentPlayerIndex)->getPlayerSet().get();
     currentPlayerSet->setLastAskedMurder(p_murder);
     currentPlayerSet->setLastAskedWeapon(p_weapon);
     currentPlayerSet->setLastAskedRoom(p_room);
     currentPlayerSet->resetPlayerIndicesWithNoShownCluedoObjects();
 
     CluedoObject* foundObject = nullptr;
-    while ((playerIndexToAsk != p_currentPlayerIndex) && (nullptr == foundObject))
+    while ((playerIndexToAsk != m_currentPlayerIndex) && (nullptr == foundObject))
     {
         if (m_players.size() == playerIndexToAsk)
         {
             playerIndexToAsk = 0;
-            if (playerIndexToAsk == p_currentPlayerIndex)
+            if (playerIndexToAsk == m_currentPlayerIndex)
             {
                 break;
             }
@@ -119,7 +140,7 @@ CluedoObject* GameRunner::askObjectsAtOtherPlayer(int p_otherPlayerIndex, Cluedo
     return foundObject;
 }
 
-void GameRunner::getObjectsToAsk(int p_currentPlayerIndex, CluedoObject** p_murder, CluedoObject** p_weapon, CluedoObject** p_room)
+void GameRunner::getObjectsToAsk(CluedoObject** p_murder, CluedoObject** p_weapon, CluedoObject** p_room)
 {
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 
@@ -136,16 +157,16 @@ void GameRunner::getObjectsToAsk(int p_currentPlayerIndex, CluedoObject** p_murd
     auto randomEngineRooms = std::default_random_engine(seed);
     std::shuffle(std::begin(rooms), std::end(rooms), randomEngineRooms);
 
-    findUnknownObject(p_currentPlayerIndex, murders, p_murder);
-    findUnknownObject(p_currentPlayerIndex, weapons, p_weapon);
-    findUnknownObject(p_currentPlayerIndex, rooms, p_room);
+    findUnknownObject(murders, p_murder);
+    findUnknownObject(weapons, p_weapon);
+    findUnknownObject(rooms, p_room);
 }
 
-void GameRunner::findUnknownObject(int p_currentPlayerIndex, std::vector<CluedoObject*>& p_cluedoObjectsToCheck, CluedoObject** p_foundObject)
+void GameRunner::findUnknownObject(std::vector<CluedoObject*>& p_cluedoObjectsToCheck, CluedoObject** p_foundObject)
 {
     bool foundUnknownObject = false;
 
-    PlayerSet* currentPlayerSet = m_players.at(p_currentPlayerIndex)->getPlayerSet().get();
+    PlayerSet* currentPlayerSet = m_players.at(m_currentPlayerIndex)->getPlayerSet().get();
     std::vector<CluedoObject*>& cluedoObjects = currentPlayerSet->getCluedoObjects();
     std::multimap<int, CluedoObject*>& cluedoObjectsFromOtherPlayers = currentPlayerSet->getCluedoObjectsFromOtherPlayers();
 

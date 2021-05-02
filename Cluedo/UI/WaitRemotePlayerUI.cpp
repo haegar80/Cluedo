@@ -45,6 +45,7 @@ void WaitRemotePlayerUI::setupUi()
     retranslateUi();
 
     QObject::connect(m_buttonCancel, SIGNAL(pressed()), this, SLOT(buttonCancel_clicked()));
+    QObject::connect(&GameController::getInstance(), SIGNAL(remotePlayer_added()), this, SLOT(remotePlayer_added()));
 }
 
 void WaitRemotePlayerUI::retranslateUi()
@@ -57,11 +58,6 @@ void WaitRemotePlayerUI::retranslateUi()
 #if WIN32
 void WaitRemotePlayerUI::initTcpWinSocketServer(std::shared_ptr<TcpWinSocketServer> p_winSocketServer) {
     m_tcpWinSocketServer = p_winSocketServer;
-
-    if (m_tcpWinSocketServer) {
-        QObject::connect(m_tcpWinSocketServer.get(), SIGNAL(remotePlayer_added()), this, SLOT(remotePlayer_added()));
-    }
-
     startTcpSocketServer();
 }
 #endif

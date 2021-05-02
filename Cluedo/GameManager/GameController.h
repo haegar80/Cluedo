@@ -49,11 +49,12 @@ public:
 #endif
 
     Player* createNewPlayer(std::string p_name, Player::EPlayerType p_playerType);
+    int getCurrentPlayerIndex();
     Player* getCurrentPlayer();
+    void moveToNextPlayer();
 
-    void setCurrentPlayerIndex(int p_currentPlayerIndex)
-    {
-        m_currentPlayerIndex = p_currentPlayerIndex;
+    std::shared_ptr<GameRunner> getGameRunner() {
+        return m_gameRunner;
     }
 
     std::vector<Player*>& getPlayers()
@@ -68,6 +69,7 @@ public:
 
     signals:
     void gameController_ready();
+    void remotePlayer_added();
     void playersList_updated();
     void allCluedoObjects_distributed();
 
@@ -84,7 +86,6 @@ private:
     CluedoObject* m_effectiveRoom{ nullptr };
 
     bool m_gameEnd{ false };
-    int m_currentPlayerIndex{ -1 };
     int m_lastDistributedPlayerSetIndex{ 0 };
 
 #if WIN32
