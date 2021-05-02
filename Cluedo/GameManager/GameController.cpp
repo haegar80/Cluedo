@@ -111,10 +111,13 @@ void GameController::sendPlayersListToClients() {
     for (RemotePlayer* remotePlayer : remotePlayers) {
         std::stringstream ss;
         ss << MessageIds::PlayersList << ":";
+        int indexNumber = 0;
         for (Player* anyPlayer : getPlayers()) {
             if (remotePlayer != anyPlayer) {
+                ss << indexNumber;
                 ss << anyPlayer->getName() << ";";
             }
+            indexNumber++;
         }
         m_tcpWinSocketServer->sendData(remotePlayer->getRemoteSocket(), ss.str());
      }
@@ -216,11 +219,11 @@ std::vector<RemotePlayer*> GameController::getRemotePlayers() {
     return remotePlayers;
 }
 
-RemotePlayer* GameController::createNewRemotePlayer(std::string p_name, SOCKET p_remoteSocket) {
+RemotePlayer* GameController::createNewRemotePlayer(int p_indexNumber, std::string p_name, SOCKET p_remoteSocket) {
     std::shared_ptr<PlayerSet> playerSet = createNewPlayerSet();
 
     RemotePlayer* remotePlayer = new RemotePlayer(std::move(p_name), playerSet, p_remoteSocket);
-    m_players.push_back(remotePlayer);
+    m_players.insert(m_players.begin() + p_indexNumber, remotePlayer);
 
     return remotePlayer;
 }
@@ -372,9 +375,15 @@ void GameController::receiveRemotePlayersList(SOCKET p_sourceSocket, const std::
     std::size_t startPos = 0;
 
     while(std::string::npos != (delimiterPos = message.find(";", startPos))) {
-        std::string name = message.substr(startPos, delimiterPos - startPos);
-        printf("Add remote player: %s\n", name.c_str());
-        createNewRemotePlayer(std::move(name), p_sourceSocket);
+        std::string indexString = message.substr(startPos, 1);
+        std::stringstream ss;
+        int indexNumber;
+        ss << indexString;
+        ss >> indexNumber;
+
+        std::string name = message.substr(startPos + 1, delimiterPos - (startPos + 1));
+        printf("Add remote player: %s with index number: %d\n", name.c_str(), indexNumber);
+        createNewRemotePlayer(indexNumber, std::move(name), p_sourceSocket);
         startPos = delimiterPos + 1;
     }
 

@@ -88,7 +88,9 @@ void ConnectServerUI::connectToServer() {
                 Player* player = gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_SelfClient);
 
                 std::stringstream ss;
+                constexpr int DummyIndexNumber = 0;
                 ss << MessageIds::PlayersList << ":";
+                ss << DummyIndexNumber;
                 ss << player->getName() << ";";
                 m_tcpWinSocketClient->sendData(ss.str());
 

@@ -99,7 +99,7 @@ private:
 
     Player* getSelfPlayer();
     std::vector<RemotePlayer*> getRemotePlayers();
-    RemotePlayer* createNewRemotePlayer(std::string p_name, SOCKET p_remoteSocket);
+    RemotePlayer* createNewRemotePlayer(int p_indexNumber, std::string p_name, SOCKET p_remoteSocket);
 
     void selectEffectiveMurderWeaponRoom();
     void addCluedoObjectsToDistribute(std::vector<CluedoObject*>& p_cluedoObjects, CluedoObject::CluedoObjectType p_type);
