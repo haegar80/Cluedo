@@ -187,6 +187,8 @@ void CluedoUI::buttonSelectObjects_clicked()
 
 void CluedoUI::buttonStartGame_clicked()
 {
+    m_buttonConnectGame->setDisabled(true);
+
     m_startGameUI = new StartGameUI();
     m_startGameUI->setWindowModality(Qt::ApplicationModal);
     m_startGameUI->setAttribute(Qt::WA_DeleteOnClose);
@@ -243,6 +245,9 @@ void CluedoUI::game_started_server()
 }
 
 void CluedoUI::game_started_client() {
+    m_buttonStartGame->setDisabled(true);
+    m_buttonConnectGame->setDisabled(true);
+
 #if WIN32
     GameController::getInstance().setTcpWinSocketClient(m_tcpWinSocketClient);
 #endif
@@ -251,6 +256,8 @@ void CluedoUI::game_started_client() {
 
 void CluedoUI::playersList_updated()
 {
+    m_listPlayers->clear();
+
     std::vector<Player*>& players = GameController::getInstance().getPlayers();
 
     for (Player* player : players)
