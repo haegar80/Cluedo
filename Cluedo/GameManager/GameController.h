@@ -31,6 +31,7 @@ public:
     // Server functions
     void selectAndDistributeCluedoObjects();
     void sendPlayersListToClients();
+    void sendCurrentPlayerIndexToClients();
 #if WIN32
     void setTcpWinSocketServer(std::shared_ptr<TcpWinSocketServer> p_winSocketServer) {
         m_tcpWinSocketServer = p_winSocketServer;
@@ -71,6 +72,7 @@ public:
     void gameController_ready();
     void remotePlayer_added();
     void playersList_updated();
+    void currentPlayerIndex_updated();
     void allCluedoObjects_distributed();
 
 private:
@@ -87,6 +89,7 @@ private:
 
     bool m_gameEnd{ false };
     int m_lastDistributedPlayerSetIndex{ 0 };
+    int m_currentPlayerIndexFromServer{ -1 };
 
 #if WIN32
     std::shared_ptr<TcpWinSocketClient> m_tcpWinSocketClient;
@@ -114,4 +117,5 @@ private:
     void receiveRemoteCluedoObject(const std::string& message);
     void receiveRemoteAllCluedoObjectsDistributed();
     void receiveRemotePlayersList(SOCKET p_sourceSocket, const std::string& message);
+    void receiveRemoteCurrentPlayerIndex(const std::string& message);
 };

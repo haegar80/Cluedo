@@ -40,7 +40,6 @@ public:
 #endif
 
 signals:
-    void playersListNextPlayer_ready();
     void askPlayer_ready();
 
 private:

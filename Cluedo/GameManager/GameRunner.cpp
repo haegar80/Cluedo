@@ -45,10 +45,6 @@ void GameRunner::moveToNextPlayer() {
     }
 
     Player* currentPlayer = m_players.at(m_currentPlayerIndex);
-    
-    emit playersListNextPlayer_ready();
-    printf("Update players list that next player is ready\n");
-
     if (Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) {
         emit askPlayer_ready();
     }

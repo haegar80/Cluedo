@@ -39,7 +39,7 @@ public:
     void game_started_server();
     void game_started_client();
     void playersList_updated();
-    void playersListNextPlayer_ready();
+    void currentPlayerIndex_updated();
     void allCluedoObjects_distributed();
     void askPlayer_ready();
     void askPlayer_finished();

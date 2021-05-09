@@ -125,6 +125,16 @@ void GameController::sendPlayersListToClients() {
      }
 }
 
+void GameController::sendCurrentPlayerIndexToClients() {
+    std::vector<RemotePlayer*> remotePlayers = getRemotePlayers();
+    for (RemotePlayer* remotePlayer : remotePlayers) {
+        std::stringstream ss;
+        ss << MessageIds::CurrentPlayerIndex << ":";
+        ss << getCurrentPlayerIndex();
+        m_tcpWinSocketServer->sendData(remotePlayer->getRemoteSocket(), ss.str());
+    }
+}
+
 void GameController::registerRemoteServerMessages(bool p_client) {
     if (p_client) {
         auto receiveRemoteCluedoObjectCallback = [this](SOCKET, const std::string& p_message) { receiveRemoteCluedoObject(p_message); };
@@ -132,6 +142,9 @@ void GameController::registerRemoteServerMessages(bool p_client) {
 
         auto receiveRemoteAllCluedoObjectsDistributedCallback = [this](SOCKET, const std::string&) { receiveRemoteAllCluedoObjectsDistributed(); };
         MessageHandler::getInstance().registerMessageHandler(MessageIds::AllCluedoObjectsDistributed, receiveRemoteAllCluedoObjectsDistributedCallback);
+
+        auto receiveRemoteCurrentPlayerIndexCallback = [this](SOCKET, const std::string& p_message) { receiveRemoteCurrentPlayerIndex(p_message); };
+        MessageHandler::getInstance().registerMessageHandler(MessageIds::CurrentPlayerIndex, receiveRemoteCurrentPlayerIndexCallback);
     }
 
     auto receiveRemotePlayersListCallback = [this](SOCKET p_sourceSocket, const std::string& p_message) { receiveRemotePlayersList(p_sourceSocket, p_message); };
@@ -153,7 +166,8 @@ int GameController::getCurrentPlayerIndex() {
         return m_gameRunner->getCurrentPlayerIndex();
     }
     else {
-        return -1;
+        // Assume that the server is played by another player and the current player index is received from this server
+        return m_currentPlayerIndexFromServer;
     }
 }
 
@@ -174,6 +188,8 @@ void GameController::moveToNextPlayer() {
     Player* currentPlayer = getCurrentPlayer();
     if (Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) {
         m_gameRunner->moveToNextPlayer();
+        sendCurrentPlayerIndexToClients();
+        emit currentPlayerIndex_updated();
     }
     else if (Player::PlayerType_Remote == currentPlayer->getPlayerType()) {
         printf("Move to next player...\n");
@@ -412,4 +428,12 @@ void GameController::receiveRemotePlayersList(SOCKET p_sourceSocket, const std::
     }
 
     emit playersList_updated();
+}
+
+void GameController::receiveRemoteCurrentPlayerIndex(const std::string& message) {
+    std::stringstream ss{ message };
+    ss >> m_currentPlayerIndexFromServer;
+    printf("Current player index received from server: %d\n", m_currentPlayerIndexFromServer);
+
+    emit currentPlayerIndex_updated();
 }
