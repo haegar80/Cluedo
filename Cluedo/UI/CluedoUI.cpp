@@ -240,8 +240,6 @@ void CluedoUI::buttonQuitGame_clicked() {
 
 void CluedoUI::game_started_server()
 {
-    QObject::connect(GameController::getInstance().getGameRunner().get(), SIGNAL(askPlayer_ready()), this, SLOT(askPlayer_ready()));
-
     GameController::getInstance().sendPlayersListToClients();
     GameController::getInstance().selectAndDistributeCluedoObjects();
     GameController::getInstance().sendCurrentPlayerIndexToClients();
@@ -279,17 +277,20 @@ void CluedoUI::playersList_updated()
 
 void CluedoUI::currentPlayerIndex_updated() {
     selectCurrentPlayer();
+
+    Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
+    if (currentPlayer && (Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) || (Player::PlayerType_SelfClient == currentPlayer->getPlayerType())) {
+        m_buttonSelectObjects->setEnabled(true);
+    }
+    else {
+        m_buttonSelectObjects->setEnabled(false);
+    }
 }
 
 void CluedoUI::allCluedoObjects_distributed() {
     hideNotUsedCluedoObjects();
     fillCluedoObjects();
     m_selectionObjectWidget->show();
-}
-
-void CluedoUI::askPlayer_ready()
-{
-    m_buttonSelectObjects->setEnabled(true);
 }
 
 void CluedoUI::askPlayer_finished() 

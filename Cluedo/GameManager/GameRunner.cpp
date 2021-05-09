@@ -43,11 +43,6 @@ void GameRunner::moveToNextPlayer() {
     {
         m_currentPlayerIndex = 0;
     }
-
-    Player* currentPlayer = m_players.at(m_currentPlayerIndex);
-    if (Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) {
-        emit askPlayer_ready();
-    }
 }
 
 void GameRunner::checkObjectsAtOtherPlayers(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)

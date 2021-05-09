@@ -41,7 +41,6 @@ public:
     void playersList_updated();
     void currentPlayerIndex_updated();
     void allCluedoObjects_distributed();
-    void askPlayer_ready();
     void askPlayer_finished();
 
 private:

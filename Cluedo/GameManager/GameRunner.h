@@ -11,9 +11,8 @@
 class Player;
 class CluedoObject;
 
-class GameRunner : public QObject
+class GameRunner
 {
-    Q_OBJECT
 public:
     GameRunner(std::vector<Player*>& p_players);
     virtual ~GameRunner() = default;
@@ -38,9 +37,6 @@ public:
         m_tcpWinSocketServer = p_winSocketServer;
     }
 #endif
-
-signals:
-    void askPlayer_ready();
 
 private:
     int m_currentPlayerIndex{ -1 };
