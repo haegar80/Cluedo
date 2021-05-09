@@ -6,5 +6,6 @@ namespace MessageIds
     constexpr int AllCluedoObjectsDistributed = 101;
     constexpr int PlayersList = 102;
     constexpr int CurrentPlayerIndex = 103;
+    constexpr int AskOtherPlayer = 104;
 };
 

@@ -19,41 +19,18 @@ void GameRunner::askPlayer()
     CluedoObject* roomToAsk{ nullptr };
     getObjectsToAsk(&murderToAsk, &weaponToAsk, &roomToAsk);
 
-    checkObjectsAtOtherPlayers(murderToAsk, weaponToAsk, roomToAsk);
+    askPlayer(murderToAsk, weaponToAsk, roomToAsk);
 }
 
-void GameRunner::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex)
+void GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
 {
-    CluedoObjectLoader& cluedoObjectLoader = CluedoObjectLoader::getInstance();
-    std::vector<CluedoObject*> murders = cluedoObjectLoader.getMurders();
-    CluedoObject* murder = murders.at(p_murderIndex);
-
-    std::vector<CluedoObject*> weapons = cluedoObjectLoader.getWeapons();
-    CluedoObject* weapon = weapons.at(p_weaponIndex);
-
-    std::vector<CluedoObject*> rooms = cluedoObjectLoader.getRooms();
-    CluedoObject* room = rooms.at(p_roomIndex);
-
-    checkObjectsAtOtherPlayers(murder, weapon, room);
-}
-
-void GameRunner::moveToNextPlayer() {
-    m_currentPlayerIndex++;
-    if (m_players.size() == m_currentPlayerIndex)
-    {
-        m_currentPlayerIndex = 0;
-    }
-}
-
-void GameRunner::checkObjectsAtOtherPlayers(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
-{
-    int playerIndexToAsk = m_currentPlayerIndex + 1;
-
     PlayerSet* currentPlayerSet = m_players.at(m_currentPlayerIndex)->getPlayerSet().get();
     currentPlayerSet->setLastAskedMurder(p_murder);
     currentPlayerSet->setLastAskedWeapon(p_weapon);
     currentPlayerSet->setLastAskedRoom(p_room);
     currentPlayerSet->resetPlayerIndicesWithNoShownCluedoObjects();
+
+    int playerIndexToAsk = m_currentPlayerIndex + 1;
 
     CluedoObject* foundObject = nullptr;
     while ((playerIndexToAsk != m_currentPlayerIndex) && (nullptr == foundObject))
@@ -99,6 +76,14 @@ void GameRunner::checkObjectsAtOtherPlayers(CluedoObject* p_murder, CluedoObject
     else
     {
         currentPlayerSet->setLastShownCluedoObject(nullptr);
+    }
+}
+
+void GameRunner::moveToNextPlayer() {
+    m_currentPlayerIndex++;
+    if (m_players.size() == m_currentPlayerIndex)
+    {
+        m_currentPlayerIndex = 0;
     }
 }
 

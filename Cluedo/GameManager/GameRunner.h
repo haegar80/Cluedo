@@ -25,7 +25,7 @@ public:
     void startGame();
 
     void askPlayer();
-    void askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
+    void askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
     void moveToNextPlayer();
 
     int getCurrentPlayerIndex() {
@@ -46,7 +46,6 @@ private:
     std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;
 #endif
 
-    void checkObjectsAtOtherPlayers(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
     CluedoObject* askObjectsAtOtherPlayer(int p_otherPlayerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
 
     void getObjectsToAsk(CluedoObject** p_murder, CluedoObject** p_weapon, CluedoObject** p_room);

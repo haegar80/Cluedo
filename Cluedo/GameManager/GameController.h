@@ -118,4 +118,5 @@ private:
     void receiveRemoteAllCluedoObjectsDistributed();
     void receiveRemotePlayersList(SOCKET p_sourceSocket, const std::string& message);
     void receiveRemoteCurrentPlayerIndex(const std::string& message);
+    void receiveRemoteAskOtherPlayer(const std::string& message);
 };

@@ -183,27 +183,26 @@ void SelectObjectsUI::selectedRoom()
 
 void SelectObjectsUI::buttonOk_clicked()
 {
-    Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
+    if (m_selectedMurder && m_selectedWeapon && m_selectedRoom) {
+        Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
 
-    m_askPlayerUI = new AskPlayerUI(m_imageSelectedMurder->pixmap(), m_imageSelectedWeapon->pixmap(), m_imageSelectedRoom->pixmap());
-    m_askPlayerUI->setWindowModality(Qt::ApplicationModal);
-    m_askPlayerUI->setAttribute(Qt::WA_DeleteOnClose);
+        m_askPlayerUI = new AskPlayerUI(m_imageSelectedMurder->pixmap(), m_imageSelectedWeapon->pixmap(), m_imageSelectedRoom->pixmap());
+        m_askPlayerUI->setWindowModality(Qt::ApplicationModal);
+        m_askPlayerUI->setAttribute(Qt::WA_DeleteOnClose);
 
-    QObject::connect(m_askPlayerUI, SIGNAL(askPlayerWindow_closed()), this, SLOT(askPlayerWindow_closed()));
+        QObject::connect(m_askPlayerUI, SIGNAL(askPlayerWindow_closed()), this, SLOT(askPlayerWindow_closed()));
 
-    if ((Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) || (Player::PlayerType_SelfClient == currentPlayer->getPlayerType()))
-    {
-        if (m_selectedMurder && m_selectedWeapon && m_selectedRoom)
+        if ((Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) || (Player::PlayerType_SelfClient == currentPlayer->getPlayerType()))
         {
             GameController::getInstance().askPlayer(m_listMurder->currentRow(), m_listWeapon->currentRow(), m_listRoom->currentRow());
             m_askPlayerUI->show();
             m_askPlayerUI->updateShownCluedoObject();
         }
-    }
-    else
-    {
-        m_askPlayerUI->show();
-        m_askPlayerUI->updateShownCluedoObject();
+        else
+        {
+            m_askPlayerUI->show();
+            m_askPlayerUI->updateShownCluedoObject();
+        }
     }
 }
 
