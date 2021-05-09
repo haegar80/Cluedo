@@ -74,6 +74,7 @@ public:
     void playersList_updated();
     void currentPlayerIndex_updated();
     void allCluedoObjects_distributed();
+    void askPlayerResponse_ready();
 
 private:
     std::shared_ptr<GameRunner> m_gameRunner;

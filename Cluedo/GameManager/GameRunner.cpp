@@ -12,17 +12,17 @@ void GameRunner::startGame() {
     m_currentPlayerIndex = 0;
 }
 
-void GameRunner::askPlayer()
+bool GameRunner::askPlayer()
 {
     CluedoObject* murderToAsk{ nullptr };
     CluedoObject* weaponToAsk{ nullptr };
     CluedoObject* roomToAsk{ nullptr };
     getObjectsToAsk(&murderToAsk, &weaponToAsk, &roomToAsk);
 
-    askPlayer(murderToAsk, weaponToAsk, roomToAsk);
+    return askPlayer(murderToAsk, weaponToAsk, roomToAsk);
 }
 
-void GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
+bool GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
 {
     PlayerSet* currentPlayerSet = m_players.at(m_currentPlayerIndex)->getPlayerSet().get();
     currentPlayerSet->setLastAskedMurder(p_murder);
@@ -77,6 +77,8 @@ void GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
     {
         currentPlayerSet->setLastShownCluedoObject(nullptr);
     }
+
+    return m_askedAllPlayers;
 }
 
 void GameRunner::moveToNextPlayer() {

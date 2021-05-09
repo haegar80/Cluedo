@@ -118,6 +118,7 @@ void AskPlayerUI::setupUi()
     m_buttonOk = new QPushButton(m_centralwidget);
     m_buttonOk->setObjectName(QStringLiteral("buttonOk"));
     m_buttonOk->setGeometry(QRect(20, 650, 75, 23));
+    m_buttonOk->setEnabled(false);
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
     m_menubar->setObjectName(QStringLiteral("menubar"));
@@ -182,6 +183,8 @@ void AskPlayerUI::updateShownCluedoObject()
             m_imageShowedObject->hide();
         }
     }
+
+    m_buttonOk->setEnabled(true);
 }
 
 void AskPlayerUI::closeEvent(QCloseEvent* event)

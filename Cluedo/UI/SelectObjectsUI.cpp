@@ -100,6 +100,7 @@ void SelectObjectsUI::setupUi()
     QObject::connect(m_buttonOk, SIGNAL(pressed()), this, SLOT(buttonOk_clicked()));
     QObject::connect(m_buttonTellSuspicion, SIGNAL(pressed()), this, SLOT(buttonTellSuspicion_clicked()));
     QObject::connect(m_buttonAbort, SIGNAL(pressed()), this, SLOT(close()));
+    QObject::connect(&GameController::getInstance(), SIGNAL(askPlayerResponse_ready()), this, SLOT(askPlayerResponse_ready()));
 
     Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
     if ((Player::PlayerType_SelfServer != currentPlayer->getPlayerType()) && (Player::PlayerType_SelfClient != currentPlayer->getPlayerType()))
@@ -196,12 +197,6 @@ void SelectObjectsUI::buttonOk_clicked()
         {
             GameController::getInstance().askPlayer(m_listMurder->currentRow(), m_listWeapon->currentRow(), m_listRoom->currentRow());
             m_askPlayerUI->show();
-            m_askPlayerUI->updateShownCluedoObject();
-        }
-        else
-        {
-            m_askPlayerUI->show();
-            m_askPlayerUI->updateShownCluedoObject();
         }
     }
 }
@@ -218,6 +213,10 @@ void SelectObjectsUI::buttonTellSuspicion_clicked()
         msgBox.setText(resultText.str().c_str());
         msgBox.exec();
     }
+}
+
+void SelectObjectsUI::askPlayerResponse_ready() {
+    m_askPlayerUI->updateShownCluedoObject();
 }
 
 void SelectObjectsUI::askPlayerWindow_closed()

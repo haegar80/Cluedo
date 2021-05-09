@@ -24,8 +24,8 @@ public:
 
     void startGame();
 
-    void askPlayer();
-    void askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
+    bool askPlayer();
+    bool askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
     void moveToNextPlayer();
 
     int getCurrentPlayerIndex() {
@@ -41,6 +41,7 @@ public:
 private:
     int m_currentPlayerIndex{ -1 };
     std::vector<Player*> m_players;
+    bool m_askedAllPlayers{ false };
 
 #if WIN32
     std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;

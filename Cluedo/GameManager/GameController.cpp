@@ -44,7 +44,10 @@ void GameController::askPlayer()
 {
     if (m_gameRunner)
     {
-        m_gameRunner->askPlayer();
+        bool askedAllPlayers = m_gameRunner->askPlayer();
+        if (askedAllPlayers) {
+            emit askPlayerResponse_ready();
+        }
     }
 }
 
@@ -493,6 +496,9 @@ void GameController::receiveRemoteAskOtherPlayer(const std::string& message) {
     }
 
     if (m_gameRunner) {
-        m_gameRunner->askPlayer(cluedoObjectsToAsk.at(0), cluedoObjectsToAsk.at(1), cluedoObjectsToAsk.at(2));
+        bool askedAllPlayers = m_gameRunner->askPlayer(cluedoObjectsToAsk.at(0), cluedoObjectsToAsk.at(1), cluedoObjectsToAsk.at(2));
+        if (askedAllPlayers) {
+            emit askPlayerResponse_ready();
+        }
     }
 }

@@ -32,6 +32,7 @@ public:
     void selectedRoom();
     void buttonOk_clicked();
     void buttonTellSuspicion_clicked();
+    void askPlayerResponse_ready();
     void askPlayerWindow_closed();
 
 private:
