@@ -11,6 +11,7 @@ class PlayerSet;
 class ConnectServerUI;
 class StartGameUI;
 class SelectObjectsUI;
+class SelectObjectToShowUI;
 
 class QWidget;
 class QPushButton;
@@ -41,6 +42,7 @@ public:
     void playersList_updated();
     void currentPlayerIndex_updated();
     void allCluedoObjects_distributed();
+    void showObject_requested(const QString& p_askedPlayer, const QString& p_murderString, const QString& p_weaponString, const QString& p_roomString);
     void askPlayer_finished();
 
 private:
@@ -73,6 +75,7 @@ private:
     ConnectServerUI* m_connectServerUI;
     StartGameUI* m_startGameUI;
     SelectObjectsUI* m_selectObjectsUI;
+    SelectObjectToShowUI* m_selectObjectToShowUI;
 
 #if WIN32
     std::shared_ptr<TcpWinSocketClient> m_tcpWinSocketClient;

@@ -1,8 +1,10 @@
 #include "GameRunner.h"
+#include "../Message/MessageIds.h"
 #include "../Model/RemotePlayer.h"
 #include <map>
 #include <algorithm>
 #include <random>
+#include <sstream>
 
 GameRunner::GameRunner(std::vector<Player*>& p_players) : m_players(p_players)
 {
@@ -31,6 +33,9 @@ bool GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
     currentPlayerSet->resetPlayerIndicesWithNoShownCluedoObjects();
 
     int playerIndexToAsk = m_currentPlayerIndex + 1;
+    if (m_lastAskedPlayerIndex >= 0) {
+        playerIndexToAsk = m_lastAskedPlayerIndex + 1;
+    }
 
     CluedoObject* foundObject = nullptr;
     while ((playerIndexToAsk != m_currentPlayerIndex) && (nullptr == foundObject))
@@ -40,27 +45,47 @@ bool GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
             playerIndexToAsk = 0;
             if (playerIndexToAsk == m_currentPlayerIndex)
             {
+                m_askedAllPlayers = true;
                 break;
             }
         }
 
+        m_lastAskedPlayerIndex = playerIndexToAsk;
+
         Player* playerToAsk = m_players.at(playerIndexToAsk);
-        if (Player::PlayerType_Remote == playerToAsk->getPlayerType()) {
+        if (Player::PlayerType_SelfServer == playerToAsk->getPlayerType()) {
+            m_showObjectCallback(playerToAsk->getName(), p_murder->getName(), p_weapon->getName(), p_room->getName());
+        }
+        else if (Player::PlayerType_Remote == playerToAsk->getPlayerType()) {
             RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(playerToAsk);
             if (remotePlayer) {
                 SOCKET remoteSocket = remotePlayer->getRemoteSocket();
-                m_tcpWinSocketServer->sendData(remoteSocket, "Hast du etwas von " + p_murder->getName() + "?");
+                std::stringstream ss;
+                ss << MessageIds::AskOtherPlayer << ":";
+                ss << m_currentPlayerIndex;
+                ss << ";";
+                ss << p_murder->getNumber();
+                ss << ";";
+                ss << p_weapon->getNumber();
+                ss << ";";
+                ss << p_room->getNumber();
+                ss << ";";
+#if WIN32
+                m_tcpWinSocketServer->sendData(remoteSocket, ss.str());
+#endif
+                return false;
             }
         }
+        else if (Player::PlayerType_Computer == playerToAsk->getPlayerType()) {
+            foundObject = askObjectsAtComputer(p_murder, p_weapon, p_room);
 
-        foundObject = askObjectsAtOtherPlayer(playerIndexToAsk, p_murder, p_weapon, p_room);
-
-        if (nullptr == foundObject)
-        {
-            currentPlayerSet->addPlayerIndexWithNoShownCluedoObjects(playerIndexToAsk);
-            currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_murder);
-            currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_weapon);
-            currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_room);
+            if (nullptr == foundObject)
+            {
+                currentPlayerSet->addPlayerIndexWithNoShownCluedoObjects(playerIndexToAsk);
+                currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_murder);
+                currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_weapon);
+                currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_room);
+            }
         }
 
         playerIndexToAsk++;
@@ -68,10 +93,9 @@ bool GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
 
     if (nullptr != foundObject)
     {
-        int playerIndex = --playerIndexToAsk;
         currentPlayerSet->setLastShownCluedoObject(foundObject);
-        currentPlayerSet->setLastPlayerIndexWhoShowedCluedoObject(playerIndex);
-        currentPlayerSet->addCluedoObjectFromOtherPlayers(playerIndex, foundObject);
+        currentPlayerSet->setLastPlayerIndexWhoShowedCluedoObject(m_lastAskedPlayerIndex);
+        currentPlayerSet->addCluedoObjectFromOtherPlayers(m_lastAskedPlayerIndex, foundObject);
     }
     else
     {
@@ -79,6 +103,10 @@ bool GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
     }
 
     return m_askedAllPlayers;
+}
+
+void GameRunner::askPlayerRemoteResponse(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room) {
+
 }
 
 void GameRunner::moveToNextPlayer() {
@@ -89,11 +117,11 @@ void GameRunner::moveToNextPlayer() {
     }
 }
 
-CluedoObject* GameRunner::askObjectsAtOtherPlayer(int p_otherPlayerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
+CluedoObject* GameRunner::askObjectsAtComputer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
 {
     CluedoObject* foundObject = nullptr;
 
-    PlayerSet* playerSet = m_players.at(p_otherPlayerIndex)->getPlayerSet().get();
+    PlayerSet* playerSet = m_players.at(m_lastAskedPlayerIndex)->getPlayerSet().get();
     std::vector<CluedoObject*>& cluedoObjects = playerSet->getCluedoObjects();
 
     for (CluedoObject* cluedoObject : cluedoObjects)

@@ -6,6 +6,7 @@
 #include "../Network/TcpWinSocketServer.h"
 #endif
 #include <memory>
+#include <functional>
 #include <vector>
 
 class Player;
@@ -26,7 +27,12 @@ public:
 
     bool askPlayer();
     bool askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
+    void askPlayerRemoteResponse(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
     void moveToNextPlayer();
+
+    void registerShowObjectCallback(std::function<void(const std::string&, const std::string&, const std::string&, const std::string&)> p_callback) {
+        m_showObjectCallback = p_callback;
+    }
 
     int getCurrentPlayerIndex() {
         return m_currentPlayerIndex;
@@ -40,14 +46,16 @@ public:
 
 private:
     int m_currentPlayerIndex{ -1 };
-    std::vector<Player*> m_players;
+    int m_lastAskedPlayerIndex{ -1 };
     bool m_askedAllPlayers{ false };
+    std::vector<Player*> m_players;
 
+    std::function<void(const std::string&, const std::string&, const std::string&, const std::string&)> m_showObjectCallback;
 #if WIN32
     std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;
 #endif
 
-    CluedoObject* askObjectsAtOtherPlayer(int p_otherPlayerIndex, CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
+    CluedoObject* askObjectsAtComputer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
 
     void getObjectsToAsk(CluedoObject** p_murder, CluedoObject** p_weapon, CluedoObject** p_room);
     void findUnknownObject(std::vector<CluedoObject*>& p_cluedoObjectsToCheck, CluedoObject** p_foundObject);

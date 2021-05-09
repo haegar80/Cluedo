@@ -35,6 +35,7 @@ void GameController::startGame()
     emit playersList_updated();
 
     m_gameRunner = std::make_shared<GameRunner>(m_players);
+    m_gameRunner->registerShowObjectCallback([this](const std::string& p_askedPlayer, const std::string& p_murderString, const std::string& p_weaponString, const std::string& p_roomString) { showObjectCallback(p_askedPlayer, p_murderString, p_weaponString, p_roomString); });
     m_gameRunner->startGame();
 
     emit gameController_ready();
@@ -73,6 +74,8 @@ void GameController::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomI
             // Assume that the server is played by another player
             std::stringstream ss;
             ss << MessageIds::AskOtherPlayer << ":";
+            ss << getSelfPlayerIndex();
+            ss << ";";
             ss << murder->getNumber();
             ss << ";";
             ss << weapon->getNumber();
@@ -276,6 +279,21 @@ Player* GameController::getSelfPlayer() {
     return selfPlayer;
 }
 
+int GameController::getSelfPlayerIndex() {
+    int index = 0;
+    
+    for (Player* player : m_players)
+    {
+        if ((Player::PlayerType_SelfServer == player->getPlayerType()) || (Player::PlayerType_SelfClient == player->getPlayerType())) {
+            break;
+        }
+
+        index++;
+    }
+
+    return index;
+}
+
 std::vector<RemotePlayer*> GameController::getRemotePlayers() {
     std::vector<RemotePlayer*> remotePlayers;
 
@@ -425,6 +443,15 @@ void GameController::distributeRooms()
     distributeCluedoObjects(m_roomsToDistribute);
 }
 
+void GameController::showObjectCallback(const std::string& p_askedPlayer, const std::string& p_murderString, const std::string& p_weaponString, const std::string& p_roomString) {
+    QString playerName = QString(p_askedPlayer.c_str());
+    QString objectName1 = QString(p_murderString.c_str());
+    QString objectName2 = QString(p_weaponString.c_str());
+    QString objectName3 = QString(p_roomString.c_str());
+
+    emit showObject_requested(playerName, objectName1, objectName2, objectName3);
+}
+
 void GameController::receiveRemoteCluedoObject(const std::string& message) {
     std::stringstream ss{ message };
     int number;
@@ -474,31 +501,49 @@ void GameController::receiveRemoteCurrentPlayerIndex(const std::string& message)
 }
 
 void GameController::receiveRemoteAskOtherPlayer(const std::string& message) {
-    std::size_t delimiterPos = std::string::npos;
     std::size_t startPos = 0;
+    std::size_t delimiterPos = message.find(";", startPos);
 
-    std::vector<CluedoObject*> cluedoObjectsToAsk;
-
-    while (std::string::npos != (delimiterPos = message.find(";", startPos))) {
-        std::string cluedoObjectString = message.substr(startPos, delimiterPos - startPos);
-        std::stringstream ss;
-        int cluedoObjectNumber;
-        ss << cluedoObjectString;
-        ss >> cluedoObjectNumber;
-
-        CluedoObject* cluedoObject = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(cluedoObjectNumber);
-        if (cluedoObject) {
-            cluedoObjectsToAsk.push_back(cluedoObject);
-            printf("Cluedo Object to ask: %s\n", cluedoObject->getName().c_str());
-        }
+    if (std::string::npos != delimiterPos) {
+        std::string playerIndexString = message.substr(startPos, delimiterPos - startPos);
+        std::stringstream ssPlayerIndex;
+        int playerIndex;
+        ssPlayerIndex << playerIndexString;
+        ssPlayerIndex >> playerIndex;
 
         startPos = delimiterPos + 1;
-    }
+        std::vector<CluedoObject*> cluedoObjectsToAsk;
 
-    if (m_gameRunner) {
-        bool askedAllPlayers = m_gameRunner->askPlayer(cluedoObjectsToAsk.at(0), cluedoObjectsToAsk.at(1), cluedoObjectsToAsk.at(2));
-        if (askedAllPlayers) {
-            emit askPlayerResponse_ready();
+        while (std::string::npos != (delimiterPos = message.find(";", startPos))) {
+            std::string cluedoObjectString = message.substr(startPos, delimiterPos - startPos);
+            std::stringstream ssCluedoObject;
+            int cluedoObjectNumber;
+            ssCluedoObject << cluedoObjectString;
+            ssCluedoObject >> cluedoObjectNumber;
+
+            CluedoObject* cluedoObject = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(cluedoObjectNumber);
+            if (cluedoObject) {
+                cluedoObjectsToAsk.push_back(cluedoObject);
+                printf("Cluedo Object to ask: %s\n", cluedoObject->getName().c_str());
+            }
+
+            startPos = delimiterPos + 1;
+        }
+
+        if (m_gameRunner) {
+            bool askedAllPlayers = m_gameRunner->askPlayer(cluedoObjectsToAsk.at(0), cluedoObjectsToAsk.at(1), cluedoObjectsToAsk.at(2));
+            if (askedAllPlayers) {
+                emit askPlayerResponse_ready();
+            }
+        }
+        else {
+            // Assume that we are a remote client
+            QString playerName = QString(m_players.at(playerIndex)->getName().c_str());
+            QString objectName1 = QString(cluedoObjectsToAsk.at(0)->getName().c_str());
+            QString objectName2 = QString(cluedoObjectsToAsk.at(1)->getName().c_str());
+            QString objectName3 = QString(cluedoObjectsToAsk.at(2)->getName().c_str());
+
+            emit showObject_requested(playerName, objectName1, objectName2, objectName3);
         }
     }
 }

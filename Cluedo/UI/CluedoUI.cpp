@@ -2,6 +2,7 @@
 #include "ConnectServerUI.h"
 #include "StartGameUI.h"
 #include "SelectObjectsUI.h"
+#include "SelectObjectToShowUI.h"
 #include "../Model/Player.h"
 #include "../GameManager/GameController.h"
 #include "../Utils/Utils.h"
@@ -125,6 +126,7 @@ void CluedoUI::setupUi()
     QObject::connect(&GameController::getInstance(), SIGNAL(playersList_updated()), this, SLOT(playersList_updated()));
     QObject::connect(&GameController::getInstance(), SIGNAL(currentPlayerIndex_updated()), this, SLOT(currentPlayerIndex_updated()));
     QObject::connect(&GameController::getInstance(), SIGNAL(allCluedoObjects_distributed()), this, SLOT(allCluedoObjects_distributed()));
+    QObject::connect(&GameController::getInstance(), &GameController::showObject_requested, this, &CluedoUI::showObject_requested);
 
     m_selectionObjectWidget->hide();
 }
@@ -291,6 +293,13 @@ void CluedoUI::allCluedoObjects_distributed() {
     hideNotUsedCluedoObjects();
     fillCluedoObjects();
     m_selectionObjectWidget->show();
+}
+
+void CluedoUI::showObject_requested(const QString& p_askedPlayer, const QString& p_murderString, const QString& p_weaponString, const QString& p_roomString) {
+    m_selectObjectToShowUI = new SelectObjectToShowUI(p_askedPlayer, p_murderString, p_weaponString, p_roomString);
+    m_selectObjectToShowUI->setWindowModality(Qt::ApplicationModal);
+    m_selectObjectToShowUI->setAttribute(Qt::WA_DeleteOnClose);
+    m_selectObjectToShowUI->show();
 }
 
 void CluedoUI::askPlayer_finished() 

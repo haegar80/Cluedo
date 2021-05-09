@@ -74,6 +74,7 @@ public:
     void playersList_updated();
     void currentPlayerIndex_updated();
     void allCluedoObjects_distributed();
+    void showObject_requested(const QString& p_askedPlayer, const QString& p_murderString, const QString& p_weaponString, const QString& p_roomString);
     void askPlayerResponse_ready();
 
 private:
@@ -103,6 +104,7 @@ private:
     void initPlayerSet(std::shared_ptr<PlayerSet> playerSet);
 
     Player* getSelfPlayer();
+    int getSelfPlayerIndex();
     std::vector<RemotePlayer*> getRemotePlayers();
     RemotePlayer* createNewRemotePlayer(int p_indexNumber, std::string p_name, SOCKET p_remoteSocket);
 
@@ -114,6 +116,7 @@ private:
     void distributeMurders();
     void distributeWeapons();
     void distributeRooms();
+    void showObjectCallback(const std::string& p_askedPlayer, const std::string& p_murderString, const std::string& p_weaponString, const std::string& p_roomString);
 
     void receiveRemoteCluedoObject(const std::string& message);
     void receiveRemoteAllCluedoObjectsDistributed();
