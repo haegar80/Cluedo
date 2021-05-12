@@ -145,7 +145,7 @@
    <widget class="QLabel" name="labelAvailableObjects">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>10</x>
       <y>400</y>
       <width>251</width>
       <height>16</height>

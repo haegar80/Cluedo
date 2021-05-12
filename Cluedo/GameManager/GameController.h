@@ -50,6 +50,7 @@ public:
 #endif
 
     Player* createNewPlayer(std::string p_name, Player::EPlayerType p_playerType);
+    Player* getSelfPlayer();
     int getCurrentPlayerIndex();
     Player* getCurrentPlayer();
     void moveToNextPlayer();
@@ -103,7 +104,6 @@ private:
     std::shared_ptr<PlayerSet> createNewPlayerSet();
     void initPlayerSet(std::shared_ptr<PlayerSet> playerSet);
 
-    Player* getSelfPlayer();
     int getSelfPlayerIndex();
     std::vector<RemotePlayer*> getRemotePlayers();
     RemotePlayer* createNewRemotePlayer(int p_indexNumber, std::string p_name, SOCKET p_remoteSocket);

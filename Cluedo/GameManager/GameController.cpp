@@ -199,6 +199,20 @@ Player* GameController::createNewPlayer(std::string p_name, Player::EPlayerType 
     return player;
 }
 
+Player* GameController::getSelfPlayer() {
+    Player* selfPlayer = nullptr;
+
+    for (Player* player : m_players)
+    {
+        if ((Player::PlayerType_SelfServer == player->getPlayerType()) || (Player::PlayerType_SelfClient == player->getPlayerType())) {
+            selfPlayer = player;
+            break;
+        }
+    }
+
+    return selfPlayer;
+}
+
 int GameController::getCurrentPlayerIndex() {
     if (m_gameRunner) {
         return m_gameRunner->getCurrentPlayerIndex();
@@ -263,20 +277,6 @@ void GameController::initPlayerSet(std::shared_ptr<PlayerSet> playerSet)
     {
         playerSet->addUnknownCluedoObjects(room);
     }
-}
-
-Player* GameController::getSelfPlayer() {
-    Player* selfPlayer = nullptr;
-
-    for (Player* player : m_players)
-    {
-        if ((Player::PlayerType_SelfServer == player->getPlayerType()) || (Player::PlayerType_SelfClient == player->getPlayerType())) {
-            selfPlayer = player;
-            break;
-        }
-    }
-
-    return selfPlayer;
 }
 
 int GameController::getSelfPlayerIndex() {

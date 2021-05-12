@@ -81,7 +81,7 @@ void SelectObjectToShowUI::setupUi()
 
     m_labelAvailableObjects = new QLabel(m_centralwidget);
     m_labelAvailableObjects->setObjectName(QStringLiteral("labelAvailableObjects"));
-    m_labelAvailableObjects->setGeometry(QRect(270, 400, 251, 16));
+    m_labelAvailableObjects->setGeometry(QRect(10, 400, 251, 16));
     m_labelAvailableMurder = new QLabel(m_centralwidget);
     m_labelAvailableMurder->setObjectName(QStringLiteral("labelAvailableMurder"));
     m_labelAvailableMurder->setGeometry(QRect(10, 430, 51, 16));
@@ -173,6 +173,8 @@ void SelectObjectToShowUI::buttonShowMurder_clicked()
     m_showMurder = true;
     m_imageAvailableWeapon->hide();
     m_imageAvailableRoom->hide();
+    m_buttonShowWeapon->hide();
+    m_buttonShowRoom->hide();
 }
 
 void SelectObjectToShowUI::buttonShowWeapon_clicked()
@@ -182,6 +184,8 @@ void SelectObjectToShowUI::buttonShowWeapon_clicked()
     m_showWeapon = true;
     m_imageAvailableMurder->hide();
     m_imageAvailableRoom->hide();
+    m_buttonShowMurder->hide();
+    m_buttonShowRoom->hide();
 }
 
 void SelectObjectToShowUI::buttonShowRoom_clicked()
@@ -191,6 +195,8 @@ void SelectObjectToShowUI::buttonShowRoom_clicked()
     m_showRoom = true;
     m_imageAvailableMurder->hide();
     m_imageAvailableWeapon->hide();
+    m_buttonShowMurder->hide();
+    m_buttonShowWeapon->hide();
 }
 
 void SelectObjectToShowUI::buttonOk_clicked()
@@ -199,9 +205,9 @@ void SelectObjectToShowUI::buttonOk_clicked()
 }
 
 void SelectObjectToShowUI::initObjectsToShow() {
-    Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
-    if (currentPlayer) {
-        std::shared_ptr<PlayerSet> playerSet = currentPlayer->getPlayerSet();
+    Player* selfPlayer = GameController::getInstance().getSelfPlayer();
+    if (selfPlayer) {
+        std::shared_ptr<PlayerSet> playerSet = selfPlayer->getPlayerSet();
         std::vector<CluedoObject*>& cluedoObjects = playerSet->getCluedoObjects();
         bool hasObject = false;
         for (CluedoObject* cluedoObject : cluedoObjects) {
@@ -242,6 +248,13 @@ void SelectObjectToShowUI::initObjectsToShow() {
             ss << "Du kannst nichts zeigen, du hast keine von den gew\303\274nschten Karten!";
             msgBox.setText(ss.str().c_str());
             msgBox.exec();
+
+            m_imageAvailableMurder->hide();
+            m_imageAvailableWeapon->hide();
+            m_imageAvailableRoom->hide();
+            m_buttonShowMurder->hide();
+            m_buttonShowWeapon->hide();
+            m_buttonShowRoom->hide();
         }
     }
 }
