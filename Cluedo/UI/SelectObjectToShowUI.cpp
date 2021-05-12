@@ -223,6 +223,9 @@ void SelectObjectToShowUI::buttonOk_clicked()
     else if (m_showRoom) {
         GameController::getInstance().askPlayerResponse(m_selectedRoomNumber);
     }
+    else {
+        GameController::getInstance().askPlayerResponse(0);
+    }
 
     this->close();
 }

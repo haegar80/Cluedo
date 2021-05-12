@@ -36,6 +36,7 @@ void GameController::startGame()
 
     m_gameRunner = std::make_shared<GameRunner>(m_players);
     m_gameRunner->registerShowObjectCallback([this](const std::string& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber) { showObjectCallback(p_askedPlayer, p_murderNumber, p_weaponNumber, p_roomNumber); });
+    m_gameRunner->registerObjectShownCallback([this]() {objectShownCallback(); });
     m_gameRunner->startGame();
 
     emit gameController_ready();
@@ -47,7 +48,7 @@ void GameController::askPlayer()
     {
         bool askedAllPlayers = m_gameRunner->askPlayer();
         if (askedAllPlayers) {
-            emit askPlayerResponse_ready();
+           // Todo: Do something
         }
     }
 }
@@ -91,8 +92,13 @@ void GameController::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomI
 void GameController::askPlayerResponse(int p_cluedoObjectNumber) {
     if (m_gameRunner)
     {
-        CluedoObject* cluedoObject = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(p_cluedoObjectNumber);
-        m_gameRunner->askPlayerResponse(cluedoObject);
+        if (p_cluedoObjectNumber > 0) {
+            CluedoObject* cluedoObject = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(p_cluedoObjectNumber);
+            m_gameRunner->askPlayerResponse(true, cluedoObject);
+        }
+        else {
+            m_gameRunner->askPlayerResponse(false, nullptr);
+        }
     }
     else {
 #if WIN32
@@ -100,6 +106,8 @@ void GameController::askPlayerResponse(int p_cluedoObjectNumber) {
             // Assume that the server is played by another player
             std::stringstream ss;
             ss << MessageIds::AskOtherPlayerResponse << ":";
+            ss << getSelfPlayerIndex();
+            ss << ";";
             ss << p_cluedoObjectNumber;
             ss << ";";
             m_tcpWinSocketClient->sendData(ss.str());
@@ -472,6 +480,10 @@ void GameController::showObjectCallback(const std::string& p_askedPlayer, int p_
     emit showObject_requested(playerName, p_murderNumber, p_weaponNumber, p_roomNumber);
 }
 
+void GameController::objectShownCallback() {
+    emit askPlayerResponse_ready();
+}
+
 void GameController::receiveRemoteCluedoObject(const std::string& message) {
     std::stringstream ss{ message };
     int number;
@@ -553,7 +565,7 @@ void GameController::receiveRemoteAskOtherPlayer(const std::string& message) {
         if (m_gameRunner) {
             bool askedAllPlayers = m_gameRunner->askPlayer(cluedoObjectsToAsk.at(0), cluedoObjectsToAsk.at(1), cluedoObjectsToAsk.at(2));
             if (askedAllPlayers) {
-                emit askPlayerResponse_ready();
+                //Todo: Do something
             }
         }
         else {
@@ -573,23 +585,42 @@ void GameController::receiveRemoteAskOtherPlayerResponse(const std::string& mess
     std::size_t delimiterPos = message.find(";", startPos);
 
     if (std::string::npos != delimiterPos) {
-        std::string cluedoObjectString = message.substr(startPos, delimiterPos - startPos);
-        std::stringstream ssCluedoObject;
-        int cluedoObjectNumber;
-        ssCluedoObject << cluedoObjectString;
-        ssCluedoObject >> cluedoObjectNumber;
+        std::string currentPlayerIndexString = message.substr(startPos, delimiterPos - startPos);
+        std::stringstream ssCurrentPlayerIndex;
+        int currentPlayerIndex;
+        ssCurrentPlayerIndex << currentPlayerIndexString;
+        ssCurrentPlayerIndex >> currentPlayerIndex;
 
-        if (m_gameRunner)
-        {
-            CluedoObject* cluedoObject = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(cluedoObjectNumber);
-            if (cluedoObject) {
-                printf("Cluedo Object shown upon asking: %s\n", cluedoObject->getName().c_str());
-                m_gameRunner->askPlayerResponse(cluedoObject);
+        startPos = delimiterPos + 1;
+
+        if (std::string::npos != delimiterPos) {
+            std::string cluedoObjectString = message.substr(startPos, delimiterPos - startPos);
+            std::stringstream ssCluedoObject;
+            int cluedoObjectNumber;
+            ssCluedoObject << cluedoObjectString;
+            ssCluedoObject >> cluedoObjectNumber;
+
+            bool objectCouldBeShown = false;
+            CluedoObject* shownCluedoObject = nullptr;
+
+            if (cluedoObjectNumber > 0) {
+                objectCouldBeShown = true;
+                shownCluedoObject = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(cluedoObjectNumber);
+                printf("Cluedo Object shown upon asking: %s\n", shownCluedoObject->getName().c_str());
             }
-        }
-        else {
-            // Assume that we are a remote client
 
+            if (m_gameRunner)
+            {
+                m_gameRunner->askPlayerResponse(objectCouldBeShown, shownCluedoObject);
+            }
+            else {
+                // Assume that we are a remote client
+                PlayerSet* playerSet = getSelfPlayer()->getPlayerSet().get();
+                playerSet->setLastShownCluedoObject(shownCluedoObject);
+                playerSet->setLastPlayerIndexWhoShowedCluedoObject(currentPlayerIndex);
+
+                emit askPlayerResponse_ready();
+            }
         }
     }
 }

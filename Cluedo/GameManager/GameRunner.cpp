@@ -105,8 +105,13 @@ bool GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
     return m_askedAllPlayers;
 }
 
-void GameRunner::askPlayerResponse(CluedoObject* p_cluedoObject) {
-
+void GameRunner::askPlayerResponse(bool p_objectCouldBeShown, CluedoObject* p_cluedoObject) {
+    if (p_objectCouldBeShown) {
+        askPlayerResponseWithShownObject(p_cluedoObject);
+    }
+    else {
+        askPlayerResponseWithoutShownObject();
+    }
 }
 
 void GameRunner::moveToNextPlayer() {
@@ -115,6 +120,41 @@ void GameRunner::moveToNextPlayer() {
     {
         m_currentPlayerIndex = 0;
     }
+}
+
+void GameRunner::askPlayerResponseWithShownObject(CluedoObject* p_cluedoObject) {
+    Player* currentPlayer = m_players.at(m_currentPlayerIndex);
+    PlayerSet* currentPlayerSet = currentPlayer->getPlayerSet().get();
+    currentPlayerSet->setLastShownCluedoObject(p_cluedoObject);
+    currentPlayerSet->setLastPlayerIndexWhoShowedCluedoObject(m_lastAskedPlayerIndex);
+
+    // This is only needed when current player is a computer, but we store it even though
+    currentPlayerSet->addCluedoObjectFromOtherPlayers(m_lastAskedPlayerIndex, p_cluedoObject);
+
+    if (Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) {
+        m_ObjectShownCallback();
+    }
+    else if (Player::PlayerType_Remote == currentPlayer->getPlayerType()) {
+        RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(currentPlayer);
+        if (remotePlayer) {
+            SOCKET remoteSocket = remotePlayer->getRemoteSocket();
+            std::stringstream ss;
+            ss << MessageIds::AskOtherPlayerResponse << ":";
+            ss << m_currentPlayerIndex;
+            ss << ";";
+            ss << p_cluedoObject->getNumber();
+            ss << ";";
+#if WIN32
+            m_tcpWinSocketServer->sendData(remoteSocket, ss.str());
+#endif
+        }
+    }
+}
+
+void GameRunner::askPlayerResponseWithoutShownObject() {
+    Player* currentPlayer = m_players.at(m_currentPlayerIndex);
+    PlayerSet* currentPlayerSet = currentPlayer->getPlayerSet().get();
+    currentPlayerSet->setLastShownCluedoObject(nullptr);
 }
 
 CluedoObject* GameRunner::askObjectsAtComputer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)

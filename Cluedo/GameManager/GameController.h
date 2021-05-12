@@ -118,6 +118,7 @@ private:
     void distributeWeapons();
     void distributeRooms();
     void showObjectCallback(const std::string& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber);
+    void objectShownCallback();
 
     void receiveRemoteCluedoObject(const std::string& message);
     void receiveRemoteAllCluedoObjectsDistributed();

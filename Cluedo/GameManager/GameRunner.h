@@ -27,11 +27,15 @@ public:
 
     bool askPlayer();
     bool askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
-    void askPlayerResponse(CluedoObject* p_cluedoObject);
+    void askPlayerResponse(bool p_objectCouldBeShown, CluedoObject* p_cluedoObject);
     void moveToNextPlayer();
 
     void registerShowObjectCallback(std::function<void(const std::string&, int, int, int)> p_callback) {
         m_showObjectCallback = p_callback;
+    }
+
+    void registerObjectShownCallback(std::function<void()> p_callback) {
+        m_ObjectShownCallback;
     }
 
     int getCurrentPlayerIndex() {
@@ -51,9 +55,14 @@ private:
     std::vector<Player*> m_players;
 
     std::function<void(const std::string&, int, int, int)> m_showObjectCallback;
+    std::function<void()> m_ObjectShownCallback;
+
 #if WIN32
     std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;
 #endif
+
+    void askPlayerResponseWithShownObject(CluedoObject* p_cluedoObject);
+    void askPlayerResponseWithoutShownObject();
 
     CluedoObject* askObjectsAtComputer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
 
