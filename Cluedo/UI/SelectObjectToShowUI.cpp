@@ -13,12 +13,25 @@
 #include <QMessageBox>
 #include <sstream>
 
-SelectObjectToShowUI::SelectObjectToShowUI(const QString& p_askedPlayer, const QString& p_selectedMurder, const QString& p_selectedWeapon, const QString& p_selectedRoom) :
+SelectObjectToShowUI::SelectObjectToShowUI(const QString& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber) :
     m_askedPlayer(p_askedPlayer),
-    m_selectedMurder(p_selectedMurder),
-    m_selectedWeapon(p_selectedWeapon),
-    m_selectedRoom(p_selectedRoom)
+    m_selectedMurderNumber(p_murderNumber),
+    m_selectedWeaponNumber(p_weaponNumber),
+    m_selectedRoomNumber(p_roomNumber)
 {
+    CluedoObject* selectedMurder = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(m_selectedMurderNumber);
+    if (selectedMurder) {
+        m_selectedMurderString = QString(selectedMurder->getName().c_str());
+    }
+    CluedoObject* selectedWeapon = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(m_selectedWeaponNumber);
+    if (selectedWeapon) {
+        m_selectedWeaponString = QString(selectedWeapon->getName().c_str());
+    }
+    CluedoObject* selectedRoom = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(m_selectedRoomNumber);
+    if (selectedRoom) {
+        m_selectedRoomString = QString(selectedRoom->getName().c_str());
+    }
+
     setupUi();
 }
 
@@ -53,7 +66,7 @@ void SelectObjectToShowUI::setupUi()
     m_imageSelectedMurder->setGeometry(QRect(10, 80, 211, 281));
     m_imageSelectedMurder->setFrameShape(QFrame::Box);
     m_imageSelectedMurder->setScaledContents(true);
-    QImage image = Utils::getImage(m_selectedMurder);
+    QImage image = Utils::getImage(m_selectedMurderString);
     if (!image.isNull())
     {
         m_imageSelectedMurder->setPixmap(QPixmap::fromImage(image));
@@ -63,7 +76,7 @@ void SelectObjectToShowUI::setupUi()
     m_imageSelectedWeapon->setGeometry(QRect(260, 80, 211, 281));
     m_imageSelectedWeapon->setFrameShape(QFrame::Box);
     m_imageSelectedWeapon->setScaledContents(true);
-    image = Utils::getImage(m_selectedWeapon);
+    image = Utils::getImage(m_selectedWeaponString);
     if (!image.isNull())
     {
         m_imageSelectedWeapon->setPixmap(QPixmap::fromImage(image));
@@ -73,8 +86,8 @@ void SelectObjectToShowUI::setupUi()
     m_imageSelectedRoom->setGeometry(QRect(510, 80, 281, 281));
     m_imageSelectedRoom->setFrameShape(QFrame::Box);
     m_imageSelectedRoom->setScaledContents(true);
-    image = Utils::getImage(m_selectedRoom);
-    if (!image.isNull())
+    image = Utils::getImage(m_selectedRoomString);
+    if (!image.isNull()) 
     {
         m_imageSelectedRoom->setPixmap(QPixmap::fromImage(image));
     }
@@ -211,28 +224,28 @@ void SelectObjectToShowUI::initObjectsToShow() {
         std::vector<CluedoObject*>& cluedoObjects = playerSet->getCluedoObjects();
         bool hasObject = false;
         for (CluedoObject* cluedoObject : cluedoObjects) {
-            if (cluedoObject->getName() == m_selectedMurder.toStdString()) {
+            if (cluedoObject->getNumber() == m_selectedMurderNumber) {
                 hasObject = true;
                 m_buttonShowMurder->setEnabled(true);
-                QImage image = Utils::getImage(m_selectedMurder);
+                QImage image = Utils::getImage(m_selectedMurderString);
                 if (!image.isNull())
                 {
                     m_imageAvailableMurder->setPixmap(QPixmap::fromImage(image));
                 }
             }
-            else if (cluedoObject->getName() == m_selectedWeapon.toStdString()) {
+            else if (cluedoObject->getNumber() == m_selectedWeaponNumber) {
                 hasObject = true;
                 m_buttonShowWeapon->setEnabled(true);
-                QImage image = Utils::getImage(m_selectedWeapon);
+                QImage image = Utils::getImage(m_selectedWeaponString);
                 if (!image.isNull())
                 {
                     m_imageAvailableWeapon->setPixmap(QPixmap::fromImage(image));
                 }
             }
-            else if (cluedoObject->getName() == m_selectedRoom.toStdString()) {
+            else if (cluedoObject->getNumber() == m_selectedRoomNumber) {
                 hasObject = true;
                 m_buttonShowRoom->setEnabled(true);
-                QImage image = Utils::getImage(m_selectedRoom);
+                QImage image = Utils::getImage(m_selectedRoomString);
                 if (!image.isNull())
                 {
                     m_imageAvailableRoom->setPixmap(QPixmap::fromImage(image));

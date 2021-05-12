@@ -54,7 +54,7 @@ bool GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
 
         Player* playerToAsk = m_players.at(playerIndexToAsk);
         if (Player::PlayerType_SelfServer == playerToAsk->getPlayerType()) {
-            m_showObjectCallback(playerToAsk->getName(), p_murder->getName(), p_weapon->getName(), p_room->getName());
+            m_showObjectCallback(playerToAsk->getName(), p_murder->getNumber(), p_weapon->getNumber(), p_room->getNumber());
         }
         else if (Player::PlayerType_Remote == playerToAsk->getPlayerType()) {
             RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(playerToAsk);

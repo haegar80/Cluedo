@@ -42,7 +42,7 @@ public:
     void playersList_updated();
     void currentPlayerIndex_updated();
     void allCluedoObjects_distributed();
-    void showObject_requested(const QString& p_askedPlayer, const QString& p_murderString, const QString& p_weaponString, const QString& p_roomString);
+    void showObject_requested(const QString& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber);
     void askPlayer_finished();
 
 private:

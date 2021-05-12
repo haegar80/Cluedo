@@ -35,7 +35,7 @@ void GameController::startGame()
     emit playersList_updated();
 
     m_gameRunner = std::make_shared<GameRunner>(m_players);
-    m_gameRunner->registerShowObjectCallback([this](const std::string& p_askedPlayer, const std::string& p_murderString, const std::string& p_weaponString, const std::string& p_roomString) { showObjectCallback(p_askedPlayer, p_murderString, p_weaponString, p_roomString); });
+    m_gameRunner->registerShowObjectCallback([this](const std::string& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber) { showObjectCallback(p_askedPlayer, p_murderNumber, p_weaponNumber, p_roomNumber); });
     m_gameRunner->startGame();
 
     emit gameController_ready();
@@ -443,13 +443,10 @@ void GameController::distributeRooms()
     distributeCluedoObjects(m_roomsToDistribute);
 }
 
-void GameController::showObjectCallback(const std::string& p_askedPlayer, const std::string& p_murderString, const std::string& p_weaponString, const std::string& p_roomString) {
+void GameController::showObjectCallback(const std::string& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber) {
     QString playerName = QString(p_askedPlayer.c_str());
-    QString objectName1 = QString(p_murderString.c_str());
-    QString objectName2 = QString(p_weaponString.c_str());
-    QString objectName3 = QString(p_roomString.c_str());
 
-    emit showObject_requested(playerName, objectName1, objectName2, objectName3);
+    emit showObject_requested(playerName, p_murderNumber, p_weaponNumber, p_roomNumber);
 }
 
 void GameController::receiveRemoteCluedoObject(const std::string& message) {
@@ -539,11 +536,11 @@ void GameController::receiveRemoteAskOtherPlayer(const std::string& message) {
         else {
             // Assume that we are a remote client
             QString playerName = QString(m_players.at(playerIndex)->getName().c_str());
-            QString objectName1 = QString(cluedoObjectsToAsk.at(0)->getName().c_str());
-            QString objectName2 = QString(cluedoObjectsToAsk.at(1)->getName().c_str());
-            QString objectName3 = QString(cluedoObjectsToAsk.at(2)->getName().c_str());
+            int murderNumber = cluedoObjectsToAsk.at(0)->getNumber();
+            int weaponNumber = cluedoObjectsToAsk.at(1)->getNumber();
+            int roomNumber = cluedoObjectsToAsk.at(2)->getNumber();
 
-            emit showObject_requested(playerName, objectName1, objectName2, objectName3);
+            emit showObject_requested(playerName, murderNumber, weaponNumber, roomNumber);
         }
     }
 }

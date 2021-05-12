@@ -30,7 +30,7 @@ public:
     void askPlayerRemoteResponse(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
     void moveToNextPlayer();
 
-    void registerShowObjectCallback(std::function<void(const std::string&, const std::string&, const std::string&, const std::string&)> p_callback) {
+    void registerShowObjectCallback(std::function<void(const std::string&, int, int, int)> p_callback) {
         m_showObjectCallback = p_callback;
     }
 
@@ -50,7 +50,7 @@ private:
     bool m_askedAllPlayers{ false };
     std::vector<Player*> m_players;
 
-    std::function<void(const std::string&, const std::string&, const std::string&, const std::string&)> m_showObjectCallback;
+    std::function<void(const std::string&, int, int, int)> m_showObjectCallback;
 #if WIN32
     std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;
 #endif

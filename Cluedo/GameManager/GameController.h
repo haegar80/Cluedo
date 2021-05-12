@@ -25,6 +25,7 @@ public:
     void startGame();
     void askPlayer();
     void askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
+    //void showSelectedObject();
     bool tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
     bool shouldTellSuspicion();
 
@@ -75,7 +76,7 @@ public:
     void playersList_updated();
     void currentPlayerIndex_updated();
     void allCluedoObjects_distributed();
-    void showObject_requested(const QString& p_askedPlayer, const QString& p_murderString, const QString& p_weaponString, const QString& p_roomString);
+    void showObject_requested(const QString& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber);
     void askPlayerResponse_ready();
 
 private:
@@ -116,7 +117,7 @@ private:
     void distributeMurders();
     void distributeWeapons();
     void distributeRooms();
-    void showObjectCallback(const std::string& p_askedPlayer, const std::string& p_murderString, const std::string& p_weaponString, const std::string& p_roomString);
+    void showObjectCallback(const std::string& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber);
 
     void receiveRemoteCluedoObject(const std::string& message);
     void receiveRemoteAllCluedoObjectsDistributed();

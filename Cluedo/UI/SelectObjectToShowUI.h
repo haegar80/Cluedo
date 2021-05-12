@@ -21,7 +21,7 @@ class SelectObjectToShowUI : public QMainWindow
     Q_OBJECT
 
 public:
-    SelectObjectToShowUI(const QString& p_askedPlayer, const QString& p_selectedMurder, const QString& p_selectedWeapon, const QString& p_selectedRoom);
+    SelectObjectToShowUI(const QString& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber);
     virtual ~SelectObjectToShowUI() = default;
 
     void setupUi();
@@ -70,9 +70,12 @@ private:
     QStatusBar* m_statusbar;
     
     const QString m_askedPlayer{ "" };
-    const QString m_selectedMurder;
-    const QString m_selectedWeapon;
-    const QString m_selectedRoom;
+    QString m_selectedMurderString;
+    QString m_selectedWeaponString;
+    QString m_selectedRoomString;
+    int m_selectedMurderNumber;
+    int m_selectedWeaponNumber;
+    int m_selectedRoomNumber;
 
     bool m_showMurder{ false };
     bool m_showWeapon{ false };
