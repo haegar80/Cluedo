@@ -214,6 +214,16 @@ void SelectObjectToShowUI::buttonShowRoom_clicked()
 
 void SelectObjectToShowUI::buttonOk_clicked()
 {
+    if (m_showMurder) {
+        GameController::getInstance().askPlayerResponse(m_selectedMurderNumber);
+    }
+    else if (m_showWeapon) {
+        GameController::getInstance().askPlayerResponse(m_selectedWeaponNumber);
+    }
+    else if (m_showRoom) {
+        GameController::getInstance().askPlayerResponse(m_selectedRoomNumber);
+    }
+
     this->close();
 }
 

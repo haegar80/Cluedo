@@ -105,7 +105,7 @@ bool GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
     return m_askedAllPlayers;
 }
 
-void GameRunner::askPlayerRemoteResponse(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room) {
+void GameRunner::askPlayerResponse(CluedoObject* p_cluedoObject) {
 
 }
 

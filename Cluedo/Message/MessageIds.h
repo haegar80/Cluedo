@@ -7,5 +7,6 @@ namespace MessageIds
     constexpr int PlayersList = 102;
     constexpr int CurrentPlayerIndex = 103;
     constexpr int AskOtherPlayer = 104;
+    constexpr int AskOtherPlayerResponse = 105;
 };
 

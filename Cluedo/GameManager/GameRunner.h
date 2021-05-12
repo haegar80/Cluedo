@@ -27,7 +27,7 @@ public:
 
     bool askPlayer();
     bool askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
-    void askPlayerRemoteResponse(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
+    void askPlayerResponse(CluedoObject* p_cluedoObject);
     void moveToNextPlayer();
 
     void registerShowObjectCallback(std::function<void(const std::string&, int, int, int)> p_callback) {

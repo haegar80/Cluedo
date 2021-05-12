@@ -25,7 +25,7 @@ public:
     void startGame();
     void askPlayer();
     void askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
-    //void showSelectedObject();
+    void askPlayerResponse(int p_cluedoObjectNumber);
     bool tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
     bool shouldTellSuspicion();
 
@@ -124,4 +124,5 @@ private:
     void receiveRemotePlayersList(SOCKET p_sourceSocket, const std::string& message);
     void receiveRemoteCurrentPlayerIndex(const std::string& message);
     void receiveRemoteAskOtherPlayer(const std::string& message);
+    void receiveRemoteAskOtherPlayerResponse(const std::string& message);
 };
