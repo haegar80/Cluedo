@@ -147,12 +147,12 @@
      <rect>
       <x>270</x>
       <y>400</y>
-      <width>171</width>
+      <width>251</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Du hast davon:</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Karten von obiger Anfrage, die du selber besitzt:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="labelAsk">

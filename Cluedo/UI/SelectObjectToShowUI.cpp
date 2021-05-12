@@ -81,7 +81,7 @@ void SelectObjectToShowUI::setupUi()
 
     m_labelAvailableObjects = new QLabel(m_centralwidget);
     m_labelAvailableObjects->setObjectName(QStringLiteral("labelAvailableObjects"));
-    m_labelAvailableObjects->setGeometry(QRect(270, 400, 171, 16));
+    m_labelAvailableObjects->setGeometry(QRect(270, 400, 251, 16));
     m_labelAvailableMurder = new QLabel(m_centralwidget);
     m_labelAvailableMurder->setObjectName(QStringLiteral("labelAvailableMurder"));
     m_labelAvailableMurder->setGeometry(QRect(10, 430, 51, 16));
@@ -113,7 +113,7 @@ void SelectObjectToShowUI::setupUi()
     m_buttonShowWeapon = new QPushButton(m_centralwidget);
     m_buttonShowWeapon->setObjectName(QStringLiteral("buttonShowWeapon"));
     m_buttonShowWeapon->setGeometry(QRect(310, 750, 111, 23));
-    m_buttonShowMurder->setEnabled(false);
+    m_buttonShowWeapon->setEnabled(false);
     m_buttonShowRoom = new QPushButton(m_centralwidget);
     m_buttonShowRoom->setObjectName(QStringLiteral("buttonShowRoom"));
     m_buttonShowRoom->setGeometry(QRect(590, 750, 111, 23));
@@ -121,7 +121,7 @@ void SelectObjectToShowUI::setupUi()
 
     m_buttonOk = new QPushButton(m_centralwidget);
     m_buttonOk->setObjectName(QStringLiteral("buttonOk"));
-    m_buttonOk->setGeometry(QRect(20, 650, 75, 23));
+    m_buttonOk->setGeometry(QRect(10, 810, 75, 23));
     m_buttonOk->setEnabled(false);
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
@@ -138,6 +138,8 @@ void SelectObjectToShowUI::setupUi()
     QObject::connect(m_buttonShowWeapon, SIGNAL(pressed()), this, SLOT(buttonShowWeapon_clicked()));
     QObject::connect(m_buttonShowRoom, SIGNAL(pressed()), this, SLOT(buttonShowRoom_clicked()));
     QObject::connect(m_buttonOk, SIGNAL(pressed()), this, SLOT(buttonOk_clicked()));
+
+    initObjectsToShow();
 }
 
 void SelectObjectToShowUI::retranslateUi()
@@ -151,6 +153,7 @@ void SelectObjectToShowUI::retranslateUi()
     m_imageSelectedMurder->setText(QString());
     m_imageSelectedWeapon->setText(QString());
     m_imageSelectedRoom->setText(QString());
+    m_labelAvailableObjects->setText(QApplication::translate("mainWindowSelectObjectToShow", "Karten von obiger Anfrage, die du selber besitzt:", nullptr));
     m_labelAvailableMurder->setText(QApplication::translate("mainWindowSelectObjectToShow", "Murder", nullptr));
     m_labelAvailableWeapon->setText(QApplication::translate("mainWindowSelectObjectToShow", "Waffe", nullptr));
     m_labelAvailableRoom->setText(QApplication::translate("mainWindowSelectObjectToShow", "Raum", nullptr));
@@ -236,7 +239,7 @@ void SelectObjectToShowUI::initObjectsToShow() {
 
             QMessageBox msgBox;
             std::stringstream ss;
-            ss << "Du kannst nichts zeigen, du hast keine von den gewünschten Karten!";
+            ss << "Du kannst nichts zeigen, du hast keine von den gew\303\274nschten Karten!";
             msgBox.setText(ss.str().c_str());
             msgBox.exec();
         }
