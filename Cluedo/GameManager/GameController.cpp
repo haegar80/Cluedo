@@ -92,7 +92,7 @@ void GameController::askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomI
 void GameController::askPlayerResponse(int p_cluedoObjectNumber) {
     if (m_gameRunner)
     {
-        if (p_cluedoObjectNumber > 0) {
+        if (p_cluedoObjectNumber > CluedoObjectNumberInitValue) {
             CluedoObject* cluedoObject = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(p_cluedoObjectNumber);
             m_gameRunner->askPlayerResponse(true, cluedoObject);
         }
@@ -603,7 +603,7 @@ void GameController::receiveRemoteAskOtherPlayerResponse(const std::string& mess
             bool objectCouldBeShown = false;
             CluedoObject* shownCluedoObject = nullptr;
 
-            if (cluedoObjectNumber > 0) {
+            if (cluedoObjectNumber > CluedoObjectNumberInitValue) {
                 objectCouldBeShown = true;
                 shownCluedoObject = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(cluedoObjectNumber);
                 printf("Cluedo Object shown upon asking: %s\n", shownCluedoObject->getName().c_str());
@@ -619,7 +619,9 @@ void GameController::receiveRemoteAskOtherPlayerResponse(const std::string& mess
                 playerSet->setLastShownCluedoObject(shownCluedoObject);
                 playerSet->setLastPlayerIndexWhoShowedCluedoObject(currentPlayerIndex);
 
-                emit askPlayerResponse_ready();
+                if (objectCouldBeShown) {
+                    emit askPlayerResponse_ready();
+                }
             }
         }
     }

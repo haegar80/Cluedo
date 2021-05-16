@@ -149,12 +149,31 @@ void GameRunner::askPlayerResponseWithShownObject(CluedoObject* p_cluedoObject) 
 #endif
         }
     }
+
+    m_lastAskedPlayerIndex = -1;
 }
 
 void GameRunner::askPlayerResponseWithoutShownObject() {
     Player* currentPlayer = m_players.at(m_currentPlayerIndex);
     PlayerSet* currentPlayerSet = currentPlayer->getPlayerSet().get();
     currentPlayerSet->setLastShownCluedoObject(nullptr);
+
+    constexpr int CluedoObjectNumberInitValue = 0;
+    if (Player::PlayerType_Remote == currentPlayer->getPlayerType()) {
+        RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(currentPlayer);
+        if (remotePlayer) {
+            SOCKET remoteSocket = remotePlayer->getRemoteSocket();
+            std::stringstream ss;
+            ss << MessageIds::AskOtherPlayerResponse << ":";
+            ss << m_currentPlayerIndex;
+            ss << ";";
+            ss << CluedoObjectNumberInitValue;
+            ss << ";";
+#if WIN32
+            m_tcpWinSocketServer->sendData(remoteSocket, ss.str());
+#endif
+        }
+    }
 }
 
 CluedoObject* GameRunner::askObjectsAtComputer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)

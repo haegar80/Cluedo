@@ -80,6 +80,8 @@ public:
     void askPlayerResponse_ready();
 
 private:
+    static constexpr int CluedoObjectNumberInitValue = 0;
+
     std::shared_ptr<GameRunner> m_gameRunner;
     std::vector<Player*> m_players;
 
