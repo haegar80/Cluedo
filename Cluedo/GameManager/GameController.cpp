@@ -101,9 +101,9 @@ void GameController::askPlayerResponse(int p_cluedoObjectNumber) {
         }
     }
     else {
+        // Assume that the server is played by another player
 #if WIN32
         if (m_tcpWinSocketClient) {
-            // Assume that the server is played by another player
             std::stringstream ss;
             ss << MessageIds::AskOtherPlayerResponse << ":";
             ss << getSelfPlayerIndex();
@@ -209,6 +209,10 @@ void GameController::registerRemoteServerMessages(bool p_client) {
         auto receiveRemoteAskOtherPlayerCallback = [this](SOCKET, const std::string& p_message) { receiveRemoteAskOtherPlayer(p_message); };
         MessageHandler::getInstance().registerMessageHandler(MessageIds::AskOtherPlayer, receiveRemoteAskOtherPlayerCallback);
     }
+    else {
+        auto receiveMoveToNextPlayerResponseCallback = [this](SOCKET, const std::string&) { receiveMoveToNextPlayerResponse(); };
+        MessageHandler::getInstance().registerMessageHandler(MessageIds::MoveToNextPlayer, receiveMoveToNextPlayerResponseCallback);
+    }
 
     auto receiveRemotePlayersListCallback = [this](SOCKET p_sourceSocket, const std::string& p_message) { receiveRemotePlayersList(p_sourceSocket, p_message); };
     MessageHandler::getInstance().registerMessageHandler(MessageIds::PlayersList, receiveRemotePlayersListCallback);
@@ -268,14 +272,20 @@ Player* GameController::getCurrentPlayer()
 }
 
 void GameController::moveToNextPlayer() {
-    Player* currentPlayer = getCurrentPlayer();
-    if (Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) {
+    if (m_gameRunner) {
         m_gameRunner->moveToNextPlayer();
         sendCurrentPlayerIndexToClients();
         emit currentPlayerIndex_updated();
     }
-    else if (Player::PlayerType_Remote == currentPlayer->getPlayerType()) {
-        printf("Move to next player...\n");
+    else {
+        // Assume that the server is played by another player
+#if WIN32
+        if (m_tcpWinSocketClient) {
+            std::stringstream ss;
+            ss << MessageIds::MoveToNextPlayer << ":";
+            m_tcpWinSocketClient->sendData(ss.str());
+        }
+#endif
     }
 }
 
@@ -625,4 +635,9 @@ void GameController::receiveRemoteAskOtherPlayerResponse(const std::string& mess
             }
         }
     }
+}
+
+void GameController::receiveMoveToNextPlayerResponse() {
+    printf("Move to next player.");
+    moveToNextPlayer();
 }

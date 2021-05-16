@@ -128,4 +128,5 @@ private:
     void receiveRemoteCurrentPlayerIndex(const std::string& message);
     void receiveRemoteAskOtherPlayer(const std::string& message);
     void receiveRemoteAskOtherPlayerResponse(const std::string& message);
+    void receiveMoveToNextPlayerResponse();
 };
