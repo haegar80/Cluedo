@@ -121,6 +121,7 @@ private:
     void distributeRooms();
     void showObjectCallback(const std::string& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber);
     void objectShownCallback();
+    void noObjectCanBeShownCallback();
 
     void receiveRemoteCluedoObject(const std::string& message);
     void receiveRemoteAllCluedoObjectsDistributed();
@@ -128,5 +129,6 @@ private:
     void receiveRemoteCurrentPlayerIndex(const std::string& message);
     void receiveRemoteAskOtherPlayer(const std::string& message);
     void receiveRemoteAskOtherPlayerResponse(const std::string& message);
+    void receiveNoCluedoObjectCanBeShownResponse();
     void receiveMoveToNextPlayerResponse();
 };

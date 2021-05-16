@@ -37,6 +37,7 @@ void GameController::startGame()
     m_gameRunner = std::make_shared<GameRunner>(m_players);
     m_gameRunner->registerShowObjectCallback([this](const std::string& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber) { showObjectCallback(p_askedPlayer, p_murderNumber, p_weaponNumber, p_roomNumber); });
     m_gameRunner->registerObjectShownCallback([this]() {objectShownCallback(); });
+    m_gameRunner->registerNoObjectCanBeShownCallback([this]() {noObjectCanBeShownCallback(); });
     m_gameRunner->startGame();
 
     emit gameController_ready();
@@ -46,10 +47,7 @@ void GameController::askPlayer()
 {
     if (m_gameRunner)
     {
-        bool askedAllPlayers = m_gameRunner->askPlayer();
-        if (askedAllPlayers) {
-           // Todo: Do something
-        }
+        m_gameRunner->askPlayer();
     }
 }
 
@@ -222,6 +220,9 @@ void GameController::registerRemoteServerMessages(bool p_client) {
 
     auto receiveRemoteAskOtherPlayerResponseCallback = [this](SOCKET, const std::string& p_message) { receiveRemoteAskOtherPlayerResponse(p_message); };
     MessageHandler::getInstance().registerMessageHandler(MessageIds::AskOtherPlayerResponse, receiveRemoteAskOtherPlayerResponseCallback);
+
+    auto receiveNoCluedoObjectCanBeShownResponseCallback = [this](SOCKET, const std::string&) { receiveNoCluedoObjectCanBeShownResponse(); };
+    MessageHandler::getInstance().registerMessageHandler(MessageIds::NoCluedoObjectCanBeShown, receiveNoCluedoObjectCanBeShownResponseCallback);
 }
 
 Player* GameController::createNewPlayer(std::string p_name, Player::EPlayerType p_playerType)
@@ -494,6 +495,10 @@ void GameController::objectShownCallback() {
     emit askPlayerResponse_ready();
 }
 
+void GameController::noObjectCanBeShownCallback() {
+    emit askPlayerResponse_ready();
+}
+
 void GameController::receiveRemoteCluedoObject(const std::string& message) {
     std::stringstream ss{ message };
     int number;
@@ -573,10 +578,7 @@ void GameController::receiveRemoteAskOtherPlayer(const std::string& message) {
         }
 
         if (m_gameRunner) {
-            bool askedAllPlayers = m_gameRunner->askPlayer(cluedoObjectsToAsk.at(0), cluedoObjectsToAsk.at(1), cluedoObjectsToAsk.at(2));
-            if (askedAllPlayers) {
-                //Todo: Do something
-            }
+            m_gameRunner->askPlayer(cluedoObjectsToAsk.at(0), cluedoObjectsToAsk.at(1), cluedoObjectsToAsk.at(2));
         }
         else {
             // Assume that we are a remote client
@@ -635,6 +637,11 @@ void GameController::receiveRemoteAskOtherPlayerResponse(const std::string& mess
             }
         }
     }
+}
+
+void GameController::receiveNoCluedoObjectCanBeShownResponse() {
+    printf("No Cluedo object can be shown!");
+    emit askPlayerResponse_ready();
 }
 
 void GameController::receiveMoveToNextPlayerResponse() {

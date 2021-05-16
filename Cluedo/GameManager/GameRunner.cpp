@@ -14,7 +14,7 @@ void GameRunner::startGame() {
     m_currentPlayerIndex = 0;
 }
 
-bool GameRunner::askPlayer()
+void GameRunner::askPlayer()
 {
     CluedoObject* murderToAsk{ nullptr };
     CluedoObject* weaponToAsk{ nullptr };
@@ -24,7 +24,7 @@ bool GameRunner::askPlayer()
     return askPlayer(murderToAsk, weaponToAsk, roomToAsk);
 }
 
-bool GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
+void GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)
 {
     PlayerSet* currentPlayerSet = m_players.at(m_currentPlayerIndex)->getPlayerSet().get();
     currentPlayerSet->setLastAskedMurder(p_murder);
@@ -45,7 +45,7 @@ bool GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
             playerIndexToAsk = 0;
             if (playerIndexToAsk == m_currentPlayerIndex)
             {
-                m_askedAllPlayers = true;
+                handleNoObjectCanBeShown();
                 break;
             }
         }
@@ -73,7 +73,6 @@ bool GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
 #if WIN32
                 m_tcpWinSocketServer->sendData(remoteSocket, ss.str());
 #endif
-                return false;
             }
         }
         else if (Player::PlayerType_Computer == playerToAsk->getPlayerType()) {
@@ -101,8 +100,6 @@ bool GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
     {
         currentPlayerSet->setLastShownCluedoObject(nullptr);
     }
-
-    return m_askedAllPlayers;
 }
 
 void GameRunner::askPlayerResponse(bool p_objectCouldBeShown, CluedoObject* p_cluedoObject) {
@@ -132,7 +129,7 @@ void GameRunner::askPlayerResponseWithShownObject(CluedoObject* p_cluedoObject) 
     currentPlayerSet->addCluedoObjectFromOtherPlayers(m_lastAskedPlayerIndex, p_cluedoObject);
 
     if (Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) {
-        m_ObjectShownCallback();
+        m_objectShownCallback();
     }
     else if (Player::PlayerType_Remote == currentPlayer->getPlayerType()) {
         RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(currentPlayer);
@@ -169,6 +166,24 @@ void GameRunner::askPlayerResponseWithoutShownObject() {
             ss << ";";
             ss << CluedoObjectNumberInitValue;
             ss << ";";
+#if WIN32
+            m_tcpWinSocketServer->sendData(remoteSocket, ss.str());
+#endif
+        }
+    }
+}
+
+void GameRunner::handleNoObjectCanBeShown() {
+    Player* currentPlayer = m_players.at(m_currentPlayerIndex);
+    if (Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) {
+        m_noObjectCanBeShownCallback();
+    }
+    else if (Player::PlayerType_Remote == currentPlayer->getPlayerType()) {
+        RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(currentPlayer);
+        if (remotePlayer) {
+            SOCKET remoteSocket = remotePlayer->getRemoteSocket();
+            std::stringstream ss;
+            ss << MessageIds::NoCluedoObjectCanBeShown << ":";
 #if WIN32
             m_tcpWinSocketServer->sendData(remoteSocket, ss.str());
 #endif
