@@ -35,7 +35,7 @@ public:
     }
 
     void registerObjectShownCallback(std::function<void()> p_callback) {
-        m_ObjectShownCallback;
+        m_ObjectShownCallback = p_callback;
     }
 
     int getCurrentPlayerIndex() {
