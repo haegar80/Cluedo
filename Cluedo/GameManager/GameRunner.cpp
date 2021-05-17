@@ -38,56 +38,52 @@ void GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
     }
 
     CluedoObject* foundObject = nullptr;
-    while ((playerIndexToAsk != m_currentPlayerIndex) && (nullptr == foundObject))
+    if (m_players.size() == playerIndexToAsk)
     {
-        if (m_players.size() == playerIndexToAsk)
+        playerIndexToAsk = 0;
+        if (playerIndexToAsk == m_currentPlayerIndex)
         {
-            playerIndexToAsk = 0;
-            if (playerIndexToAsk == m_currentPlayerIndex)
-            {
-                handleNoObjectCanBeShown();
-                break;
-            }
+            handleNoObjectCanBeShown();
         }
+    }
 
-        m_lastAskedPlayerIndex = playerIndexToAsk;
+    m_lastAskedPlayerIndex = playerIndexToAsk;
 
-        Player* playerToAsk = m_players.at(playerIndexToAsk);
-        if (Player::PlayerType_SelfServer == playerToAsk->getPlayerType()) {
-            m_showObjectCallback(playerToAsk->getName(), p_murder->getNumber(), p_weapon->getNumber(), p_room->getNumber());
-        }
-        else if (Player::PlayerType_Remote == playerToAsk->getPlayerType()) {
-            RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(playerToAsk);
-            if (remotePlayer) {
-                SOCKET remoteSocket = remotePlayer->getRemoteSocket();
-                std::stringstream ss;
-                ss << MessageIds::AskOtherPlayer << ":";
-                ss << m_currentPlayerIndex;
-                ss << ";";
-                ss << p_murder->getNumber();
-                ss << ";";
-                ss << p_weapon->getNumber();
-                ss << ";";
-                ss << p_room->getNumber();
-                ss << ";";
+    Player* playerToAsk = m_players.at(playerIndexToAsk);
+    if (Player::PlayerType_SelfServer == playerToAsk->getPlayerType()) {
+        m_showObjectCallback(playerToAsk->getName(), p_murder->getNumber(), p_weapon->getNumber(), p_room->getNumber());
+    }
+    else if (Player::PlayerType_Remote == playerToAsk->getPlayerType()) {
+        RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(playerToAsk);
+        if (remotePlayer) {
+            SOCKET remoteSocket = remotePlayer->getRemoteSocket();
+            std::stringstream ss;
+            ss << MessageIds::AskOtherPlayer << ":";
+            ss << m_currentPlayerIndex;
+            ss << ";";
+            ss << p_murder->getNumber();
+            ss << ";";
+            ss << p_weapon->getNumber();
+            ss << ";";
+            ss << p_room->getNumber();
+            ss << ";";
 #if WIN32
-                m_tcpWinSocketServer->sendData(remoteSocket, ss.str());
+            m_tcpWinSocketServer->sendData(remoteSocket, ss.str());
 #endif
-            }
         }
-        else if (Player::PlayerType_Computer == playerToAsk->getPlayerType()) {
-            foundObject = askObjectsAtComputer(p_murder, p_weapon, p_room);
+    }
+    else if (Player::PlayerType_Computer == playerToAsk->getPlayerType()) {
+        foundObject = askObjectsAtComputer(p_murder, p_weapon, p_room);
 
-            if (nullptr == foundObject)
-            {
-                currentPlayerSet->addPlayerIndexWithNoShownCluedoObjects(playerIndexToAsk);
-                currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_murder);
-                currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_weapon);
-                currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_room);
-            }
+        if (nullptr == foundObject)
+        {
+            currentPlayerSet->addPlayerIndexWithNoShownCluedoObjects(playerIndexToAsk);
+            currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_murder);
+            currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_weapon);
+            currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_room);
+
+            askPlayer(p_murder, p_weapon, p_room);
         }
-
-        playerIndexToAsk++;
     }
 
     if (nullptr != foundObject)
@@ -171,6 +167,8 @@ void GameRunner::askPlayerResponseWithoutShownObject() {
 #endif
         }
     }
+
+    askPlayer(currentPlayerSet->getLastAskedMurder(), currentPlayerSet->getLastAskedWeapon(), currentPlayerSet->getLastAskedRoom());
 }
 
 void GameRunner::handleNoObjectCanBeShown() {

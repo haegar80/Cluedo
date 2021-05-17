@@ -640,11 +640,11 @@ void GameController::receiveRemoteAskOtherPlayerResponse(const std::string& mess
 }
 
 void GameController::receiveNoCluedoObjectCanBeShownResponse() {
-    printf("No Cluedo object can be shown!");
+    printf("No Cluedo object can be shown!\n");
     emit askPlayerResponse_ready();
 }
 
 void GameController::receiveMoveToNextPlayerResponse() {
-    printf("Move to next player.");
+    printf("Move to next player.\n");
     moveToNextPlayer();
 }
