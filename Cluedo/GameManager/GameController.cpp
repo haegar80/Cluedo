@@ -597,11 +597,11 @@ void GameController::receiveRemoteAskOtherPlayerResponse(const std::string& mess
     std::size_t delimiterPos = message.find(";", startPos);
 
     if (std::string::npos != delimiterPos) {
-        std::string currentPlayerIndexString = message.substr(startPos, delimiterPos - startPos);
-        std::stringstream ssCurrentPlayerIndex;
-        int currentPlayerIndex;
-        ssCurrentPlayerIndex << currentPlayerIndexString;
-        ssCurrentPlayerIndex >> currentPlayerIndex;
+        std::string askedPlayerIndexString = message.substr(startPos, delimiterPos - startPos);
+        std::stringstream ssAskedPlayerIndex;
+        int askedPlayerIndex;
+        ssAskedPlayerIndex << askedPlayerIndexString;
+        ssAskedPlayerIndex >> askedPlayerIndex;
 
         startPos = delimiterPos + 1;
 
@@ -629,10 +629,13 @@ void GameController::receiveRemoteAskOtherPlayerResponse(const std::string& mess
                 // Assume that we are a remote client
                 PlayerSet* playerSet = getSelfPlayer()->getPlayerSet().get();
                 playerSet->setLastShownCluedoObject(shownCluedoObject);
-                playerSet->setLastPlayerIndexWhoShowedCluedoObject(currentPlayerIndex);
-
+                
                 if (objectCouldBeShown) {
+                    playerSet->setLastPlayerIndexWhoShowedCluedoObject(askedPlayerIndex);
                     emit askPlayerResponse_ready();
+                }
+                else {
+                    playerSet->addPlayerIndexWithNoShownCluedoObjects(askedPlayerIndex);
                 }
             }
         }

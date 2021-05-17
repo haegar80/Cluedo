@@ -133,7 +133,7 @@ void GameRunner::askPlayerResponseWithShownObject(CluedoObject* p_cluedoObject) 
             SOCKET remoteSocket = remotePlayer->getRemoteSocket();
             std::stringstream ss;
             ss << MessageIds::AskOtherPlayerResponse << ":";
-            ss << m_currentPlayerIndex;
+            ss << m_lastAskedPlayerIndex;
             ss << ";";
             ss << p_cluedoObject->getNumber();
             ss << ";";
@@ -150,6 +150,7 @@ void GameRunner::askPlayerResponseWithoutShownObject() {
     Player* currentPlayer = m_players.at(m_currentPlayerIndex);
     PlayerSet* currentPlayerSet = currentPlayer->getPlayerSet().get();
     currentPlayerSet->setLastShownCluedoObject(nullptr);
+    currentPlayerSet->addPlayerIndexWithNoShownCluedoObjects(m_lastAskedPlayerIndex);
 
     constexpr int CluedoObjectNumberInitValue = 0;
     if (Player::PlayerType_Remote == currentPlayer->getPlayerType()) {
@@ -158,7 +159,7 @@ void GameRunner::askPlayerResponseWithoutShownObject() {
             SOCKET remoteSocket = remotePlayer->getRemoteSocket();
             std::stringstream ss;
             ss << MessageIds::AskOtherPlayerResponse << ":";
-            ss << m_currentPlayerIndex;
+            ss << m_lastAskedPlayerIndex;
             ss << ";";
             ss << CluedoObjectNumberInitValue;
             ss << ";";
