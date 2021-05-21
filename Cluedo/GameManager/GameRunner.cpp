@@ -74,27 +74,7 @@ void GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
     }
     else if (Player::PlayerType_Computer == playerToAsk->getPlayerType()) {
         foundObject = askObjectsAtComputer(p_murder, p_weapon, p_room);
-
-        if (nullptr == foundObject)
-        {
-            currentPlayerSet->addPlayerIndexWithNoShownCluedoObjects(playerIndexToAsk);
-            currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_murder);
-            currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_weapon);
-            currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(playerIndexToAsk, p_room);
-
-            askPlayer(p_murder, p_weapon, p_room);
-        }
-    }
-
-    if (nullptr != foundObject)
-    {
-        currentPlayerSet->setLastShownCluedoObject(foundObject);
-        currentPlayerSet->setLastPlayerIndexWhoShowedCluedoObject(m_lastAskedPlayerIndex);
-        currentPlayerSet->addCluedoObjectFromOtherPlayers(m_lastAskedPlayerIndex, foundObject);
-    }
-    else
-    {
-        currentPlayerSet->setLastShownCluedoObject(nullptr);
+        askPlayerResponse((nullptr != foundObject), foundObject);
     }
 }
 
@@ -121,7 +101,7 @@ void GameRunner::askPlayerResponseWithShownObject(CluedoObject* p_cluedoObject) 
     currentPlayerSet->setLastShownCluedoObject(p_cluedoObject);
     currentPlayerSet->setLastPlayerIndexWhoShowedCluedoObject(m_lastAskedPlayerIndex);
 
-    // This is only needed when current player is a computer, but we store it even though
+    // This is only needed when current player is a computer
     currentPlayerSet->addCluedoObjectFromOtherPlayers(m_lastAskedPlayerIndex, p_cluedoObject);
 
     if (Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) {
@@ -151,6 +131,11 @@ void GameRunner::askPlayerResponseWithoutShownObject() {
     PlayerSet* currentPlayerSet = currentPlayer->getPlayerSet().get();
     currentPlayerSet->setLastShownCluedoObject(nullptr);
     currentPlayerSet->addPlayerIndexWithNoShownCluedoObjects(m_lastAskedPlayerIndex);
+
+    // This is only needed when current player is a computer
+    currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(m_lastAskedPlayerIndex, currentPlayerSet->getLastAskedMurder());
+    currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(m_lastAskedPlayerIndex, currentPlayerSet->getLastAskedWeapon());
+    currentPlayerSet->addMissingCluedoObjectsAtOtherPlayers(m_lastAskedPlayerIndex, currentPlayerSet->getLastAskedRoom());
 
     constexpr int CluedoObjectNumberInitValue = 0;
     if (Player::PlayerType_Remote == currentPlayer->getPlayerType()) {
