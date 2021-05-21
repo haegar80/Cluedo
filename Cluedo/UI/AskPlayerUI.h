@@ -21,12 +21,13 @@ class AskPlayerUI : public QMainWindow
     Q_OBJECT
 
 public:
-    AskPlayerUI(const QPixmap* p_selectedMurder, const QPixmap* p_selectedWeapon, const QPixmap* p_selectedRoom);
+    AskPlayerUI(bool p_showShowedObject, const QString& p_askedPlayer, const QPixmap* p_selectedMurder, const QPixmap* p_selectedWeapon, const QPixmap* p_selectedRoom);
+    AskPlayerUI(bool p_showShowedObject, const QString& p_askedPlayer, int p_selectedMurderNumber, int p_selectedWeaponNumber, int p_selectedRoomNumber);
     virtual ~AskPlayerUI() = default;
 
     void setupUi();
     void retranslateUi();
-    void updateShownCluedoObject();
+    void updateShownCluedoObject(Player* p_player);
 
     signals:
     void askPlayerWindow_closed();
@@ -35,6 +36,8 @@ protected:
     void closeEvent(QCloseEvent* event) override;
 private:
     QWidget* m_centralwidget;
+    QLabel* m_labelAsk;
+    QLabel* m_labelAskedPerson;
     QLabel* m_labelSelectedMurder;
     QLabel* m_labelSelectedWeapon;
     QLabel* m_labelSelectedRoom;
@@ -56,11 +59,13 @@ private:
     QMenuBar* m_menubar;
     QStatusBar* m_statusbar;
     
-    const QPixmap* m_selectedMurder;
-    const QPixmap* m_selectedWeapon;
-    const QPixmap* m_selectedRoom;
+    bool m_showShowedObject{ false };
+    const QString m_askedPlayer{ "" };
+    QPixmap m_selectedMurder;
+    QPixmap m_selectedWeapon;
+    QPixmap m_selectedRoom;
 
-    void checkAndupdateImageWithShownObject(Player* p_currentPlayer, CluedoObject* p_shownCluedoObject);
+    void checkAndupdateImageWithShownObject(Player* p_player, CluedoObject* p_shownCluedoObject);
     void updateImageWithShownObject(CluedoObject* p_shownCluedoObject);
     void hideLabels();
     void updatePlayerLabelWithShownObject(PlayerSet* p_playerSet, CluedoObject* p_shownCluedoObject);

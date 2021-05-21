@@ -187,7 +187,8 @@ void SelectObjectsUI::buttonOk_clicked()
     if (m_selectedMurder && m_selectedWeapon && m_selectedRoom) {
         Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
 
-        m_askPlayerUI = new AskPlayerUI(m_imageSelectedMurder->pixmap(), m_imageSelectedWeapon->pixmap(), m_imageSelectedRoom->pixmap());
+        QString currentPlayerName = QString(currentPlayer->getName().c_str());
+        m_askPlayerUI = new AskPlayerUI(true, currentPlayerName, m_imageSelectedMurder->pixmap(), m_imageSelectedWeapon->pixmap(), m_imageSelectedRoom->pixmap());
         m_askPlayerUI->setWindowModality(Qt::ApplicationModal);
         m_askPlayerUI->setAttribute(Qt::WA_DeleteOnClose);
 
@@ -216,7 +217,8 @@ void SelectObjectsUI::buttonTellSuspicion_clicked()
 }
 
 void SelectObjectsUI::askPlayerResponse_ready() {
-    m_askPlayerUI->updateShownCluedoObject();
+    Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
+    m_askPlayerUI->updateShownCluedoObject(currentPlayer);
 }
 
 void SelectObjectsUI::askPlayerWindow_closed()

@@ -8,6 +8,7 @@
 #include <memory>
 
 class PlayerSet;
+class AskPlayerUI;
 class ConnectServerUI;
 class StartGameUI;
 class SelectObjectsUI;
@@ -43,6 +44,7 @@ public:
     void currentPlayerIndex_updated();
     void allCluedoObjects_distributed();
     void showObject_requested(const QString& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber);
+    void askPlayerFromOtherPlayer_finished(int p_askedMurderNumber, int p_askedWeaponNumber, int p_askedRoomNumber);
     void askPlayer_finished();
 
 private:
@@ -72,6 +74,7 @@ private:
 
     std::shared_ptr<PlayerSet> m_myPlayerSet;
 
+    AskPlayerUI* m_askPlayerInfoUI;
     ConnectServerUI* m_connectServerUI;
     StartGameUI* m_startGameUI;
     SelectObjectsUI* m_selectObjectsUI;

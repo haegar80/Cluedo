@@ -30,7 +30,10 @@ void GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
     currentPlayerSet->setLastAskedMurder(p_murder);
     currentPlayerSet->setLastAskedWeapon(p_weapon);
     currentPlayerSet->setLastAskedRoom(p_room);
-    currentPlayerSet->resetPlayerIndicesWithNoShownCluedoObjects();
+
+    if (m_lastAskedPlayerIndex < 0) {
+        currentPlayerSet->resetPlayerIndicesWithNoShownCluedoObjects();
+    }
 
     int playerIndexToAsk = m_currentPlayerIndex + 1;
     if (m_lastAskedPlayerIndex >= 0) {
@@ -123,6 +126,7 @@ void GameRunner::askPlayerResponseWithShownObject(CluedoObject* p_cluedoObject) 
         }
     }
 
+    askPlayerResponseInformNotInvolvedPlayer();
     m_lastAskedPlayerIndex = -1;
 }
 
@@ -171,6 +175,51 @@ void GameRunner::handleNoObjectCanBeShown() {
 #if WIN32
             m_tcpWinSocketServer->sendData(remoteSocket, ss.str());
 #endif
+        }
+    }
+
+    askPlayerResponseInformNotInvolvedPlayer();
+    m_lastAskedPlayerIndex = -1;
+}
+
+void GameRunner::askPlayerResponseInformNotInvolvedPlayer() {
+    Player* currentPlayer = m_players.at(m_currentPlayerIndex);
+    PlayerSet* currentPlayerSet = currentPlayer->getPlayerSet().get();
+
+    for (int i = 0; i < m_players.size(); i++) {
+        if ((i != m_currentPlayerIndex) && (i != m_lastAskedPlayerIndex)) {
+            if (Player::PlayerType_SelfServer == m_players.at(i)->getPlayerType()) {
+                PlayerSet* serverPlayerSet = m_players.at(i)->getPlayerSet().get();
+                for (int playerIndexWithNoShownCluedoObject : currentPlayerSet->getPlayerIndicesWithNoShownCluedoObjects()) {
+                    serverPlayerSet->addPlayerIndexWithNoShownCluedoObjects(playerIndexWithNoShownCluedoObject);
+                }
+                serverPlayerSet->setLastPlayerIndexWhoShowedCluedoObject(currentPlayerSet->getLastPlayerIndexWhoShowedCluedoObject());
+                m_askPlayerResponseInformNotInvolvedServerCallback();
+            }
+            else if (Player::PlayerType_Remote == m_players.at(i)->getPlayerType()) {
+                RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(m_players.at(i));
+                if (remotePlayer) {
+                    SOCKET remoteSocket = remotePlayer->getRemoteSocket();
+                    std::stringstream ss;
+                    ss << MessageIds::InformNotInvolvedPlayer << ":";
+                    ss << currentPlayerSet->getLastAskedMurder()->getNumber();
+                    ss << ";";
+                    ss << currentPlayerSet->getLastAskedWeapon()->getNumber();
+                    ss << ";";
+                    ss << currentPlayerSet->getLastAskedRoom()->getNumber();
+                    ss << ";";
+
+                    for (int playerIndexWithNoShownCluedoObject : currentPlayerSet->getPlayerIndicesWithNoShownCluedoObjects()) {
+                        ss << playerIndexWithNoShownCluedoObject;
+                        ss << ";";
+                    }
+                    ss << currentPlayerSet->getLastPlayerIndexWhoShowedCluedoObject();
+                    ss << ";";
+#if WIN32
+                    m_tcpWinSocketServer->sendData(remoteSocket, ss.str());
+#endif
+                }
+            }
         }
     }
 }

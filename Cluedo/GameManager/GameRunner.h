@@ -42,6 +42,10 @@ public:
         m_noObjectCanBeShownCallback = p_callback;
     }
 
+    void registerAskPlayerResponseInformNotInvolvedServerCallback(std::function<void()> p_callback) {
+        m_askPlayerResponseInformNotInvolvedServerCallback = p_callback;
+    }
+
     int getCurrentPlayerIndex() {
         return m_currentPlayerIndex;
     }
@@ -60,6 +64,7 @@ private:
     std::function<void(const std::string&, int, int, int)> m_showObjectCallback;
     std::function<void()> m_objectShownCallback;
     std::function<void()> m_noObjectCanBeShownCallback;
+    std::function<void()> m_askPlayerResponseInformNotInvolvedServerCallback;
 
 #if WIN32
     std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;
@@ -68,6 +73,7 @@ private:
     void askPlayerResponseWithShownObject(CluedoObject* p_cluedoObject);
     void askPlayerResponseWithoutShownObject();
     void handleNoObjectCanBeShown();
+    void askPlayerResponseInformNotInvolvedPlayer();
 
     CluedoObject* askObjectsAtComputer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
 

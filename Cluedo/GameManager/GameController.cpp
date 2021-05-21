@@ -38,6 +38,7 @@ void GameController::startGame()
     m_gameRunner->registerShowObjectCallback([this](const std::string& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber) { showObjectCallback(p_askedPlayer, p_murderNumber, p_weaponNumber, p_roomNumber); });
     m_gameRunner->registerObjectShownCallback([this]() {objectShownCallback(); });
     m_gameRunner->registerNoObjectCanBeShownCallback([this]() {noObjectCanBeShownCallback(); });
+    m_gameRunner->registerAskPlayerResponseInformNotInvolvedServerCallback([this]() {askplayerResponseInformNotInvolvedServerCallback(); });
     m_gameRunner->startGame();
 
     emit gameController_ready();
@@ -206,6 +207,9 @@ void GameController::registerRemoteServerMessages(bool p_client) {
 
         auto receiveRemoteAskOtherPlayerCallback = [this](SOCKET, const std::string& p_message) { receiveRemoteAskOtherPlayer(p_message); };
         MessageHandler::getInstance().registerMessageHandler(MessageIds::AskOtherPlayer, receiveRemoteAskOtherPlayerCallback);
+
+        auto receiveRemoteInformNotInvolvedPlayerResponseCallback = [this](SOCKET, const std::string& p_message) { receiveRemoteInformNotInvolvedPlayerResponse(p_message); };
+        MessageHandler::getInstance().registerMessageHandler(MessageIds::InformNotInvolvedPlayer, receiveRemoteInformNotInvolvedPlayerResponseCallback);
     }
     else {
         auto receiveMoveToNextPlayerResponseCallback = [this](SOCKET, const std::string&) { receiveMoveToNextPlayerResponse(); };
@@ -499,6 +503,13 @@ void GameController::noObjectCanBeShownCallback() {
     emit askPlayerResponse_ready();
 }
 
+void GameController::askplayerResponseInformNotInvolvedServerCallback() {
+    Player* currentPlayer = getCurrentPlayer();
+    PlayerSet* currentPlayerSet = currentPlayer->getPlayerSet().get();
+
+    emit askPlayerFromOtherPlayer_finished(currentPlayerSet->getLastAskedMurder()->getNumber(), currentPlayerSet->getLastAskedWeapon()->getNumber(), currentPlayerSet->getLastAskedRoom()->getNumber());
+}
+
 void GameController::receiveRemoteCluedoObject(const std::string& message) {
     std::stringstream ss{ message };
     int number;
@@ -640,6 +651,65 @@ void GameController::receiveRemoteAskOtherPlayerResponse(const std::string& mess
             }
         }
     }
+}
+
+void GameController::receiveRemoteInformNotInvolvedPlayerResponse(const std::string& message) {
+    std::size_t delimiterPos = std::string::npos;
+    std::size_t startPos = 0;
+    std::vector<CluedoObject*> cluedoObjectsToAsk;
+
+    constexpr int TotalNumberOfCluedoObjectLoops = 3;
+    int numberOfCluedoObjectLoops = 0;
+
+    while ((numberOfCluedoObjectLoops < TotalNumberOfCluedoObjectLoops) && (std::string::npos != (delimiterPos = message.find(";", startPos)))) {
+        std::string cluedoObjectString = message.substr(startPos, delimiterPos - startPos);
+        std::stringstream ssCluedoObject;
+        int cluedoObjectNumber;
+        ssCluedoObject << cluedoObjectString;
+        ssCluedoObject >> cluedoObjectNumber;
+
+        CluedoObject* cluedoObject = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(cluedoObjectNumber);
+        if (cluedoObject) {
+            cluedoObjectsToAsk.push_back(cluedoObject);
+        }
+
+        startPos = delimiterPos + 1;
+    }
+
+    int murderNumber = cluedoObjectsToAsk.at(0)->getNumber();
+    int weaponNumber = cluedoObjectsToAsk.at(1)->getNumber();
+    int roomNumber = cluedoObjectsToAsk.at(2)->getNumber();
+
+    delimiterPos = std::string::npos;
+
+    while (std::string::npos != (delimiterPos = message.find(";", startPos))) {
+        std::string playerIndexString = message.substr(startPos, delimiterPos - startPos);
+        std::stringstream ssPlayerIndex;
+        int playerIndex;
+        ssPlayerIndex << playerIndexString;
+        ssPlayerIndex >> playerIndex;
+
+        startPos = delimiterPos + 1;
+
+        std::string hasObjectString = message.substr(startPos, delimiterPos - startPos);
+        std::stringstream ssHasObject;
+        int hasObject;
+        ssHasObject << hasObjectString;
+        ssHasObject >> hasObject;
+
+        PlayerSet* playerSet = getSelfPlayer()->getPlayerSet().get();
+        playerSet->resetPlayerIndicesWithNoShownCluedoObjects();
+        if (hasObject > 0) {
+            playerSet->setLastPlayerIndexWhoShowedCluedoObject(playerIndex);
+        }
+        else {
+            playerSet->addPlayerIndexWithNoShownCluedoObjects(playerIndex);
+        }
+
+        startPos = delimiterPos + 1;
+    }
+
+    emit askPlayerFromOtherPlayer_finished(murderNumber, weaponNumber, roomNumber);
 }
 
 void GameController::receiveNoCluedoObjectCanBeShownResponse() {

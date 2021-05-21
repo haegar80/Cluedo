@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1101</width>
-    <height>739</height>
+    <height>760</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,7 +18,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>60</y>
+      <y>80</y>
       <width>211</width>
       <height>281</height>
      </rect>
@@ -37,7 +37,7 @@
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>60</y>
+      <y>80</y>
       <width>211</width>
       <height>281</height>
      </rect>
@@ -56,7 +56,7 @@
     <property name="geometry">
      <rect>
       <x>510</x>
-      <y>60</y>
+      <y>80</y>
       <width>281</width>
       <height>281</height>
      </rect>
@@ -75,7 +75,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>30</y>
+      <y>50</y>
       <width>111</width>
       <height>16</height>
      </rect>
@@ -88,7 +88,7 @@
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>30</y>
+      <y>50</y>
       <width>111</width>
       <height>16</height>
      </rect>
@@ -101,7 +101,7 @@
     <property name="geometry">
      <rect>
       <x>510</x>
-      <y>30</y>
+      <y>50</y>
       <width>111</width>
       <height>16</height>
      </rect>
@@ -114,7 +114,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>390</y>
+      <y>410</y>
       <width>201</width>
       <height>16</height>
      </rect>
@@ -136,7 +136,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>360</y>
+      <y>380</y>
       <width>161</width>
       <height>16</height>
      </rect>
@@ -149,7 +149,7 @@
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>390</y>
+      <y>410</y>
       <width>211</width>
       <height>281</height>
      </rect>
@@ -168,7 +168,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>650</y>
+      <y>670</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -181,7 +181,7 @@
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>360</y>
+      <y>380</y>
       <width>171</width>
       <height>16</height>
      </rect>
@@ -194,7 +194,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>450</y>
+      <y>470</y>
       <width>201</width>
       <height>16</height>
      </rect>
@@ -204,28 +204,6 @@
     </property>
    </widget>
    <widget class="QLabel" name="labelPlayerNameNoObjects1">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>480</y>
-      <width>201</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::Box</enum>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="labelPlayerNameNoObjects2">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -247,7 +225,7 @@
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="labelPlayerNameNoObjects3">
+   <widget class="QLabel" name="labelPlayerNameNoObjects2">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -269,7 +247,7 @@
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="labelPlayerNameNoObjects4">
+   <widget class="QLabel" name="labelPlayerNameNoObjects3">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -291,7 +269,7 @@
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="labelPlayerNameNoObjects5">
+   <widget class="QLabel" name="labelPlayerNameNoObjects4">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -313,7 +291,7 @@
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="labelPlayerNameNoObjects6">
+   <widget class="QLabel" name="labelPlayerNameNoObjects5">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -333,6 +311,54 @@
     </property>
     <property name="alignment">
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelPlayerNameNoObjects6">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>600</y>
+      <width>201</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelAsk">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>51</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Es fragt:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelAskedPerson">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>20</y>
+      <width>401</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
   </widget>

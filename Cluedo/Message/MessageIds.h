@@ -8,7 +8,8 @@ namespace MessageIds
     constexpr int CurrentPlayerIndex = 103;
     constexpr int AskOtherPlayer = 104;
     constexpr int AskOtherPlayerResponse = 105;
-    constexpr int NoCluedoObjectCanBeShown = 106;
-    constexpr int MoveToNextPlayer = 107;
+    constexpr int InformNotInvolvedPlayer = 106;
+    constexpr int NoCluedoObjectCanBeShown = 107;
+    constexpr int MoveToNextPlayer = 108;
 };
 

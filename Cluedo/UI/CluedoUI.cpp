@@ -1,4 +1,5 @@
 #include "CluedoUI.h"
+#include "AskPlayerUI.h"
 #include "ConnectServerUI.h"
 #include "StartGameUI.h"
 #include "SelectObjectsUI.h"
@@ -30,6 +31,7 @@ void CluedoUI::setupUi()
 
     QRect screenGeometry = QApplication::desktop()->availableGeometry();
     this->resize(screenGeometry.width(), screenGeometry.height());
+    printf("Width: %d, height: %d!\n", screenGeometry.width(), screenGeometry.height());
     this->setMinimumSize(QSize(200, 200));
 
     m_centralwidget = new QWidget(this);
@@ -127,6 +129,7 @@ void CluedoUI::setupUi()
     QObject::connect(&GameController::getInstance(), SIGNAL(currentPlayerIndex_updated()), this, SLOT(currentPlayerIndex_updated()));
     QObject::connect(&GameController::getInstance(), SIGNAL(allCluedoObjects_distributed()), this, SLOT(allCluedoObjects_distributed()));
     QObject::connect(&GameController::getInstance(), &GameController::showObject_requested, this, &CluedoUI::showObject_requested);
+    QObject::connect(&GameController::getInstance(), &GameController::askPlayerFromOtherPlayer_finished, this, &CluedoUI::askPlayerFromOtherPlayer_finished);
 
     m_selectionObjectWidget->hide();
 }
@@ -277,7 +280,8 @@ void CluedoUI::playersList_updated()
     selectCurrentPlayer();
 }
 
-void CluedoUI::currentPlayerIndex_updated() {
+void CluedoUI::currentPlayerIndex_updated()
+{
     selectCurrentPlayer();
 
     Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
@@ -289,17 +293,32 @@ void CluedoUI::currentPlayerIndex_updated() {
     }
 }
 
-void CluedoUI::allCluedoObjects_distributed() {
+void CluedoUI::allCluedoObjects_distributed()
+{
     hideNotUsedCluedoObjects();
     fillCluedoObjects();
     m_selectionObjectWidget->show();
 }
 
-void CluedoUI::showObject_requested(const QString& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber) {
+void CluedoUI::showObject_requested(const QString& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber)
+{
     m_selectObjectToShowUI = new SelectObjectToShowUI(p_askedPlayer, p_murderNumber, p_weaponNumber, p_roomNumber);
     m_selectObjectToShowUI->setWindowModality(Qt::ApplicationModal);
     m_selectObjectToShowUI->setAttribute(Qt::WA_DeleteOnClose);
     m_selectObjectToShowUI->show();
+}
+
+void CluedoUI::askPlayerFromOtherPlayer_finished(int p_askedMurderNumber, int p_askedWeaponNumber, int p_askedRoomNumber)
+{
+    Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
+    QString currentPlayerName = QString(currentPlayer->getName().c_str());
+    m_askPlayerInfoUI = new AskPlayerUI(false, currentPlayerName, p_askedMurderNumber, p_askedWeaponNumber, p_askedRoomNumber);
+    m_askPlayerInfoUI->setWindowModality(Qt::ApplicationModal);
+    m_askPlayerInfoUI->setAttribute(Qt::WA_DeleteOnClose);
+
+    Player* selfPlayer = GameController::getInstance().getSelfPlayer();
+    m_askPlayerInfoUI->updateShownCluedoObject(selfPlayer);
+    m_askPlayerInfoUI->show();
 }
 
 void CluedoUI::askPlayer_finished() 
