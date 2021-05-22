@@ -35,7 +35,7 @@ void GameController::startGame()
     emit playersList_updated();
 
     m_gameRunner = std::make_shared<GameRunner>(m_players);
-    m_gameRunner->registerShowObjectCallback([this](const std::string& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber) { showObjectCallback(p_askedPlayer, p_murderNumber, p_weaponNumber, p_roomNumber); });
+    m_gameRunner->registerShowObjectCallback([this](int p_murderNumber, int p_weaponNumber, int p_roomNumber) { showObjectCallback(p_murderNumber, p_weaponNumber, p_roomNumber); });
     m_gameRunner->registerObjectShownCallback([this]() {objectShownCallback(); });
     m_gameRunner->registerNoObjectCanBeShownCallback([this]() {noObjectCanBeShownCallback(); });
     m_gameRunner->registerAskPlayerResponseInformNotInvolvedServerCallback([this]() {askplayerResponseInformNotInvolvedServerCallback(); });
@@ -514,10 +514,8 @@ void GameController::distributeRooms()
     distributeCluedoObjects(m_roomsToDistribute);
 }
 
-void GameController::showObjectCallback(const std::string& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber) {
-    QString playerName = QString(p_askedPlayer.c_str());
-
-    emit showObject_requested(playerName, p_murderNumber, p_weaponNumber, p_roomNumber);
+void GameController::showObjectCallback(int p_murderNumber, int p_weaponNumber, int p_roomNumber) {
+    emit showObject_requested(p_murderNumber, p_weaponNumber, p_roomNumber);
 }
 
 void GameController::objectShownCallback() {
@@ -623,7 +621,7 @@ void GameController::receiveRemoteAskOtherPlayer(const std::string& message) {
             int weaponNumber = cluedoObjectsToAsk.at(1)->getNumber();
             int roomNumber = cluedoObjectsToAsk.at(2)->getNumber();
 
-            emit showObject_requested(playerName, murderNumber, weaponNumber, roomNumber);
+            emit showObject_requested(murderNumber, weaponNumber, roomNumber);
         }
     }
 }

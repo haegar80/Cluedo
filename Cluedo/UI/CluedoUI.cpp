@@ -301,9 +301,11 @@ void CluedoUI::allCluedoObjects_distributed()
     m_selectionObjectWidget->show();
 }
 
-void CluedoUI::showObject_requested(const QString& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber)
+void CluedoUI::showObject_requested(int p_murderNumber, int p_weaponNumber, int p_roomNumber)
 {
-    m_selectObjectToShowUI = new SelectObjectToShowUI(p_askedPlayer, p_murderNumber, p_weaponNumber, p_roomNumber);
+    Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
+    QString currentPlayerName = QString(currentPlayer->getName().c_str());
+    m_selectObjectToShowUI = new SelectObjectToShowUI(currentPlayerName, p_murderNumber, p_weaponNumber, p_roomNumber);
     m_selectObjectToShowUI->setWindowModality(Qt::ApplicationModal);
     m_selectObjectToShowUI->setAttribute(Qt::WA_DeleteOnClose);
     m_selectObjectToShowUI->show();

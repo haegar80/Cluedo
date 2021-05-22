@@ -30,7 +30,7 @@ public:
     void askPlayerResponse(bool p_objectCouldBeShown, CluedoObject* p_cluedoObject);
     void moveToNextPlayer();
 
-    void registerShowObjectCallback(std::function<void(const std::string&, int, int, int)> p_callback) {
+    void registerShowObjectCallback(std::function<void(int, int, int)> p_callback) {
         m_showObjectCallback = p_callback;
     }
 
@@ -61,7 +61,7 @@ private:
     int m_lastAskedPlayerIndex{ -1 };
     std::vector<Player*> m_players;
 
-    std::function<void(const std::string&, int, int, int)> m_showObjectCallback;
+    std::function<void(int, int, int)> m_showObjectCallback;
     std::function<void()> m_objectShownCallback;
     std::function<void()> m_noObjectCanBeShownCallback;
     std::function<void()> m_askPlayerResponseInformNotInvolvedServerCallback;

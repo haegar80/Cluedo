@@ -76,7 +76,7 @@ public:
     void playersList_updated();
     void currentPlayerIndex_updated();
     void allCluedoObjects_distributed();
-    void showObject_requested(const QString& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber);
+    void showObject_requested(int p_murderNumber, int p_weaponNumber, int p_roomNumber);
     void askPlayerResponse_ready();
     void askPlayerFromOtherPlayer_finished(int p_askedMurderNumber, int p_askedWeaponNumber, int p_askedRoomNumber);
 
@@ -122,7 +122,7 @@ private:
     void distributeMurders();
     void distributeWeapons();
     void distributeRooms();
-    void showObjectCallback(const std::string& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber);
+    void showObjectCallback(int p_murderNumber, int p_weaponNumber, int p_roomNumber);
     void objectShownCallback();
     void noObjectCanBeShownCallback();
     void askplayerResponseInformNotInvolvedServerCallback();
