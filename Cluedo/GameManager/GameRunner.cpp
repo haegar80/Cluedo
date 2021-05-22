@@ -97,6 +97,14 @@ void GameRunner::moveToNextPlayer() {
     {
         m_currentPlayerIndex = 0;
     }
+
+    Player* currentPlayer = m_players.at(m_currentPlayerIndex);
+    if (Player::PlayerType_Computer == currentPlayer->getPlayerType()) {
+        askPlayer();
+    }
+    else {
+        // askPlayer() is triggered by the next player
+    }
 }
 
 void GameRunner::askPlayerResponseWithShownObject(CluedoObject* p_cluedoObject) {
