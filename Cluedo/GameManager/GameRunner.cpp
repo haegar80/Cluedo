@@ -47,6 +47,7 @@ void GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
         if (playerIndexToAsk == m_currentPlayerIndex)
         {
             handleNoObjectCanBeShown();
+            return;
         }
     }
 
