@@ -308,7 +308,14 @@ void CluedoUI::showObject_requested(int p_murderNumber, int p_weaponNumber, int 
     m_selectObjectToShowUI = new SelectObjectToShowUI(currentPlayerName, p_murderNumber, p_weaponNumber, p_roomNumber);
     m_selectObjectToShowUI->setWindowModality(Qt::ApplicationModal);
     m_selectObjectToShowUI->setAttribute(Qt::WA_DeleteOnClose);
+
+    QObject::connect(m_selectObjectToShowUI, SIGNAL(selectObjectToShowWindow_closed()), this, SLOT(selectObjectToShowWindow_closed()));
+
     m_selectObjectToShowUI->show();
+}
+
+void CluedoUI::selectObjectToShowWindow_closed() {
+    GameController::getInstance().moveToNextPlayer();
 }
 
 void CluedoUI::askPlayerFromOtherPlayer_finished(int p_askedMurderNumber, int p_askedWeaponNumber, int p_askedRoomNumber)

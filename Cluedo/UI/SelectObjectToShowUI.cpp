@@ -230,6 +230,8 @@ void SelectObjectToShowUI::buttonOk_clicked()
     }
 
     this->close();
+
+    emit selectObjectToShowWindow_closed();
 }
 
 void SelectObjectToShowUI::initObjectsToShow() {

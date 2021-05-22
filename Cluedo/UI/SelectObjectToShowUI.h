@@ -45,6 +45,9 @@ public:
     void buttonShowRoom_clicked();
     void buttonOk_clicked();
 
+    signals:
+    void selectObjectToShowWindow_closed();
+
 private:
     static constexpr int referenceWidth = 1920;
     static constexpr int referenceHeight = 1040;

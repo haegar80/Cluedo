@@ -300,7 +300,7 @@ void GameController::moveToNextPlayer(bool p_externalCall) {
             emit currentPlayerIndex_updated();
 
             // reset values
-            for (auto playerReadyPair : m_humanPlayersReadyToMoveToNextPlayer) {
+            for (auto& playerReadyPair : m_humanPlayersReadyToMoveToNextPlayer) {
                 playerReadyPair.second = false;
             }
         }
