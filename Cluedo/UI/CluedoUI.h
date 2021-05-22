@@ -45,6 +45,7 @@ public:
     void allCluedoObjects_distributed();
     void showObject_requested(const QString& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber);
     void askPlayerFromOtherPlayer_finished(int p_askedMurderNumber, int p_askedWeaponNumber, int p_askedRoomNumber);
+    void askPlayerFromOtherPlayerWindow_closed();
     void askPlayer_finished();
 
 private:

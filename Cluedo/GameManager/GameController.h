@@ -54,7 +54,7 @@ public:
     Player* getSelfPlayer();
     int getCurrentPlayerIndex();
     Player* getCurrentPlayer();
-    void moveToNextPlayer();
+    void moveToNextPlayer(bool p_externalCall = true);
 
     std::shared_ptr<GameRunner> getGameRunner() {
         return m_gameRunner;
@@ -85,6 +85,8 @@ private:
 
     std::shared_ptr<GameRunner> m_gameRunner;
     std::vector<Player*> m_players;
+
+    std::map<Player*, bool> m_humanPlayersReadyToMoveToNextPlayer;
 
     std::vector<CluedoObject*> m_murdersToDistribute;
     std::vector<CluedoObject*> m_weaponsToDistribute;
@@ -133,5 +135,5 @@ private:
     void receiveRemoteAskOtherPlayerResponse(const std::string& message);
     void receiveRemoteInformNotInvolvedPlayerResponse(const std::string& message);
     void receiveNoCluedoObjectCanBeShownResponse();
-    void receiveMoveToNextPlayerResponse();
+    void receiveMoveToNextPlayerResponse(const std::string& message);
 };

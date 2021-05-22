@@ -31,6 +31,7 @@ public:
 
     signals:
     void askPlayerWindow_closed();
+    void askPlayerFromOtherPlayerWindow_closed();
 
 protected:
     void closeEvent(QCloseEvent* event) override;

@@ -212,7 +212,7 @@ void GameController::registerRemoteServerMessages(bool p_client) {
         MessageHandler::getInstance().registerMessageHandler(MessageIds::InformNotInvolvedPlayer, receiveRemoteInformNotInvolvedPlayerResponseCallback);
     }
     else {
-        auto receiveMoveToNextPlayerResponseCallback = [this](SOCKET, const std::string&) { receiveMoveToNextPlayerResponse(); };
+        auto receiveMoveToNextPlayerResponseCallback = [this](SOCKET, const std::string& p_message) { receiveMoveToNextPlayerResponse(p_message); };
         MessageHandler::getInstance().registerMessageHandler(MessageIds::MoveToNextPlayer, receiveMoveToNextPlayerResponseCallback);
     }
 
@@ -235,6 +235,10 @@ Player* GameController::createNewPlayer(std::string p_name, Player::EPlayerType 
 
     Player* player = new Player(std::move(p_name), playerSet, p_playerType);
     m_players.push_back(player);
+
+    if (Player::PlayerType_Computer != p_playerType) {
+        m_humanPlayersReadyToMoveToNextPlayer.insert(std::make_pair(player, false));
+    }
 
     return player;
 }
@@ -276,11 +280,30 @@ Player* GameController::getCurrentPlayer()
     return currentPlayer;
 }
 
-void GameController::moveToNextPlayer() {
+void GameController::moveToNextPlayer(bool p_externalCall) {
     if (m_gameRunner) {
-        m_gameRunner->moveToNextPlayer();
-        sendCurrentPlayerIndexToClients();
-        emit currentPlayerIndex_updated();
+        if (p_externalCall) {
+            m_humanPlayersReadyToMoveToNextPlayer[getSelfPlayer()] = true;
+        }
+
+        bool allPlayersReadyToMoveToNextPlayer = true;
+        for (auto playerReadyPair : m_humanPlayersReadyToMoveToNextPlayer) {
+            if (!playerReadyPair.second) {
+                allPlayersReadyToMoveToNextPlayer = false;
+                break;
+            }
+        }
+
+        if (allPlayersReadyToMoveToNextPlayer) {
+            m_gameRunner->moveToNextPlayer();
+            sendCurrentPlayerIndexToClients();
+            emit currentPlayerIndex_updated();
+
+            // reset values
+            for (auto playerReadyPair : m_humanPlayersReadyToMoveToNextPlayer) {
+                playerReadyPair.second = false;
+            }
+        }
     }
     else {
         // Assume that the server is played by another player
@@ -288,6 +311,7 @@ void GameController::moveToNextPlayer() {
         if (m_tcpWinSocketClient) {
             std::stringstream ss;
             ss << MessageIds::MoveToNextPlayer << ":";
+            ss << getSelfPlayerIndex();
             m_tcpWinSocketClient->sendData(ss.str());
         }
 #endif
@@ -361,6 +385,7 @@ RemotePlayer* GameController::createNewRemotePlayer(int p_indexNumber, std::stri
 
     RemotePlayer* remotePlayer = new RemotePlayer(std::move(p_name), playerSet, p_remoteSocket);
     m_players.insert(m_players.begin() + p_indexNumber, remotePlayer);
+    m_humanPlayersReadyToMoveToNextPlayer.insert(std::make_pair(remotePlayer, false));
 
     return remotePlayer;
 }
@@ -717,7 +742,12 @@ void GameController::receiveNoCluedoObjectCanBeShownResponse() {
     emit askPlayerResponse_ready();
 }
 
-void GameController::receiveMoveToNextPlayerResponse() {
-    printf("Move to next player.\n");
-    moveToNextPlayer();
+void GameController::receiveMoveToNextPlayerResponse(const std::string& message) {
+    std::stringstream ssPlayerIndex{ message };
+    int playerIndex;
+    ssPlayerIndex >> playerIndex;
+    printf("Move to next player, player index: %d\n", playerIndex);
+    m_humanPlayersReadyToMoveToNextPlayer[m_players.at(playerIndex)] = true;
+
+    moveToNextPlayer(false);
 }

@@ -318,7 +318,15 @@ void CluedoUI::askPlayerFromOtherPlayer_finished(int p_askedMurderNumber, int p_
 
     Player* selfPlayer = GameController::getInstance().getSelfPlayer();
     m_askPlayerInfoUI->updateShownCluedoObject(selfPlayer);
+
+    QObject::connect(m_askPlayerInfoUI, SIGNAL(askPlayerFromOtherPlayerWindow_closed()), this, SLOT(askPlayerFromOtherPlayerWindow_closed()));
+
     m_askPlayerInfoUI->show();
+}
+
+void CluedoUI::askPlayerFromOtherPlayerWindow_closed()
+{
+    GameController::getInstance().moveToNextPlayer();
 }
 
 void CluedoUI::askPlayer_finished() 

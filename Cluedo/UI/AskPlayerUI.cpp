@@ -243,6 +243,7 @@ void AskPlayerUI::updateShownCluedoObject(Player* p_player)
 void AskPlayerUI::closeEvent(QCloseEvent* event)
 {
     emit askPlayerWindow_closed();
+    emit askPlayerFromOtherPlayerWindow_closed();
 }
 
 void AskPlayerUI::checkAndupdateImageWithShownObject(Player* p_player, CluedoObject* p_shownCluedoObject)
