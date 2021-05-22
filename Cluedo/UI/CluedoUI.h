@@ -49,6 +49,9 @@ public:
     void askPlayer_finished();
 
 private:
+    static constexpr int referenceWidth = 1920;
+    static constexpr int referenceHeight = 1040;
+
     QWidget* m_centralwidget;
     QWidget* m_selectionObjectWidget;
     QLabel* m_labelCluedoObjects;

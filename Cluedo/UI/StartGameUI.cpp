@@ -4,6 +4,7 @@
 #include "../GameManager/GameController.h"
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
@@ -24,34 +25,39 @@ void StartGameUI::setupUi()
     {
         this->setObjectName(QString::fromUtf8("MainWindow"));
     }
-    this->resize(624, 211);
+
+    QRect screenGeometry = QApplication::desktop()->availableGeometry();
+    float fW = static_cast<float>(screenGeometry.width()) / static_cast<float>(referenceWidth);
+    float fH = static_cast<float>(screenGeometry.height()) / static_cast<float>(referenceHeight);
+    this->resize(624 * fW, 211 * fH);
+
     m_centralwidget = new QWidget(this);
     m_centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
     m_lineEditPlayerName = new QLineEdit(m_centralwidget);
     m_lineEditPlayerName->setObjectName(QString::fromUtf8("lineEditPlayerName"));
-    m_lineEditPlayerName->setGeometry(QRect(130, 40, 131, 20));
+    m_lineEditPlayerName->setGeometry(QRect(130 * fW, 40 * fH, 131 * fW, 20 * fH));
     m_labelPlayerName = new QLabel(m_centralwidget);
     m_labelPlayerName->setObjectName(QString::fromUtf8("labelPlayerName"));
-    m_labelPlayerName->setGeometry(QRect(50, 40, 81, 16));
+    m_labelPlayerName->setGeometry(QRect(50 * fW, 40 * fH, 81 * fW, 16 * fH));
     m_labelNumberOfComputerPlayers = new QLabel(m_centralwidget);
     m_labelNumberOfComputerPlayers->setObjectName(QString::fromUtf8("labelNumberOfComputerPlayers"));
-    m_labelNumberOfComputerPlayers->setGeometry(QRect(300, 40, 121, 16));
+    m_labelNumberOfComputerPlayers->setGeometry(QRect(300 * fW, 40 * fH, 121 * fW, 16 * fH));
     m_comboBoxNumberOfComputerPlayers = new QComboBox(m_centralwidget);
     m_comboBoxNumberOfComputerPlayers->setObjectName(QString::fromUtf8("comboBoxNumberOfComputerPlayers"));
-    m_comboBoxNumberOfComputerPlayers->setGeometry(QRect(470, 40, 69, 22));
+    m_comboBoxNumberOfComputerPlayers->setGeometry(QRect(470 * fW, 40, 69 * fW, 22));
     m_labelNumberOfRemotePlayers = new QLabel(m_centralwidget);
     m_labelNumberOfRemotePlayers->setObjectName(QStringLiteral("labelNumberOfRemotePlayers"));
-    m_labelNumberOfRemotePlayers->setGeometry(QRect(300, 80, 161, 16));
+    m_labelNumberOfRemotePlayers->setGeometry(QRect(300 * fW, 80 * fH, 161 * fW, 16 * fH));
     m_comboBoxNumberOfRemotePlayers = new QComboBox(m_centralwidget);
     m_comboBoxNumberOfRemotePlayers->setObjectName(QStringLiteral("comboBoxNumberOfRemotePlayers"));
-    m_comboBoxNumberOfRemotePlayers->setGeometry(QRect(470, 80, 69, 22));
+    m_comboBoxNumberOfRemotePlayers->setGeometry(QRect(470 * fW, 80 * fH, 69 * fW, 22 * fH));
     m_buttonStartGame = new QPushButton(m_centralwidget);
     m_buttonStartGame->setObjectName(QString::fromUtf8("buttonStartGame"));
-    m_buttonStartGame->setGeometry(QRect(50, 120, 75, 23));
+    m_buttonStartGame->setGeometry(QRect(50 * fW, 120 * fH, 75 * fW, 23 * fH));
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
     m_menubar->setObjectName(QString::fromUtf8("menubar"));
-    m_menubar->setGeometry(QRect(0, 0, 570, 21));
+    m_menubar->setGeometry(QRect(0, 0, 570 * fW, 21 * fH));
     this->setMenuBar(m_menubar);
     m_statusbar = new QStatusBar(this);
     m_statusbar->setObjectName(QString::fromUtf8("statusbar"));

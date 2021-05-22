@@ -36,6 +36,9 @@ public:
 protected:
     void closeEvent(QCloseEvent* event) override;
 private:
+    static constexpr int referenceWidth = 1920;
+    static constexpr int referenceHeight = 1040;
+
     QWidget* m_centralwidget;
     QLabel* m_labelAsk;
     QLabel* m_labelAskedPerson;

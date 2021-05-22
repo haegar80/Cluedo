@@ -5,6 +5,7 @@
 #endif
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QDesktopWidget>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
@@ -24,19 +25,23 @@ void WaitRemotePlayerUI::setupUi()
     {
         this->setObjectName(QString::fromUtf8("MainWindow"));
     }
-    this->resize(318, 137);
+
+    QRect screenGeometry = QApplication::desktop()->availableGeometry();
+    float fW = static_cast<float>(screenGeometry.width()) / static_cast<float>(referenceWidth);
+    float fH = static_cast<float>(screenGeometry.height()) / static_cast<float>(referenceHeight);
+    this->resize(318 * fW, 137 * fH);
     m_centralwidget = new QWidget(this);
     m_centralwidget->setObjectName(QStringLiteral("centralwidget"));
     m_labelWaitRemotePlayer = new QLabel(m_centralwidget);
     m_labelWaitRemotePlayer->setObjectName(QStringLiteral("labelWaitRemotePlayer"));
-    m_labelWaitRemotePlayer->setGeometry(QRect(30, 20, 121, 16));
+    m_labelWaitRemotePlayer->setGeometry(QRect(30 * fW, 20 * fH, 121 * fW, 16 * fH));
     m_buttonCancel = new QPushButton(m_centralwidget);
     m_buttonCancel->setObjectName(QStringLiteral("buttonCancel"));
-    m_buttonCancel->setGeometry(QRect(30, 60, 81, 21));
+    m_buttonCancel->setGeometry(QRect(30 * fW, 60 * fH, 81 * fW, 21 * fH));
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
     m_menubar->setObjectName(QStringLiteral("menubar"));
-    m_menubar->setGeometry(QRect(0, 0, 318, 21));
+    m_menubar->setGeometry(QRect(0, 0, 318 * fW, 21 * fH));
     this->setMenuBar(m_menubar);
     m_statusbar = new QStatusBar(this);
     m_statusbar->setObjectName(QStringLiteral("statusbar"));

@@ -44,6 +44,9 @@ public:
     void gameController_ready();
 
 private:
+    static constexpr int referenceWidth = 1920;
+    static constexpr int referenceHeight = 1040;
+
 #if WIN32
     std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;
 #endif
