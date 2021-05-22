@@ -639,6 +639,7 @@ void GameController::receiveRemoteAskOtherPlayerResponse(const std::string& mess
 
         startPos = delimiterPos + 1;
 
+        delimiterPos = message.find(";", startPos);
         if (std::string::npos != delimiterPos) {
             std::string cluedoObjectString = message.substr(startPos, delimiterPos - startPos);
             std::stringstream ssCluedoObject;
@@ -693,6 +694,7 @@ void GameController::receiveRemoteInformNotInvolvedPlayerResponse(const std::str
 
         CluedoObject* cluedoObject = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(cluedoObjectNumber);
         if (cluedoObject) {
+            numberOfCluedoObjectLoops++;
             cluedoObjectsToAsk.push_back(cluedoObject);
         }
 
@@ -704,6 +706,9 @@ void GameController::receiveRemoteInformNotInvolvedPlayerResponse(const std::str
     int roomNumber = cluedoObjectsToAsk.at(2)->getNumber();
 
     delimiterPos = std::string::npos;
+    PlayerSet* playerSet = getSelfPlayer()->getPlayerSet().get();
+    playerSet->resetPlayerIndicesWithNoShownCluedoObjects();
+    playerSet->setLastPlayerIndexWhoShowedCluedoObject(-1);
 
     while (std::string::npos != (delimiterPos = message.find(";", startPos))) {
         std::string playerIndexString = message.substr(startPos, delimiterPos - startPos);
@@ -714,22 +719,23 @@ void GameController::receiveRemoteInformNotInvolvedPlayerResponse(const std::str
 
         startPos = delimiterPos + 1;
 
-        std::string hasObjectString = message.substr(startPos, delimiterPos - startPos);
-        std::stringstream ssHasObject;
-        int hasObject;
-        ssHasObject << hasObjectString;
-        ssHasObject >> hasObject;
+        delimiterPos = message.find(";", startPos);
+        if (std::string::npos != delimiterPos) {
+            std::string hasObjectString = message.substr(startPos, delimiterPos - startPos);
+            std::stringstream ssHasObject;
+            int hasObject;
+            ssHasObject << hasObjectString;
+            ssHasObject >> hasObject;
 
-        PlayerSet* playerSet = getSelfPlayer()->getPlayerSet().get();
-        playerSet->resetPlayerIndicesWithNoShownCluedoObjects();
-        if (hasObject > 0) {
-            playerSet->setLastPlayerIndexWhoShowedCluedoObject(playerIndex);
-        }
-        else {
-            playerSet->addPlayerIndexWithNoShownCluedoObjects(playerIndex);
-        }
+            if (hasObject > 0) {
+                playerSet->setLastPlayerIndexWhoShowedCluedoObject(playerIndex);
+            }
+            else {
+                playerSet->addPlayerIndexWithNoShownCluedoObjects(playerIndex);
+            }
 
-        startPos = delimiterPos + 1;
+            startPos = delimiterPos + 1;
+        }
     }
 
     emit askPlayerFromOtherPlayer_finished(murderNumber, weaponNumber, roomNumber);

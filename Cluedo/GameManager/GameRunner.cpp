@@ -33,6 +33,7 @@ void GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
 
     if (m_lastAskedPlayerIndex < 0) {
         currentPlayerSet->resetPlayerIndicesWithNoShownCluedoObjects();
+        currentPlayerSet->setLastPlayerIndexWhoShowedCluedoObject(-1);
     }
 
     int playerIndexToAsk = m_currentPlayerIndex + 1;
@@ -44,11 +45,11 @@ void GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, Clued
     if (m_players.size() == playerIndexToAsk)
     {
         playerIndexToAsk = 0;
-        if (playerIndexToAsk == m_currentPlayerIndex)
-        {
-            handleNoObjectCanBeShown();
-            return;
-        }
+    }
+    if (playerIndexToAsk == m_currentPlayerIndex)
+    {
+        handleNoObjectCanBeShown();
+        return;
     }
 
     m_lastAskedPlayerIndex = playerIndexToAsk;
@@ -199,6 +200,8 @@ void GameRunner::askPlayerResponseInformNotInvolvedPlayer() {
         if ((i != m_currentPlayerIndex) && (i != m_lastAskedPlayerIndex)) {
             if (Player::PlayerType_SelfServer == m_players.at(i)->getPlayerType()) {
                 PlayerSet* serverPlayerSet = m_players.at(i)->getPlayerSet().get();
+                serverPlayerSet->resetPlayerIndicesWithNoShownCluedoObjects();
+                serverPlayerSet->setLastPlayerIndexWhoShowedCluedoObject(-1);
                 for (int playerIndexWithNoShownCluedoObject : currentPlayerSet->getPlayerIndicesWithNoShownCluedoObjects()) {
                     serverPlayerSet->addPlayerIndexWithNoShownCluedoObjects(playerIndexWithNoShownCluedoObject);
                 }
@@ -221,9 +224,11 @@ void GameRunner::askPlayerResponseInformNotInvolvedPlayer() {
                     for (int playerIndexWithNoShownCluedoObject : currentPlayerSet->getPlayerIndicesWithNoShownCluedoObjects()) {
                         ss << playerIndexWithNoShownCluedoObject;
                         ss << ";";
+                        ss << "0;";
                     }
                     ss << currentPlayerSet->getLastPlayerIndexWhoShowedCluedoObject();
                     ss << ";";
+                    ss << "1;";
 #if WIN32
                     m_tcpWinSocketServer->sendData(remoteSocket, ss.str());
 #endif
