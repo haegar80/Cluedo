@@ -286,12 +286,6 @@ void SelectObjectToShowUI::initObjectsToShow() {
         if (!hasObject) {
             m_buttonOk->setEnabled(true);
 
-            QMessageBox msgBox;
-            std::stringstream ss;
-            ss << "Du kannst nichts zeigen, du hast keine von den gew\303\274nschten Karten!";
-            msgBox.setText(ss.str().c_str());
-            msgBox.exec();
-
             m_imageAvailableMurder->hide();
             m_imageAvailableWeapon->hide();
             m_imageAvailableRoom->hide();

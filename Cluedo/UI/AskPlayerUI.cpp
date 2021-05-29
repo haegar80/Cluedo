@@ -238,7 +238,7 @@ void AskPlayerUI::updateShownCluedoObject(Player* p_player)
         }
         else
         {
-            m_labelPlayerName->setText(QString("Niemand anderes besitzt etwas davon!"));
+            m_labelPlayerName->setText(QString("Niemand!"));
             m_labelShowedObject->hide();
             m_imageShowedObject->hide();
         }
