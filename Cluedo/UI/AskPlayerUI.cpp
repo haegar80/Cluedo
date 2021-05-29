@@ -12,13 +12,15 @@
 #include <QtWidgets/QStatusBar>
 #include <QCloseEvent>
 
-AskPlayerUI::AskPlayerUI(bool p_showShowedObject, const QString& p_askedPlayer, const QPixmap* p_selectedMurder, const QPixmap* p_selectedWeapon, const QPixmap* p_selectedRoom) :
+AskPlayerUI::AskPlayerUI(bool p_showShowedObject, const QString& p_askedPlayer, const QString& p_selectedMurderString, const QString& p_selectedWeaponString, const QString& p_selectedRoomString) :
     m_showShowedObject(p_showShowedObject),
     m_askedPlayer(p_askedPlayer),
-    m_selectedMurder(*p_selectedMurder),
-    m_selectedWeapon(*p_selectedWeapon),
-    m_selectedRoom(*p_selectedRoom)
+    m_selectedMurderString(p_selectedMurderString),
+    m_selectedWeaponString(p_selectedWeaponString),
+    m_selectedRoomString(p_selectedRoomString)
 {
+    createImages();
+
     setupUi();
 }
 
@@ -28,28 +30,18 @@ AskPlayerUI::AskPlayerUI(bool p_showShowedObject, const QString& p_askedPlayer, 
 {
     CluedoObject* selectedMurder = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(p_selectedMurderNumber);
     if (selectedMurder) {
-        QImage image = Utils::getImage(QString(selectedMurder->getName().c_str()));
-        if (!image.isNull())
-        {
-            m_selectedMurder = QPixmap::fromImage(image);
-        }
+        m_selectedMurderString = QString(selectedMurder->getName().c_str());
     }
     CluedoObject* selectedWeapon = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(p_selectedWeaponNumber);
     if (selectedWeapon) {
-        QImage image = Utils::getImage(QString(selectedWeapon->getName().c_str()));
-        if (!image.isNull())
-        {
-            m_selectedWeapon = QPixmap::fromImage(image);
-        }
+        m_selectedWeaponString = QString(selectedWeapon->getName().c_str());
     }
     CluedoObject* selectedRoom = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(p_selectedRoomNumber);
     if (selectedRoom) {
-        QImage image = Utils::getImage(QString(selectedRoom->getName().c_str()));
-        if (!image.isNull())
-        {
-            m_selectedRoom = QPixmap::fromImage(image);
-        }
+        m_selectedRoomString = QString(selectedRoom->getName().c_str());
     }
+
+    createImages();
 
     setupUi();
 }
@@ -100,64 +92,73 @@ void AskPlayerUI::setupUi()
     m_imageSelectedRoom->setFrameShape(QFrame::Box);
     m_imageSelectedRoom->setScaledContents(true);
     m_imageSelectedRoom->setPixmap(m_selectedRoom);
+    m_labelSelectedMurderName = new QLabel(m_centralwidget);
+    m_labelSelectedMurderName->setObjectName(QStringLiteral("labelSelectedMurderName"));
+    m_labelSelectedMurderName->setGeometry(QRect(10 * fW, 370 * fH, 211 * fW, 16 * fH));
+    m_labelSelectedWeaponName = new QLabel(m_centralwidget);
+    m_labelSelectedWeaponName->setObjectName(QStringLiteral("labelSelectedWeaponName"));
+    m_labelSelectedWeaponName->setGeometry(QRect(260 * fW, 370 * fH, 211 * fW, 16 * fH));
+    m_labelSelectedRoomName = new QLabel(m_centralwidget);
+    m_labelSelectedRoomName->setObjectName(QStringLiteral("labelSelectedRoomName"));
+    m_labelSelectedRoomName->setGeometry(QRect(510 * fW, 370 * fH, 211 * fW, 16 * fH));
    
     m_labelPlayer = new QLabel(m_centralwidget);
     m_labelPlayer->setObjectName(QStringLiteral("labelPlayer"));
-    m_labelPlayer->setGeometry(QRect(20 * fW, 390 * fH, 221 * fW, 16 * fH));
+    m_labelPlayer->setGeometry(QRect(10 * fW, 410 * fH, 221 * fW, 16 * fH));
     m_labelPlayerName = new QLabel(m_centralwidget);
     m_labelPlayerName->setObjectName(QStringLiteral("labelPlayerName"));
-    m_labelPlayerName->setGeometry(QRect(20 * fW, 420 * fH, 201 * fW, 16 * fH));
+    m_labelPlayerName->setGeometry(QRect(10 * fW, 440 * fH, 201 * fW, 16 * fH));
     m_labelPlayerName->setAutoFillBackground(false);
     m_labelPlayerName->setFrameShape(QFrame::Box);
     m_labelPlayerName->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelPlayerNoObjects = new QLabel(m_centralwidget);
     m_labelPlayerNoObjects->setObjectName(QStringLiteral("labelPlayerNoObjects"));
-    m_labelPlayerNoObjects->setGeometry(QRect(20 * fW, 480 * fH, 231 * fW, 16 * fH));
+    m_labelPlayerNoObjects->setGeometry(QRect(10 * fW, 500 * fH, 231 * fW, 16 * fH));
     m_labelPlayerNameNoObjects1 = new QLabel(m_centralwidget);
     m_labelPlayerNameNoObjects1->setObjectName(QStringLiteral("labelPlayerNameNoObjects1"));
-    m_labelPlayerNameNoObjects1->setGeometry(QRect(20 * fW, 510 * fH, 201 * fW, 16 * fH));
+    m_labelPlayerNameNoObjects1->setGeometry(QRect(10 * fW, 530 * fH, 201 * fW, 16 * fH));
     m_labelPlayerNameNoObjects1->setAutoFillBackground(false);
     m_labelPlayerNameNoObjects1->setFrameShape(QFrame::Box);
     m_labelPlayerNameNoObjects1->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelPlayerNameNoObjects2 = new QLabel(m_centralwidget);
     m_labelPlayerNameNoObjects2->setObjectName(QStringLiteral("labelPlayerNameNoObjects2"));
-    m_labelPlayerNameNoObjects2->setGeometry(QRect(20 * fW, 530 * fH, 201 * fW, 16 * fH));
+    m_labelPlayerNameNoObjects2->setGeometry(QRect(10 * fW, 550 * fH, 201 * fW, 16 * fH));
     m_labelPlayerNameNoObjects2->setAutoFillBackground(false);
     m_labelPlayerNameNoObjects2->setFrameShape(QFrame::Box);
     m_labelPlayerNameNoObjects2->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelPlayerNameNoObjects3 = new QLabel(m_centralwidget);
     m_labelPlayerNameNoObjects3->setObjectName(QStringLiteral("labelPlayerNameNoObjects3"));
-    m_labelPlayerNameNoObjects3->setGeometry(QRect(20 * fW, 550 * fH, 201 * fW, 16 * fH));
+    m_labelPlayerNameNoObjects3->setGeometry(QRect(10 * fW, 570 * fH, 201 * fW, 16 * fH));
     m_labelPlayerNameNoObjects3->setAutoFillBackground(false);
     m_labelPlayerNameNoObjects3->setFrameShape(QFrame::Box);
     m_labelPlayerNameNoObjects3->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelPlayerNameNoObjects4 = new QLabel(m_centralwidget);
     m_labelPlayerNameNoObjects4->setObjectName(QStringLiteral("labelPlayerNameNoObjects4"));
-    m_labelPlayerNameNoObjects4->setGeometry(QRect(20 * fW, 570 * fH, 201 * fW, 16 * fH));
+    m_labelPlayerNameNoObjects4->setGeometry(QRect(10 * fW, 590 * fH, 201 * fW, 16 * fH));
     m_labelPlayerNameNoObjects4->setAutoFillBackground(false);
     m_labelPlayerNameNoObjects4->setFrameShape(QFrame::Box);
     m_labelPlayerNameNoObjects4->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelPlayerNameNoObjects5 = new QLabel(m_centralwidget);
     m_labelPlayerNameNoObjects5->setObjectName(QStringLiteral("labelPlayerNameNoObjects5"));
-    m_labelPlayerNameNoObjects5->setGeometry(QRect(20 * fW, 590 * fH, 201 * fW, 16 * fH));
+    m_labelPlayerNameNoObjects5->setGeometry(QRect(10 * fW, 610 * fH, 201 * fW, 16 * fH));
     m_labelPlayerNameNoObjects5->setAutoFillBackground(false);
     m_labelPlayerNameNoObjects5->setFrameShape(QFrame::Box);
     m_labelPlayerNameNoObjects5->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelPlayerNameNoObjects6 = new QLabel(m_centralwidget);
     m_labelPlayerNameNoObjects6->setObjectName(QStringLiteral("labelPlayerNameNoObjects6"));
-    m_labelPlayerNameNoObjects6->setGeometry(QRect(20 * fW, 610 * fH, 201 * fW, 16 * fH));
+    m_labelPlayerNameNoObjects6->setGeometry(QRect(10 * fW, 630 * fH, 201 * fW, 16 * fH));
     m_labelPlayerNameNoObjects6->setAutoFillBackground(false);
     m_labelPlayerNameNoObjects6->setFrameShape(QFrame::Box);
     m_labelPlayerNameNoObjects6->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelShowedObject = new QLabel(m_centralwidget);
     m_labelShowedObject->setObjectName(QStringLiteral("labelShowedObject"));
-    m_labelShowedObject->setGeometry(QRect(260 * fW, 390 * fH, 251 * fW, 16 * fH));
+    m_labelShowedObject->setGeometry(QRect(250 * fW, 410 * fH, 251 * fW, 16 * fH));
     if (!m_showShowedObject) {
         m_labelShowedObject->hide();
     }
     m_imageShowedObject = new QLabel(m_centralwidget);
     m_imageShowedObject->setObjectName(QStringLiteral("imageShowedObject"));
-    m_imageShowedObject->setGeometry(QRect(260 * fW, 420 * fH, 211 * fW, 281 * fH));
+    m_imageShowedObject->setGeometry(QRect(250 * fW, 440 * fH, 211 * fW, 281 * fH));
     m_imageShowedObject->setFrameShape(QFrame::Box);
     m_imageShowedObject->setScaledContents(true);
     if (!m_showShowedObject) {
@@ -165,7 +166,7 @@ void AskPlayerUI::setupUi()
     }
     m_buttonOk = new QPushButton(m_centralwidget);
     m_buttonOk->setObjectName(QStringLiteral("buttonOk"));
-    m_buttonOk->setGeometry(QRect(20 * fW, 680 * fH, 75 * fW, 23 * fH));
+    m_buttonOk->setGeometry(QRect(10 * fW, 700 * fH, 75 * fW, 23 * fH));
     m_buttonOk->setEnabled(false);
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
@@ -194,6 +195,10 @@ void AskPlayerUI::retranslateUi()
     m_imageSelectedMurder->setText(QString());
     m_imageSelectedWeapon->setText(QString());
     m_imageSelectedRoom->setText(QString());
+    m_labelSelectedMurderName->setText(m_selectedMurderString);
+    m_labelSelectedWeaponName->setText(m_selectedWeaponString);
+    m_labelSelectedRoomName->setText(m_selectedRoomString);
+
     m_labelPlayer->setText(QApplication::translate("mainWindowAskPlayer", "Spieler/In der/die etwas besitzt", nullptr));
     m_labelPlayerName->setText(QString());
     m_labelPlayerNoObjects->setText(QApplication::translate("mainWindowAskPlayer", "Spieler/In der/die nichts besitzt", nullptr));
@@ -246,6 +251,26 @@ void AskPlayerUI::closeEvent(QCloseEvent* event)
 {
     emit askPlayerWindow_closed();
     emit askPlayerFromOtherPlayerWindow_closed();
+}
+
+void AskPlayerUI::createImages() {
+    QImage image = Utils::getImage(m_selectedMurderString);
+    if (!image.isNull())
+    {
+        m_selectedMurder = QPixmap::fromImage(image);
+    }
+
+    image = Utils::getImage(m_selectedWeaponString);
+    if (!image.isNull())
+    {
+        m_selectedWeapon = QPixmap::fromImage(image);
+    }
+
+    image = Utils::getImage(m_selectedRoomString);
+    if (!image.isNull())
+    {
+        m_selectedRoom = QPixmap::fromImage(image);
+    }
 }
 
 void AskPlayerUI::checkAndupdateImageWithShownObject(Player* p_player, CluedoObject* p_shownCluedoObject)

@@ -44,7 +44,7 @@ void SelectObjectToShowUI::setupUi()
     QRect screenGeometry = QApplication::desktop()->availableGeometry();
     float fW = static_cast<float>(screenGeometry.width()) / static_cast<float>(referenceWidth);
     float fH = static_cast<float>(screenGeometry.height()) / static_cast<float>(referenceHeight);
-    this->resize(845 * fW, 879 * fH);
+    this->resize(845 * fW, 890 * fH);
 
     m_centralwidget = new QWidget(this);
     m_centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
@@ -93,50 +93,59 @@ void SelectObjectToShowUI::setupUi()
     {
         m_imageSelectedRoom->setPixmap(QPixmap::fromImage(image));
     }
+    m_labelSelectedMurderName = new QLabel(m_centralwidget);
+    m_labelSelectedMurderName->setObjectName(QStringLiteral("labelSelectedMurderName"));
+    m_labelSelectedMurderName->setGeometry(QRect(10 * fW, 370 * fH, 211 * fW, 16 * fH));
+    m_labelSelectedWeaponName = new QLabel(m_centralwidget);
+    m_labelSelectedWeaponName->setObjectName(QStringLiteral("labelSelectedWeaponName"));
+    m_labelSelectedWeaponName->setGeometry(QRect(260 * fW, 370 * fH, 211 * fW, 16 * fH));
+    m_labelSelectedRoomName = new QLabel(m_centralwidget);
+    m_labelSelectedRoomName->setObjectName(QStringLiteral("labelSelectedRoomName"));
+    m_labelSelectedRoomName->setGeometry(QRect(510 * fW, 370 * fH, 211 * fW, 16 * fH));
 
     m_labelAvailableObjects = new QLabel(m_centralwidget);
     m_labelAvailableObjects->setObjectName(QStringLiteral("labelAvailableObjects"));
-    m_labelAvailableObjects->setGeometry(QRect(10 * fW, 400 * fH, 341 * fW, 16 * fH));
+    m_labelAvailableObjects->setGeometry(QRect(10 * fW, 410 * fH, 341 * fW, 16 * fH));
     m_labelAvailableMurder = new QLabel(m_centralwidget);
     m_labelAvailableMurder->setObjectName(QStringLiteral("labelAvailableMurder"));
-    m_labelAvailableMurder->setGeometry(QRect(10 * fW, 430 * fH, 81 * fW, 16 * fH));
+    m_labelAvailableMurder->setGeometry(QRect(10 * fW, 440 * fH, 81 * fW, 16 * fH));
     m_labelAvailableWeapon = new QLabel(m_centralwidget);
     m_labelAvailableWeapon->setObjectName(QStringLiteral("labelAvailableWeapon"));
-    m_labelAvailableWeapon->setGeometry(QRect(270 * fW, 430 * fH, 81 * fW, 16 * fH));
+    m_labelAvailableWeapon->setGeometry(QRect(270 * fW, 440 * fH, 81 * fW, 16 * fH));
     m_labelAvailableRoom = new QLabel(m_centralwidget);
     m_labelAvailableRoom->setObjectName(QStringLiteral("labelAvailableRoom"));
-    m_labelAvailableRoom->setGeometry(QRect(520 * fW, 430 * fH, 81 * fW, 16 * fH));
+    m_labelAvailableRoom->setGeometry(QRect(520 * fW, 440 * fH, 81 * fW, 16 * fH));
     m_imageAvailableMurder = new QLabel(m_centralwidget);
     m_imageAvailableMurder->setObjectName(QStringLiteral("imageAvailableMurder"));
-    m_imageAvailableMurder->setGeometry(QRect(10 * fW, 460 * fH, 211 * fW, 281 * fH));
+    m_imageAvailableMurder->setGeometry(QRect(10 * fW, 470 * fH, 211 * fW, 281 * fH));
     m_imageAvailableMurder->setFrameShape(QFrame::Box);
     m_imageAvailableMurder->setScaledContents(true);
     m_imageAvailableWeapon = new QLabel(m_centralwidget);
     m_imageAvailableWeapon->setObjectName(QStringLiteral("imageAvailableWeapon"));
-    m_imageAvailableWeapon->setGeometry(QRect(260 * fW, 460 * fH, 211 * fW, 281 * fH));
+    m_imageAvailableWeapon->setGeometry(QRect(260 * fW, 470 * fH, 211 * fW, 281 * fH));
     m_imageAvailableWeapon->setFrameShape(QFrame::Box);
     m_imageAvailableWeapon->setScaledContents(true);
     m_imageAvailableRoom = new QLabel(m_centralwidget);
     m_imageAvailableRoom->setObjectName(QStringLiteral("imageAvailableRoom"));
-    m_imageAvailableRoom->setGeometry(QRect(510 * fW, 460 * fH, 281 * fW, 281 * fH));
+    m_imageAvailableRoom->setGeometry(QRect(510 * fW, 470 * fH, 281 * fW, 281 * fH));
     m_imageAvailableRoom->setFrameShape(QFrame::Box);
     m_imageAvailableRoom->setScaledContents(true);
     m_buttonShowMurder = new QPushButton(m_centralwidget);
     m_buttonShowMurder->setObjectName(QStringLiteral("buttonShowMurder"));
-    m_buttonShowMurder->setGeometry(QRect(60 * fW, 750 * fH, 111 * fW, 23 * fH));
+    m_buttonShowMurder->setGeometry(QRect(60 * fW, 760 * fH, 111 * fW, 23 * fH));
     m_buttonShowMurder->setEnabled(false);
     m_buttonShowWeapon = new QPushButton(m_centralwidget);
     m_buttonShowWeapon->setObjectName(QStringLiteral("buttonShowWeapon"));
-    m_buttonShowWeapon->setGeometry(QRect(310 * fW, 750 * fH, 111 * fW, 23 * fH));
+    m_buttonShowWeapon->setGeometry(QRect(310 * fW, 760 * fH, 111 * fW, 23 * fH));
     m_buttonShowWeapon->setEnabled(false);
     m_buttonShowRoom = new QPushButton(m_centralwidget);
     m_buttonShowRoom->setObjectName(QStringLiteral("buttonShowRoom"));
-    m_buttonShowRoom->setGeometry(QRect(590 * fW, 750 * fH, 111 * fW, 23 * fH));
+    m_buttonShowRoom->setGeometry(QRect(590 * fW, 760 * fH, 111 * fW, 23 * fH));
     m_buttonShowRoom->setEnabled(false);
 
     m_buttonOk = new QPushButton(m_centralwidget);
     m_buttonOk->setObjectName(QStringLiteral("buttonOk"));
-    m_buttonOk->setGeometry(QRect(10 * fW, 810 * fH, 75 * fW, 23 * fH));
+    m_buttonOk->setGeometry(QRect(10 * fW, 820 * fH, 75 * fW, 23 * fH));
     m_buttonOk->setEnabled(false);
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
@@ -168,6 +177,10 @@ void SelectObjectToShowUI::retranslateUi()
     m_imageSelectedMurder->setText(QString());
     m_imageSelectedWeapon->setText(QString());
     m_imageSelectedRoom->setText(QString());
+    m_labelSelectedMurderName->setText(m_selectedMurderString);
+    m_labelSelectedWeaponName->setText(m_selectedWeaponString);
+    m_labelSelectedRoomName->setText(m_selectedRoomString);
+
     m_labelAvailableObjects->setText(QApplication::translate("mainWindowSelectObjectToShow", "Karten von obiger Anfrage, die du selber besitzt:", nullptr));
     m_labelAvailableMurder->setText(QApplication::translate("mainWindowSelectObjectToShow", "T\303\244ter", nullptr));
     m_labelAvailableWeapon->setText(QApplication::translate("mainWindowSelectObjectToShow", "Waffe", nullptr));

@@ -61,6 +61,9 @@ private:
     QLabel* m_imageSelectedMurder;
     QLabel* m_imageSelectedWeapon;
     QLabel* m_imageSelectedRoom;
+    QLabel* m_labelSelectedMurderName;
+    QLabel* m_labelSelectedWeaponName;
+    QLabel* m_labelSelectedRoomName;
     QLabel* m_labelAvailableObjects;
     QLabel* m_labelAvailableMurder;
     QLabel* m_labelAvailableWeapon;

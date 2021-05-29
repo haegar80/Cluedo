@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>845</width>
-    <height>879</height>
+    <height>890</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -114,7 +114,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>460</y>
+      <y>470</y>
       <width>211</width>
       <height>281</height>
      </rect>
@@ -133,7 +133,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>810</y>
+      <y>820</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -146,7 +146,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>400</y>
+      <y>410</y>
       <width>341</width>
       <height>16</height>
      </rect>
@@ -185,7 +185,7 @@
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>460</y>
+      <y>470</y>
       <width>211</width>
       <height>281</height>
      </rect>
@@ -204,7 +204,7 @@
     <property name="geometry">
      <rect>
       <x>510</x>
-      <y>460</y>
+      <y>470</y>
       <width>281</width>
       <height>281</height>
      </rect>
@@ -223,7 +223,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>430</y>
+      <y>440</y>
       <width>81</width>
       <height>16</height>
      </rect>
@@ -236,7 +236,7 @@
     <property name="geometry">
      <rect>
       <x>270</x>
-      <y>430</y>
+      <y>440</y>
       <width>81</width>
       <height>16</height>
      </rect>
@@ -249,7 +249,7 @@
     <property name="geometry">
      <rect>
       <x>520</x>
-      <y>430</y>
+      <y>440</y>
       <width>81</width>
       <height>16</height>
      </rect>
@@ -262,7 +262,7 @@
     <property name="geometry">
      <rect>
       <x>60</x>
-      <y>750</y>
+      <y>760</y>
       <width>111</width>
       <height>23</height>
      </rect>
@@ -275,7 +275,7 @@
     <property name="geometry">
      <rect>
       <x>310</x>
-      <y>750</y>
+      <y>760</y>
       <width>111</width>
       <height>23</height>
      </rect>
@@ -288,13 +288,52 @@
     <property name="geometry">
      <rect>
       <x>590</x>
-      <y>750</y>
+      <y>760</y>
       <width>111</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
      <string>Will ich zeigen</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelSelectedMurderName">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>370</y>
+      <width>211</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelSelectedWeaponName">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>370</y>
+      <width>211</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="labelSelectedRoomName">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>370</y>
+      <width>211</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

@@ -190,7 +190,7 @@ void SelectObjectsUI::buttonOk_clicked()
         Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
 
         QString currentPlayerName = QString(currentPlayer->getName().c_str());
-        m_askPlayerUI = new AskPlayerUI(true, currentPlayerName, m_imageSelectedMurder->pixmap(), m_imageSelectedWeapon->pixmap(), m_imageSelectedRoom->pixmap());
+        m_askPlayerUI = new AskPlayerUI(true, currentPlayerName, m_listMurder->selectedItems().at(0)->text(), m_listWeapon->selectedItems().at(0)->text(), m_listRoom->selectedItems().at(0)->text());
         m_askPlayerUI->setWindowModality(Qt::ApplicationModal);
         m_askPlayerUI->setAttribute(Qt::WA_DeleteOnClose);
 
