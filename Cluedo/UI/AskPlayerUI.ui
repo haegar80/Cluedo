@@ -76,12 +76,12 @@
      <rect>
       <x>10</x>
       <y>50</y>
-      <width>111</width>
+      <width>161</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Ausgewählter Murder</string>
+     <string>Ausgewählter Täter</string>
     </property>
    </widget>
    <widget class="QLabel" name="labelSelectedWeapon">
@@ -89,7 +89,7 @@
      <rect>
       <x>260</x>
       <y>50</y>
-      <width>111</width>
+      <width>161</width>
       <height>16</height>
      </rect>
     </property>
@@ -102,7 +102,7 @@
      <rect>
       <x>510</x>
       <y>50</y>
-      <width>111</width>
+      <width>151</width>
       <height>16</height>
      </rect>
     </property>
@@ -114,7 +114,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>410</y>
+      <y>420</y>
       <width>201</width>
       <height>16</height>
      </rect>
@@ -136,8 +136,8 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>380</y>
-      <width>161</width>
+      <y>390</y>
+      <width>221</width>
       <height>16</height>
      </rect>
     </property>
@@ -149,7 +149,7 @@
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>410</y>
+      <y>420</y>
       <width>211</width>
       <height>281</height>
      </rect>
@@ -168,7 +168,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>670</y>
+      <y>680</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -181,33 +181,33 @@
     <property name="geometry">
      <rect>
       <x>260</x>
-      <y>380</y>
-      <width>171</width>
+      <y>390</y>
+      <width>251</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Gezeigter Murder/Waffe/Raum</string>
+     <string>Gezeigter Täter/Waffe/Raum</string>
     </property>
    </widget>
    <widget class="QLabel" name="labelPlayerNoObjects">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>470</y>
-      <width>201</width>
+      <y>480</y>
+      <width>231</width>
       <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Spieler/In der/die nichts zeigen konnte&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Spieler/In der/die nichts besitzt&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
    </widget>
    <widget class="QLabel" name="labelPlayerNameNoObjects1">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>500</y>
+      <y>510</y>
       <width>201</width>
       <height>16</height>
      </rect>
@@ -229,7 +229,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>520</y>
+      <y>530</y>
       <width>201</width>
       <height>16</height>
      </rect>
@@ -251,7 +251,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>540</y>
+      <y>550</y>
       <width>201</width>
       <height>16</height>
      </rect>
@@ -273,7 +273,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>560</y>
+      <y>570</y>
       <width>201</width>
       <height>16</height>
      </rect>
@@ -295,7 +295,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>580</y>
+      <y>590</y>
       <width>201</width>
       <height>16</height>
      </rect>
@@ -317,7 +317,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>600</y>
+      <y>610</y>
       <width>201</width>
       <height>16</height>
      </rect>
@@ -340,7 +340,7 @@
      <rect>
       <x>10</x>
       <y>20</y>
-      <width>51</width>
+      <width>71</width>
       <height>16</height>
      </rect>
     </property>
@@ -351,9 +351,9 @@
    <widget class="QLabel" name="labelAskedPerson">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>90</x>
       <y>20</y>
-      <width>401</width>
+      <width>371</width>
       <height>16</height>
      </rect>
     </property>

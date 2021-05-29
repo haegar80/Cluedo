@@ -42,7 +42,7 @@ void SelectObjectsUI::setupUi()
     m_selectionObjectWidget->setGeometry(QRect(60 * fW, 50 * fH, 891 * fW, 511 * fH));
     m_labelMurderList = new QLabel(m_selectionObjectWidget);
     m_labelMurderList->setObjectName(QString::fromUtf8("labelMurderList"));
-    m_labelMurderList->setGeometry(QRect(50 * fW, 0, 81 * fW, 16 * fH));
+    m_labelMurderList->setGeometry(QRect(50 * fW, 0, 121 * fW, 16 * fH));
     m_listMurder = new QListWidget(m_selectionObjectWidget);
     m_listMurder->setObjectName(QString::fromUtf8("listMurder"));
     m_listMurder->setGeometry(QRect(50 * fW, 30 * fH, 211 * fW, 131 * fH));
@@ -54,7 +54,7 @@ void SelectObjectsUI::setupUi()
     m_imageSelectedMurder->setScaledContents(true);
     m_labelWeaponList = new QLabel(m_selectionObjectWidget);
     m_labelWeaponList->setObjectName(QString::fromUtf8("labelWeaponList"));
-    m_labelWeaponList->setGeometry(QRect(300 * fW, 0, 91 * fW, 16 * fH));
+    m_labelWeaponList->setGeometry(QRect(300 * fW, 0, 121 * fW, 16 * fH));
     m_listWeapon = new QListWidget(m_selectionObjectWidget);
     m_listWeapon->setObjectName(QString::fromUtf8("listWeapon"));
     m_listWeapon->setGeometry(QRect(300 * fW, 30 * fH, 211 * fW, 131 * fH));
@@ -66,7 +66,7 @@ void SelectObjectsUI::setupUi()
     m_imageSelectedWeapon->setScaledContents(true);
     m_labelRoomList = new QLabel(m_selectionObjectWidget);
     m_labelRoomList->setObjectName(QString::fromUtf8("labelRoomList"));
-    m_labelRoomList->setGeometry(QRect(550 * fW, 0, 81 * fW, 16 * fH));
+    m_labelRoomList->setGeometry(QRect(550 * fW, 0, 121 * fW, 16 * fH));
     m_listRoom = new QListWidget(m_selectionObjectWidget);
     m_listRoom->setObjectName(QString::fromUtf8("listRoom"));
     m_listRoom->setGeometry(QRect(550 * fW, 30 * fH, 281 * fW, 131 * fH));
@@ -81,10 +81,10 @@ void SelectObjectsUI::setupUi()
     m_buttonOk->setGeometry(QRect(110 * fW, 580 * fH, 121 * fW, 23 * fH));
     m_buttonTellSuspicion = new QPushButton(m_centralwidget);
     m_buttonTellSuspicion->setObjectName(QStringLiteral("buttonTellSuspicion"));
-    m_buttonTellSuspicion->setGeometry(QRect(250 * fW, 580 * fH, 121 * fW, 23 * fH));
+    m_buttonTellSuspicion->setGeometry(QRect(260 * fW, 580 * fH, 181 * fW, 23 * fH));
     m_buttonAbort = new QPushButton(m_centralwidget);
     m_buttonAbort->setObjectName(QStringLiteral("buttonAbort"));
-    m_buttonAbort->setGeometry(QRect(820 * fW, 580 * fH, 75 * fW, 23 * fH));
+    m_buttonAbort->setGeometry(QRect(804 * fW, 580 * fH, 91 * fW, 23 * fH));
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
     m_menubar->setObjectName(QString::fromUtf8("menubar"));

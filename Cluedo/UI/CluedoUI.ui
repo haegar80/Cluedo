@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1305</width>
+    <width>1370</width>
     <height>828</height>
    </rect>
   </property>
@@ -17,18 +17,18 @@
    <widget class="QWidget" name="selectionObjectWidget" native="true">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>50</y>
-      <width>891</width>
+      <x>20</x>
+      <y>40</y>
+      <width>1041</width>
       <height>681</height>
      </rect>
     </property>
     <widget class="QLabel" name="labelCluedoObjects">
      <property name="geometry">
       <rect>
-       <x>40</x>
+       <x>20</x>
        <y>30</y>
-       <width>141</width>
+       <width>201</width>
        <height>16</height>
       </rect>
      </property>
@@ -39,10 +39,10 @@
     <widget class="QLabel" name="imageCluedoObject5">
      <property name="geometry">
       <rect>
-       <x>600</x>
+       <x>700</x>
        <y>90</y>
-       <width>120</width>
-       <height>160</height>
+       <width>150</width>
+       <height>200</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -58,10 +58,10 @@
     <widget class="QLabel" name="imageCluedoObject1">
      <property name="geometry">
       <rect>
-       <x>40</x>
+       <x>20</x>
        <y>90</y>
-       <width>120</width>
-       <height>160</height>
+       <width>150</width>
+       <height>200</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -77,10 +77,10 @@
     <widget class="QLabel" name="imageCluedoObject2">
      <property name="geometry">
       <rect>
-       <x>180</x>
+       <x>190</x>
        <y>90</y>
-       <width>120</width>
-       <height>160</height>
+       <width>150</width>
+       <height>200</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -96,10 +96,10 @@
     <widget class="QLabel" name="imageCluedoObject3">
      <property name="geometry">
       <rect>
-       <x>320</x>
+       <x>360</x>
        <y>90</y>
-       <width>120</width>
-       <height>160</height>
+       <width>150</width>
+       <height>200</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -115,10 +115,10 @@
     <widget class="QLabel" name="imageCluedoObject4">
      <property name="geometry">
       <rect>
-       <x>460</x>
+       <x>530</x>
        <y>90</y>
-       <width>120</width>
-       <height>160</height>
+       <width>150</width>
+       <height>200</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -134,10 +134,10 @@
     <widget class="QLabel" name="imageCluedoObject6">
      <property name="geometry">
       <rect>
-       <x>740</x>
+       <x>870</x>
        <y>90</y>
-       <width>120</width>
-       <height>160</height>
+       <width>150</width>
+       <height>200</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -153,9 +153,9 @@
     <widget class="QLabel" name="labelCluedoObject2">
      <property name="geometry">
       <rect>
-       <x>180</x>
+       <x>190</x>
        <y>60</y>
-       <width>111</width>
+       <width>151</width>
        <height>16</height>
       </rect>
      </property>
@@ -166,10 +166,10 @@
     <widget class="QLabel" name="labelCluedoObject6">
      <property name="geometry">
       <rect>
-       <x>740</x>
+       <x>870</x>
        <y>60</y>
-       <width>111</width>
-       <height>13</height>
+       <width>151</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -179,10 +179,10 @@
     <widget class="QLabel" name="labelCluedoObject5">
      <property name="geometry">
       <rect>
-       <x>600</x>
+       <x>700</x>
        <y>60</y>
-       <width>111</width>
-       <height>13</height>
+       <width>151</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -192,9 +192,9 @@
     <widget class="QLabel" name="labelCluedoObject1">
      <property name="geometry">
       <rect>
-       <x>40</x>
+       <x>20</x>
        <y>60</y>
-       <width>111</width>
+       <width>151</width>
        <height>16</height>
       </rect>
      </property>
@@ -205,10 +205,10 @@
     <widget class="QLabel" name="labelCluedoObject3">
      <property name="geometry">
       <rect>
-       <x>320</x>
+       <x>360</x>
        <y>60</y>
-       <width>111</width>
-       <height>13</height>
+       <width>151</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -218,10 +218,10 @@
     <widget class="QLabel" name="labelCluedoObject4">
      <property name="geometry">
       <rect>
-       <x>460</x>
+       <x>530</x>
        <y>60</y>
-       <width>111</width>
-       <height>13</height>
+       <width>151</width>
+       <height>16</height>
       </rect>
      </property>
      <property name="text">
@@ -248,8 +248,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>970</x>
-      <y>80</y>
+      <x>1090</x>
+      <y>110</y>
       <width>256</width>
       <height>131</height>
      </rect>
@@ -261,8 +261,8 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>970</x>
-      <y>230</y>
+      <x>1090</x>
+      <y>260</y>
       <width>261</width>
       <height>41</height>
      </rect>
@@ -277,7 +277,7 @@ Verdacht aussprechen</string>
      <rect>
       <x>60</x>
       <y>750</y>
-      <width>111</width>
+      <width>161</width>
       <height>23</height>
      </rect>
     </property>
@@ -288,8 +288,8 @@ Verdacht aussprechen</string>
    <widget class="QLabel" name="labelCurrentPlayer">
     <property name="geometry">
      <rect>
-      <x>970</x>
-      <y>50</y>
+      <x>1090</x>
+      <y>80</y>
       <width>111</width>
       <height>16</height>
      </rect>
@@ -301,9 +301,9 @@ Verdacht aussprechen</string>
    <widget class="QPushButton" name="buttonConnectGame">
     <property name="geometry">
      <rect>
-      <x>190</x>
+      <x>270</x>
       <y>750</y>
-      <width>171</width>
+      <width>251</width>
       <height>23</height>
      </rect>
     </property>
@@ -317,7 +317,7 @@ Verdacht aussprechen</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1305</width>
+     <width>1370</width>
      <height>21</height>
     </rect>
    </property>

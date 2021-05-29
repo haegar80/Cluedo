@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>333</width>
-    <height>194</height>
+    <width>386</width>
+    <height>198</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,9 +17,9 @@
    <widget class="QLabel" name="labelIPAddressServer">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>170</x>
       <y>20</y>
-      <width>101</width>
+      <width>151</width>
       <height>16</height>
      </rect>
     </property>
@@ -30,7 +30,7 @@
    <widget class="QPushButton" name="buttonCancel">
     <property name="geometry">
      <rect>
-      <x>160</x>
+      <x>170</x>
       <y>110</y>
       <width>81</width>
       <height>21</height>
@@ -43,8 +43,8 @@
    <widget class="QLineEdit" name="lineEditIPAddressServer">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>20</y>
+      <x>170</x>
+      <y>50</y>
       <width>111</width>
       <height>20</height>
      </rect>
@@ -67,8 +67,8 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>60</y>
-      <width>81</width>
+      <y>20</y>
+      <width>111</width>
       <height>16</height>
      </rect>
     </property>
@@ -79,8 +79,8 @@
    <widget class="QLineEdit" name="lineEditPlayerName">
     <property name="geometry">
      <rect>
-      <x>130</x>
-      <y>60</y>
+      <x>30</x>
+      <y>50</y>
       <width>111</width>
       <height>20</height>
      </rect>
@@ -92,7 +92,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>333</width>
+     <width>386</width>
      <height>21</height>
     </rect>
    </property>

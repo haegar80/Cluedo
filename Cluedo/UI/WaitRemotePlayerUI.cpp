@@ -34,7 +34,7 @@ void WaitRemotePlayerUI::setupUi()
     m_centralwidget->setObjectName(QStringLiteral("centralwidget"));
     m_labelWaitRemotePlayer = new QLabel(m_centralwidget);
     m_labelWaitRemotePlayer->setObjectName(QStringLiteral("labelWaitRemotePlayer"));
-    m_labelWaitRemotePlayer->setGeometry(QRect(30 * fW, 20 * fH, 121 * fW, 16 * fH));
+    m_labelWaitRemotePlayer->setGeometry(QRect(30 * fW, 20 * fH, 171 * fW, 16 * fH));
     m_buttonCancel = new QPushButton(m_centralwidget);
     m_buttonCancel->setObjectName(QStringLiteral("buttonCancel"));
     m_buttonCancel->setGeometry(QRect(30 * fW, 60 * fH, 81 * fW, 21 * fH));
