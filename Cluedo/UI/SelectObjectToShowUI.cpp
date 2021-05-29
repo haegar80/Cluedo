@@ -111,10 +111,10 @@ void SelectObjectToShowUI::setupUi()
     m_labelAvailableMurder->setGeometry(QRect(10 * fW, 440 * fH, 81 * fW, 16 * fH));
     m_labelAvailableWeapon = new QLabel(m_centralwidget);
     m_labelAvailableWeapon->setObjectName(QStringLiteral("labelAvailableWeapon"));
-    m_labelAvailableWeapon->setGeometry(QRect(270 * fW, 440 * fH, 81 * fW, 16 * fH));
+    m_labelAvailableWeapon->setGeometry(QRect(260 * fW, 440 * fH, 81 * fW, 16 * fH));
     m_labelAvailableRoom = new QLabel(m_centralwidget);
     m_labelAvailableRoom->setObjectName(QStringLiteral("labelAvailableRoom"));
-    m_labelAvailableRoom->setGeometry(QRect(520 * fW, 440 * fH, 81 * fW, 16 * fH));
+    m_labelAvailableRoom->setGeometry(QRect(510 * fW, 440 * fH, 81 * fW, 16 * fH));
     m_imageAvailableMurder = new QLabel(m_centralwidget);
     m_imageAvailableMurder->setObjectName(QStringLiteral("imageAvailableMurder"));
     m_imageAvailableMurder->setGeometry(QRect(10 * fW, 470 * fH, 211 * fW, 281 * fH));

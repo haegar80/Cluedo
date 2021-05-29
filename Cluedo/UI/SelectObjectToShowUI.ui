@@ -235,7 +235,7 @@
    <widget class="QLabel" name="labelAvailableWeapon">
     <property name="geometry">
      <rect>
-      <x>270</x>
+      <x>260</x>
       <y>440</y>
       <width>81</width>
       <height>16</height>
@@ -248,7 +248,7 @@
    <widget class="QLabel" name="labelAvailableRoom">
     <property name="geometry">
      <rect>
-      <x>520</x>
+      <x>510</x>
       <y>440</y>
       <width>81</width>
       <height>16</height>

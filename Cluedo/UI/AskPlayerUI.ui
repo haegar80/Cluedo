@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1101</width>
-    <height>786</height>
+    <height>839</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -116,7 +116,7 @@
       <x>10</x>
       <y>440</y>
       <width>201</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="autoFillBackground">
@@ -148,7 +148,7 @@
    <widget class="QLabel" name="imageShowedObject">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>260</x>
       <y>440</y>
       <width>211</width>
       <height>281</height>
@@ -168,7 +168,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>700</y>
+      <y>760</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -180,7 +180,7 @@
    <widget class="QLabel" name="labelShowedObject">
     <property name="geometry">
      <rect>
-      <x>250</x>
+      <x>260</x>
       <y>410</y>
       <width>251</width>
       <height>16</height>
@@ -194,7 +194,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>500</y>
+      <y>520</y>
       <width>231</width>
       <height>16</height>
      </rect>
@@ -207,9 +207,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>530</y>
+      <y>550</y>
       <width>201</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="autoFillBackground">
@@ -229,9 +229,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>550</y>
+      <y>580</y>
       <width>201</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="autoFillBackground">
@@ -251,9 +251,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>570</y>
+      <y>610</y>
       <width>201</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="autoFillBackground">
@@ -273,9 +273,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>590</y>
+      <y>640</y>
       <width>201</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="autoFillBackground">
@@ -295,9 +295,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>610</y>
+      <y>670</y>
       <width>201</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="autoFillBackground">
@@ -317,9 +317,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>630</y>
+      <y>700</y>
       <width>201</width>
-      <height>16</height>
+      <height>21</height>
      </rect>
     </property>
     <property name="autoFillBackground">

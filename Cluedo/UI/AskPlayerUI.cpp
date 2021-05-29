@@ -55,7 +55,7 @@ void AskPlayerUI::setupUi()
     QRect screenGeometry = QApplication::desktop()->availableGeometry();
     float fW = static_cast<float>(screenGeometry.width()) / static_cast<float>(referenceWidth);
     float fH = static_cast<float>(screenGeometry.height()) / static_cast<float>(referenceHeight);
-    this->resize(1101 * fW, 760 * fH);
+    this->resize(1101 * fW, 839 * fH);
 
     m_centralwidget = new QWidget(this);
     m_centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
@@ -113,52 +113,52 @@ void AskPlayerUI::setupUi()
     m_labelPlayerName->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelPlayerNoObjects = new QLabel(m_centralwidget);
     m_labelPlayerNoObjects->setObjectName(QStringLiteral("labelPlayerNoObjects"));
-    m_labelPlayerNoObjects->setGeometry(QRect(10 * fW, 500 * fH, 231 * fW, 16 * fH));
+    m_labelPlayerNoObjects->setGeometry(QRect(10 * fW, 520 * fH, 231 * fW, 16 * fH));
     m_labelPlayerNameNoObjects1 = new QLabel(m_centralwidget);
     m_labelPlayerNameNoObjects1->setObjectName(QStringLiteral("labelPlayerNameNoObjects1"));
-    m_labelPlayerNameNoObjects1->setGeometry(QRect(10 * fW, 530 * fH, 201 * fW, 16 * fH));
+    m_labelPlayerNameNoObjects1->setGeometry(QRect(10 * fW, 550 * fH, 201 * fW, 21 * fH));
     m_labelPlayerNameNoObjects1->setAutoFillBackground(false);
     m_labelPlayerNameNoObjects1->setFrameShape(QFrame::Box);
     m_labelPlayerNameNoObjects1->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelPlayerNameNoObjects2 = new QLabel(m_centralwidget);
     m_labelPlayerNameNoObjects2->setObjectName(QStringLiteral("labelPlayerNameNoObjects2"));
-    m_labelPlayerNameNoObjects2->setGeometry(QRect(10 * fW, 550 * fH, 201 * fW, 16 * fH));
+    m_labelPlayerNameNoObjects2->setGeometry(QRect(10 * fW, 580 * fH, 201 * fW, 21 * fH));
     m_labelPlayerNameNoObjects2->setAutoFillBackground(false);
     m_labelPlayerNameNoObjects2->setFrameShape(QFrame::Box);
     m_labelPlayerNameNoObjects2->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelPlayerNameNoObjects3 = new QLabel(m_centralwidget);
     m_labelPlayerNameNoObjects3->setObjectName(QStringLiteral("labelPlayerNameNoObjects3"));
-    m_labelPlayerNameNoObjects3->setGeometry(QRect(10 * fW, 570 * fH, 201 * fW, 16 * fH));
+    m_labelPlayerNameNoObjects3->setGeometry(QRect(10 * fW, 610 * fH, 201 * fW, 21 * fH));
     m_labelPlayerNameNoObjects3->setAutoFillBackground(false);
     m_labelPlayerNameNoObjects3->setFrameShape(QFrame::Box);
     m_labelPlayerNameNoObjects3->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelPlayerNameNoObjects4 = new QLabel(m_centralwidget);
     m_labelPlayerNameNoObjects4->setObjectName(QStringLiteral("labelPlayerNameNoObjects4"));
-    m_labelPlayerNameNoObjects4->setGeometry(QRect(10 * fW, 590 * fH, 201 * fW, 16 * fH));
+    m_labelPlayerNameNoObjects4->setGeometry(QRect(10 * fW, 640 * fH, 201 * fW, 21 * fH));
     m_labelPlayerNameNoObjects4->setAutoFillBackground(false);
     m_labelPlayerNameNoObjects4->setFrameShape(QFrame::Box);
     m_labelPlayerNameNoObjects4->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelPlayerNameNoObjects5 = new QLabel(m_centralwidget);
     m_labelPlayerNameNoObjects5->setObjectName(QStringLiteral("labelPlayerNameNoObjects5"));
-    m_labelPlayerNameNoObjects5->setGeometry(QRect(10 * fW, 610 * fH, 201 * fW, 16 * fH));
+    m_labelPlayerNameNoObjects5->setGeometry(QRect(10 * fW, 670 * fH, 201 * fW, 21 * fH));
     m_labelPlayerNameNoObjects5->setAutoFillBackground(false);
     m_labelPlayerNameNoObjects5->setFrameShape(QFrame::Box);
     m_labelPlayerNameNoObjects5->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelPlayerNameNoObjects6 = new QLabel(m_centralwidget);
     m_labelPlayerNameNoObjects6->setObjectName(QStringLiteral("labelPlayerNameNoObjects6"));
-    m_labelPlayerNameNoObjects6->setGeometry(QRect(10 * fW, 630 * fH, 201 * fW, 16 * fH));
+    m_labelPlayerNameNoObjects6->setGeometry(QRect(10 * fW, 700 * fH, 201 * fW, 21 * fH));
     m_labelPlayerNameNoObjects6->setAutoFillBackground(false);
     m_labelPlayerNameNoObjects6->setFrameShape(QFrame::Box);
     m_labelPlayerNameNoObjects6->setAlignment(Qt::AlignLeading | Qt::AlignLeft | Qt::AlignVCenter);
     m_labelShowedObject = new QLabel(m_centralwidget);
     m_labelShowedObject->setObjectName(QStringLiteral("labelShowedObject"));
-    m_labelShowedObject->setGeometry(QRect(250 * fW, 410 * fH, 251 * fW, 16 * fH));
+    m_labelShowedObject->setGeometry(QRect(260 * fW, 410 * fH, 251 * fW, 16 * fH));
     if (!m_showShowedObject) {
         m_labelShowedObject->hide();
     }
     m_imageShowedObject = new QLabel(m_centralwidget);
     m_imageShowedObject->setObjectName(QStringLiteral("imageShowedObject"));
-    m_imageShowedObject->setGeometry(QRect(250 * fW, 440 * fH, 211 * fW, 281 * fH));
+    m_imageShowedObject->setGeometry(QRect(260 * fW, 440 * fH, 211 * fW, 281 * fH));
     m_imageShowedObject->setFrameShape(QFrame::Box);
     m_imageShowedObject->setScaledContents(true);
     if (!m_showShowedObject) {
@@ -166,7 +166,7 @@ void AskPlayerUI::setupUi()
     }
     m_buttonOk = new QPushButton(m_centralwidget);
     m_buttonOk->setObjectName(QStringLiteral("buttonOk"));
-    m_buttonOk->setGeometry(QRect(10 * fW, 700 * fH, 75 * fW, 23 * fH));
+    m_buttonOk->setGeometry(QRect(10 * fW, 760 * fH, 75 * fW, 23 * fH));
     m_buttonOk->setEnabled(false);
     this->setCentralWidget(m_centralwidget);
     m_menubar = new QMenuBar(this);
