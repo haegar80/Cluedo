@@ -31,18 +31,18 @@ void ConnectServerUI::setupUi()
 
     m_centralwidget = new QWidget(this);
     m_centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-    m_labelIPAddressServer = new QLabel(m_centralwidget);
-    m_labelIPAddressServer->setObjectName(QString::fromUtf8("labelIPAddressServer"));
-    m_labelIPAddressServer->setGeometry(QRect(170 * fW, 20 * fH, 151 * fW, 16 * fH));
-    m_lineEditIPAddressServer = new QLineEdit(m_centralwidget);
-    m_lineEditIPAddressServer->setObjectName(QString::fromUtf8("lineEditIPAddressServer"));
-    m_lineEditIPAddressServer->setGeometry(QRect(170 * fW, 50 * fH, 111 * fW, 20 * fH));
     m_labelPlayerName = new QLabel(m_centralwidget);
     m_labelPlayerName->setObjectName(QStringLiteral("labelPlayerName"));
     m_labelPlayerName->setGeometry(QRect(30 * fW, 20 * fH, 111 * fW, 16 * fH));
     m_lineEditPlayerName = new QLineEdit(m_centralwidget);
     m_lineEditPlayerName->setObjectName(QStringLiteral("lineEditPlayerName"));
     m_lineEditPlayerName->setGeometry(QRect(30 * fW, 50 * fH, 111 * fW, 20 * fH));
+    m_labelIPAddressServer = new QLabel(m_centralwidget);
+    m_labelIPAddressServer->setObjectName(QString::fromUtf8("labelIPAddressServer"));
+    m_labelIPAddressServer->setGeometry(QRect(170 * fW, 20 * fH, 151 * fW, 16 * fH));
+    m_lineEditIPAddressServer = new QLineEdit(m_centralwidget);
+    m_lineEditIPAddressServer->setObjectName(QString::fromUtf8("lineEditIPAddressServer"));
+    m_lineEditIPAddressServer->setGeometry(QRect(170 * fW, 50 * fH, 111 * fW, 20 * fH));
     m_buttonOk = new QPushButton(m_centralwidget);
     m_buttonOk->setObjectName(QString::fromUtf8("buttonOk"));
     m_buttonOk->setGeometry(QRect(30 * fW, 110 * fH, 75 * fW, 21 * fH));
@@ -67,8 +67,8 @@ void ConnectServerUI::setupUi()
 void ConnectServerUI::retranslateUi()
 {
     this->setWindowTitle(QApplication::translate("MainWindow", "WaitRemotePlayer", 0));
-    m_labelIPAddressServer->setText(QApplication::translate("MainWindow", "IP Addresse Server", 0));
     m_labelPlayerName->setText(QApplication::translate("MainWindow", "Benutzername", 0));
+    m_labelIPAddressServer->setText(QApplication::translate("MainWindow", "IP Addresse Server", 0));
     m_buttonOk->setText(QApplication::translate("MainWindow", "Ok", 0));
     m_buttonCancel->setText(QApplication::translate("MainWindow", "Abbrechen", 0));
 }

@@ -46,10 +46,10 @@ private:
 #endif
 
     QWidget* m_centralwidget;
-    QLabel* m_labelIPAddressServer;
-    QLineEdit* m_lineEditIPAddressServer;
     QLabel* m_labelPlayerName;
     QLineEdit* m_lineEditPlayerName;
+    QLabel* m_labelIPAddressServer;
+    QLineEdit* m_lineEditIPAddressServer;
     QPushButton* m_buttonOk;
     QPushButton* m_buttonCancel;
     QMenuBar* m_menubar;
