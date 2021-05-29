@@ -3,13 +3,14 @@
 namespace MessageIds
 {
     constexpr int DistributeCluedoObject = 100;
-    constexpr int AllCluedoObjectsDistributed = 101;
-    constexpr int PlayersList = 102;
-    constexpr int CurrentPlayerIndex = 103;
-    constexpr int AskOtherPlayer = 104;
-    constexpr int AskOtherPlayerResponse = 105;
-    constexpr int InformNotInvolvedPlayer = 106;
-    constexpr int NoCluedoObjectCanBeShown = 107;
-    constexpr int MoveToNextPlayer = 108;
+    constexpr int InformEffectiveCluedoObject = 101;
+    constexpr int AllCluedoObjectsDistributed = 102;
+    constexpr int PlayersList = 103;
+    constexpr int CurrentPlayerIndex = 104;
+    constexpr int AskOtherPlayer = 105;
+    constexpr int AskOtherPlayerResponse = 106;
+    constexpr int InformNotInvolvedPlayer = 107;
+    constexpr int NoCluedoObjectCanBeShown = 108;
+    constexpr int MoveToNextPlayer = 109;
 };
 

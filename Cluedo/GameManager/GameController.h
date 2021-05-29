@@ -128,6 +128,7 @@ private:
     void askplayerResponseInformNotInvolvedServerCallback();
 
     void receiveRemoteCluedoObject(const std::string& message);
+    void receiveRemoteInformEffectiveCluedoObject(const std::string& message);
     void receiveRemoteAllCluedoObjectsDistributed();
     void receiveRemotePlayersList(SOCKET p_sourceSocket, const std::string& message);
     void receiveRemoteCurrentPlayerIndex(const std::string& message);

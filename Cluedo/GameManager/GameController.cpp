@@ -120,7 +120,7 @@ bool GameController::tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_r
     bool isSuspicionCorrect = true;
 
     std::vector<CluedoObject*>& murders = CluedoObjectLoader::getInstance().getMurders();
-    if (murders.at(p_murderIndex) != m_effectiveMurder)
+    if (murders.at(p_murderIndex)->getNumber() != m_effectiveMurder->getNumber())
     {
         isSuspicionCorrect = false;
     }
@@ -128,7 +128,7 @@ bool GameController::tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_r
     if (isSuspicionCorrect)
     {
         std::vector<CluedoObject*>& weapons = CluedoObjectLoader::getInstance().getWeapons();
-        if (weapons.at(p_weaponIndex) != m_effectiveWeapon)
+        if (weapons.at(p_weaponIndex)->getNumber() != m_effectiveWeapon->getNumber())
         {
             isSuspicionCorrect = false;
         }
@@ -137,7 +137,7 @@ bool GameController::tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_r
     if (isSuspicionCorrect)
     {
         std::vector<CluedoObject*>& rooms = CluedoObjectLoader::getInstance().getRooms();
-        if (rooms.at(p_roomIndex) != m_effectiveRoom)
+        if (rooms.at(p_roomIndex)->getNumber() != m_effectiveRoom->getNumber())
         {
             isSuspicionCorrect = false;
         }
@@ -198,6 +198,9 @@ void GameController::registerRemoteServerMessages(bool p_client) {
     if (p_client) {
         auto receiveRemoteCluedoObjectCallback = [this](SOCKET, const std::string& p_message) { receiveRemoteCluedoObject(p_message); };
         MessageHandler::getInstance().registerMessageHandler(MessageIds::DistributeCluedoObject, receiveRemoteCluedoObjectCallback);
+
+        auto receiveRemoteInformEffectiveCluedoObjectCallback = [this](SOCKET, const std::string& p_message) { receiveRemoteInformEffectiveCluedoObject(p_message); };
+        MessageHandler::getInstance().registerMessageHandler(MessageIds::InformEffectiveCluedoObject, receiveRemoteInformEffectiveCluedoObjectCallback);
 
         auto receiveRemoteAllCluedoObjectsDistributedCallback = [this](SOCKET, const std::string&) { receiveRemoteAllCluedoObjectsDistributed(); };
         MessageHandler::getInstance().registerMessageHandler(MessageIds::AllCluedoObjectsDistributed, receiveRemoteAllCluedoObjectsDistributedCallback);
@@ -406,6 +409,19 @@ void GameController::selectEffectiveMurderWeaponRoom()
     int effectiveRoomIndex = Utils::generateRandomNumber(0, static_cast<int>(rooms.size() - 1));
     m_effectiveRoom = rooms.at(effectiveRoomIndex);
     addCluedoObjectsToDistribute(rooms, CluedoObject::Room);
+
+    for (RemotePlayer* remotePlayer : getRemotePlayers()) {
+        SOCKET remoteSocket = remotePlayer->getRemoteSocket();
+        std::stringstream ss;
+        ss << MessageIds::InformEffectiveCluedoObject << ":";
+        ss << m_effectiveMurder->getNumber();
+        ss << ";";
+        ss << m_effectiveWeapon->getNumber();
+        ss << ";";
+        ss << m_effectiveRoom->getNumber();
+        ss << ";";
+        m_tcpWinSocketServer->sendData(remoteSocket, ss.str());
+    }
 }
 
 void GameController::addCluedoObjectsToDistribute(std::vector<CluedoObject*>& p_cluedoObjects, CluedoObject::CluedoObjectType p_type)
@@ -543,6 +559,34 @@ void GameController::receiveRemoteCluedoObject(const std::string& message) {
         printf("Add cluedo object to client: %s\n", cluedoObject->getName().c_str());
         PlayerSet* playerSet = getSelfPlayer()->getPlayerSet().get();
         playerSet->addCluedoObject(cluedoObject);
+    }
+}
+
+void GameController::receiveRemoteInformEffectiveCluedoObject(const std::string& message) {
+    std::size_t delimiterPos = std::string::npos;
+    std::size_t startPos = 0;
+
+    while (std::string::npos != (delimiterPos = message.find(";", startPos))) {
+        std::string cluedoObjectNumberString = message.substr(startPos, delimiterPos - startPos);
+        std::stringstream ss;
+        int cluedoObjectNumber;
+        ss << cluedoObjectNumberString;
+        ss >> cluedoObjectNumber;
+
+        CluedoObject* cluedoObject = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(cluedoObjectNumber);
+        if (cluedoObject) {
+            if (CluedoObject::Murder == cluedoObject->getCluedoObjectType()) {
+                m_effectiveMurder = cluedoObject;
+            }
+            else if (CluedoObject::Weapon == cluedoObject->getCluedoObjectType()) {
+                m_effectiveWeapon = cluedoObject;
+            }
+            else if (CluedoObject::Room == cluedoObject->getCluedoObjectType()) {
+                m_effectiveRoom = cluedoObject;
+            }
+        }
+
+        startPos = delimiterPos + 1;
     }
 }
 
