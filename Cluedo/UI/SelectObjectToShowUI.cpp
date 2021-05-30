@@ -10,7 +10,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
-#include <QMessageBox>
+#include <QCloseEvent>
 #include <sstream>
 
 SelectObjectToShowUI::SelectObjectToShowUI(const QString& p_askedPlayer, int p_murderNumber, int p_weaponNumber, int p_roomNumber) :
@@ -161,7 +161,7 @@ void SelectObjectToShowUI::setupUi()
     QObject::connect(m_buttonShowMurder, SIGNAL(pressed()), this, SLOT(buttonShowMurder_clicked()));
     QObject::connect(m_buttonShowWeapon, SIGNAL(pressed()), this, SLOT(buttonShowWeapon_clicked()));
     QObject::connect(m_buttonShowRoom, SIGNAL(pressed()), this, SLOT(buttonShowRoom_clicked()));
-    QObject::connect(m_buttonOk, SIGNAL(pressed()), this, SLOT(buttonOk_clicked()));
+    QObject::connect(m_buttonOk, SIGNAL(pressed()), this, SLOT(close()));
 
     initObjectsToShow();
 }
@@ -227,24 +227,27 @@ void SelectObjectToShowUI::buttonShowRoom_clicked()
     m_buttonShowWeapon->hide();
 }
 
-void SelectObjectToShowUI::buttonOk_clicked()
+void SelectObjectToShowUI::closeEvent(QCloseEvent* event)
 {
-    if (m_showMurder) {
-        GameController::getInstance().askPlayerResponse(m_selectedMurderNumber);
-    }
-    else if (m_showWeapon) {
-        GameController::getInstance().askPlayerResponse(m_selectedWeaponNumber);
-    }
-    else if (m_showRoom) {
-        GameController::getInstance().askPlayerResponse(m_selectedRoomNumber);
+    if (!m_buttonOk->isEnabled()) {
+        event->ignore();
     }
     else {
-        GameController::getInstance().askPlayerResponse(0);
+        if (m_showMurder) {
+            GameController::getInstance().askPlayerResponse(m_selectedMurderNumber);
+        }
+        else if (m_showWeapon) {
+            GameController::getInstance().askPlayerResponse(m_selectedWeaponNumber);
+        }
+        else if (m_showRoom) {
+            GameController::getInstance().askPlayerResponse(m_selectedRoomNumber);
+        }
+        else {
+            GameController::getInstance().askPlayerResponse(0);
+        }
+
+        emit selectObjectToShowWindow_closed();
     }
-
-    this->close();
-
-    emit selectObjectToShowWindow_closed();
 }
 
 void SelectObjectToShowUI::initObjectsToShow() {

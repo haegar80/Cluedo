@@ -43,10 +43,12 @@ public:
     void buttonShowMurder_clicked();
     void buttonShowWeapon_clicked();
     void buttonShowRoom_clicked();
-    void buttonOk_clicked();
 
     signals:
     void selectObjectToShowWindow_closed();
+
+protected:
+    void closeEvent(QCloseEvent* event) override;
 
 private:
     static constexpr int referenceWidth = 1920;
