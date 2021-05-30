@@ -165,22 +165,6 @@ void CluedoUI::buttonSelectObjects_clicked()
     std::vector<Player*>& players = gameController.getPlayers();
     Player* currentPlayer = gameController.getCurrentPlayer();
 
-    if ((Player::PlayerType_SelfServer != currentPlayer->getPlayerType()) && (Player::PlayerType_SelfClient != currentPlayer->getPlayerType()))
-    {
-        if (gameController.shouldTellSuspicion())
-        {
-            QMessageBox msgBox;
-            std::stringstream resultText;
-            resultText << "Spieler " << currentPlayer->getName() << " hat GEWONNEN!";
-            msgBox.setText(resultText.str().c_str());
-            msgBox.exec();
-        }
-        else
-        {
-            gameController.askPlayer();
-        }
-    }
-
     m_selectObjectsUI = new SelectObjectsUI();
     m_selectObjectsUI->setWindowModality(Qt::ApplicationModal);
     m_selectObjectsUI->setAttribute(Qt::WA_DeleteOnClose);
@@ -250,6 +234,10 @@ void CluedoUI::game_started_server()
     GameController::getInstance().selectAndDistributeCluedoObjects();
     GameController::getInstance().sendCurrentPlayerIndexToClients();
     selectCurrentPlayer();
+
+    if (Player::PlayerType_Computer == GameController::getInstance().getCurrentPlayer()->getPlayerType()) {
+        GameController::getInstance().askPlayer();
+    }
 }
 
 void CluedoUI::game_started_client() {
