@@ -68,6 +68,18 @@ void PlayerSet::updateSuspicion()
 
     if ((MinimumUnknownObjects == numberOfUnknownMurders) && (MinimumUnknownObjects == numberOfUnknownWeapons) && (MinimumUnknownObjects == numberOfUnknownRooms))
     {
+        for (CluedoObject* unknownCluedoObject : m_unknownCluedoObjects) {
+            if (CluedoObject::Murder == unknownCluedoObject->getCluedoObjectType()) {
+                m_suspectedMurder = unknownCluedoObject;
+            }
+            else if (CluedoObject::Weapon == unknownCluedoObject->getCluedoObjectType()) {
+                m_suspectedMurder = unknownCluedoObject;
+            }
+            else if (CluedoObject::Room == unknownCluedoObject->getCluedoObjectType()) {
+                m_suspectedMurder = unknownCluedoObject;
+            }
+        }
+
         m_shouldTellSuspicion = true;
     }
 }

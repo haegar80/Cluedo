@@ -19,9 +19,17 @@ void GameRunner::askPlayer()
     CluedoObject* murderToAsk{ nullptr };
     CluedoObject* weaponToAsk{ nullptr };
     CluedoObject* roomToAsk{ nullptr };
-    getObjectsToAsk(&murderToAsk, &weaponToAsk, &roomToAsk);
 
-    return askPlayer(murderToAsk, weaponToAsk, roomToAsk);
+    Player* currentPlayer = m_players.at(m_currentPlayerIndex);
+    PlayerSet* currentPlayerSet = currentPlayer->getPlayerSet().get();
+
+    if (currentPlayerSet->getShouldTellSuspicion()) {
+        m_tellSuspicionCallback();
+    }
+    else {
+        getObjectsToAsk(&murderToAsk, &weaponToAsk, &roomToAsk);
+        askPlayer(murderToAsk, weaponToAsk, roomToAsk);
+    }
 }
 
 void GameRunner::askPlayer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room)

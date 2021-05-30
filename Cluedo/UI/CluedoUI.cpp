@@ -131,6 +131,7 @@ void CluedoUI::setupUi()
     QObject::connect(&GameController::getInstance(), SIGNAL(allCluedoObjects_distributed()), this, SLOT(allCluedoObjects_distributed()));
     QObject::connect(&GameController::getInstance(), &GameController::showObject_requested, this, &CluedoUI::showObject_requested);
     QObject::connect(&GameController::getInstance(), &GameController::askPlayerFromOtherPlayer_finished, this, &CluedoUI::askPlayerFromOtherPlayer_finished);
+    QObject::connect(&GameController::getInstance(), &GameController::otherPlayerToldSuspicion, this, &CluedoUI::otherPlayerToldSuspicion);
 
     m_selectionObjectWidget->hide();
 }
@@ -331,6 +332,16 @@ void CluedoUI::askPlayer_finished()
 {
     m_buttonSelectObjects->setEnabled(false);
     GameController::getInstance().moveToNextPlayer();
+}
+
+void CluedoUI::otherPlayerToldSuspicion(bool p_isSuspicionCorrect) {
+    Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
+
+    QMessageBox msgBox;
+    std::stringstream resultText;
+    resultText << "Spieler " << currentPlayer->getName() << " hat " << (p_isSuspicionCorrect ? "GEWONNEN!" : "VERLOREN!");
+    msgBox.setText(resultText.str().c_str());
+    msgBox.exec();
 }
 
 void CluedoUI::selectCurrentPlayer() {

@@ -46,6 +46,10 @@ public:
         m_askPlayerResponseInformNotInvolvedServerCallback = p_callback;
     }
 
+    void registerTellSuspicionCallback(std::function<void()> p_callback) {
+        m_tellSuspicionCallback = p_callback;
+    }
+
     int getCurrentPlayerIndex() {
         return m_currentPlayerIndex;
     }
@@ -65,6 +69,7 @@ private:
     std::function<void()> m_objectShownCallback;
     std::function<void()> m_noObjectCanBeShownCallback;
     std::function<void()> m_askPlayerResponseInformNotInvolvedServerCallback;
+    std::function<void()> m_tellSuspicionCallback;
 
 #if WIN32
     std::shared_ptr<TcpWinSocketServer> m_tcpWinSocketServer;

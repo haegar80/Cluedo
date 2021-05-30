@@ -12,5 +12,6 @@ namespace MessageIds
     constexpr int InformNotInvolvedPlayer = 107;
     constexpr int NoCluedoObjectCanBeShown = 108;
     constexpr int MoveToNextPlayer = 109;
+    constexpr int InformToldSuspicion = 110;
 };
 

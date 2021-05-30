@@ -39,6 +39,7 @@ void GameController::startGame()
     m_gameRunner->registerObjectShownCallback([this]() {objectShownCallback(); });
     m_gameRunner->registerNoObjectCanBeShownCallback([this]() {noObjectCanBeShownCallback(); });
     m_gameRunner->registerAskPlayerResponseInformNotInvolvedServerCallback([this]() {askplayerResponseInformNotInvolvedServerCallback(); });
+    m_gameRunner->registerTellSuspicionCallback([this]() {tellSuspicionCallback(); });
     m_gameRunner->startGame();
 
     emit gameController_ready();
@@ -117,18 +118,28 @@ void GameController::askPlayerResponse(int p_cluedoObjectNumber) {
 
 bool GameController::tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_roomIndex)
 {
+    std::vector<CluedoObject*>& murders = CluedoObjectLoader::getInstance().getMurders();
+    std::vector<CluedoObject*>& weapons = CluedoObjectLoader::getInstance().getWeapons();
+    std::vector<CluedoObject*>& rooms = CluedoObjectLoader::getInstance().getRooms();
+
+    return tellSuspicion(murders.at(p_murderIndex), weapons.at(p_weaponIndex), rooms.at(p_roomIndex));
+}
+
+bool GameController::tellSuspicion(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room) {
+    if ((nullptr == p_murder) || (nullptr == p_weapon) || (nullptr == p_room)) {
+        return false;
+    }
+
     bool isSuspicionCorrect = true;
 
-    std::vector<CluedoObject*>& murders = CluedoObjectLoader::getInstance().getMurders();
-    if (murders.at(p_murderIndex)->getNumber() != m_effectiveMurder->getNumber())
+    if (p_murder->getNumber() != m_effectiveMurder->getNumber())
     {
         isSuspicionCorrect = false;
     }
 
     if (isSuspicionCorrect)
     {
-        std::vector<CluedoObject*>& weapons = CluedoObjectLoader::getInstance().getWeapons();
-        if (weapons.at(p_weaponIndex)->getNumber() != m_effectiveWeapon->getNumber())
+        if (p_weapon->getNumber() != m_effectiveWeapon->getNumber())
         {
             isSuspicionCorrect = false;
         }
@@ -136,8 +147,7 @@ bool GameController::tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_r
 
     if (isSuspicionCorrect)
     {
-        std::vector<CluedoObject*>& rooms = CluedoObjectLoader::getInstance().getRooms();
-        if (rooms.at(p_roomIndex)->getNumber() != m_effectiveRoom->getNumber())
+        if (p_room->getNumber() != m_effectiveRoom->getNumber())
         {
             isSuspicionCorrect = false;
         }
@@ -148,17 +158,15 @@ bool GameController::tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_r
         m_gameEnd = true;
     }
 
+    std::vector<RemotePlayer*> remotePlayers = getRemotePlayers();
+    for (RemotePlayer* remotePlayer : remotePlayers) {
+        std::stringstream ss;
+        ss << MessageIds::InformToldSuspicion << ":";
+        ss << isSuspicionCorrect;
+        m_tcpWinSocketServer->sendData(remotePlayer->getRemoteSocket(), ss.str());
+    }
+
     return isSuspicionCorrect;
-}
-
-bool GameController::shouldTellSuspicion()
-{
-    bool shouldTellSuspicion = false;
-
-    Player* currentPlayer = getCurrentPlayer();
-    PlayerSet* currentPlayerSet = currentPlayer->getPlayerSet().get();
-
-    return currentPlayerSet->getShouldTellSuspicion();
 }
 
 void GameController::selectAndDistributeCluedoObjects()
@@ -215,8 +223,8 @@ void GameController::registerRemoteServerMessages(bool p_client) {
         MessageHandler::getInstance().registerMessageHandler(MessageIds::InformNotInvolvedPlayer, receiveRemoteInformNotInvolvedPlayerResponseCallback);
     }
     else {
-        auto receiveMoveToNextPlayerResponseCallback = [this](SOCKET, const std::string& p_message) { receiveMoveToNextPlayerResponse(p_message); };
-        MessageHandler::getInstance().registerMessageHandler(MessageIds::MoveToNextPlayer, receiveMoveToNextPlayerResponseCallback);
+        auto receiveRemoteMoveToNextPlayerResponseCallback = [this](SOCKET, const std::string& p_message) { receiveRemoteMoveToNextPlayerResponse(p_message); };
+        MessageHandler::getInstance().registerMessageHandler(MessageIds::MoveToNextPlayer, receiveRemoteMoveToNextPlayerResponseCallback);
     }
 
     auto receiveRemotePlayersListCallback = [this](SOCKET p_sourceSocket, const std::string& p_message) { receiveRemotePlayersList(p_sourceSocket, p_message); };
@@ -228,8 +236,11 @@ void GameController::registerRemoteServerMessages(bool p_client) {
     auto receiveRemoteAskOtherPlayerResponseCallback = [this](SOCKET, const std::string& p_message) { receiveRemoteAskOtherPlayerResponse(p_message); };
     MessageHandler::getInstance().registerMessageHandler(MessageIds::AskOtherPlayerResponse, receiveRemoteAskOtherPlayerResponseCallback);
 
-    auto receiveNoCluedoObjectCanBeShownResponseCallback = [this](SOCKET, const std::string&) { receiveNoCluedoObjectCanBeShownResponse(); };
-    MessageHandler::getInstance().registerMessageHandler(MessageIds::NoCluedoObjectCanBeShown, receiveNoCluedoObjectCanBeShownResponseCallback);
+    auto receiveRemoteNoCluedoObjectCanBeShownResponseCallback = [this](SOCKET, const std::string&) { receiveRemoteNoCluedoObjectCanBeShownResponse(); };
+    MessageHandler::getInstance().registerMessageHandler(MessageIds::NoCluedoObjectCanBeShown, receiveRemoteNoCluedoObjectCanBeShownResponseCallback);
+
+    auto receiveRemoteInformToldSuspicionCallback = [this](SOCKET, const std::string& p_message) { receiveRemoteInformToldSuspicion(p_message); };
+    MessageHandler::getInstance().registerMessageHandler(MessageIds::InformToldSuspicion, receiveRemoteInformToldSuspicionCallback);
 }
 
 Player* GameController::createNewPlayer(std::string p_name, Player::EPlayerType p_playerType)
@@ -549,6 +560,15 @@ void GameController::askplayerResponseInformNotInvolvedServerCallback() {
     emit askPlayerFromOtherPlayer_finished(currentPlayerSet->getLastAskedMurder()->getNumber(), currentPlayerSet->getLastAskedWeapon()->getNumber(), currentPlayerSet->getLastAskedRoom()->getNumber());
 }
 
+void GameController::tellSuspicionCallback() {
+    Player* currentPlayer = getCurrentPlayer();
+    PlayerSet* currentPlayerSet = currentPlayer->getPlayerSet().get();
+
+    bool isSuspicionCorrect = tellSuspicion(currentPlayerSet->getSuspectedMurder(), currentPlayerSet->getSuspectedWeapon(), currentPlayerSet->getSuspectedRoom());
+
+    emit otherPlayerToldSuspicion(isSuspicionCorrect);
+}
+
 void GameController::receiveRemoteCluedoObject(const std::string& message) {
     std::stringstream ss{ message };
     int number;
@@ -607,8 +627,15 @@ void GameController::receiveRemotePlayersList(SOCKET p_sourceSocket, const std::
         ss >> indexNumber;
 
         std::string name = message.substr(startPos + 1, delimiterPos - (startPos + 1));
-        printf("Add remote player: %s with index number: %d\n", name.c_str(), indexNumber);
-        createNewRemotePlayer(indexNumber, std::move(name), p_sourceSocket);
+        if (std::string::npos != name.find("Computer")) {
+            printf("Add computer player: %s with index number: %d\n", name.c_str(), indexNumber);
+            createNewPlayer(std::move(name), Player::PlayerType_Computer);
+        }
+        else {
+            printf("Add remote player: %s with index number: %d\n", name.c_str(), indexNumber);
+            createNewRemotePlayer(indexNumber, std::move(name), p_sourceSocket);
+        }
+
         emit remotePlayer_added();
 
         startPos = delimiterPos + 1;
@@ -785,12 +812,12 @@ void GameController::receiveRemoteInformNotInvolvedPlayerResponse(const std::str
     emit askPlayerFromOtherPlayer_finished(murderNumber, weaponNumber, roomNumber);
 }
 
-void GameController::receiveNoCluedoObjectCanBeShownResponse() {
+void GameController::receiveRemoteNoCluedoObjectCanBeShownResponse() {
     printf("No Cluedo object can be shown!\n");
     emit askPlayerResponse_ready();
 }
 
-void GameController::receiveMoveToNextPlayerResponse(const std::string& message) {
+void GameController::receiveRemoteMoveToNextPlayerResponse(const std::string& message) {
     std::stringstream ssPlayerIndex{ message };
     int playerIndex;
     ssPlayerIndex >> playerIndex;
@@ -798,4 +825,27 @@ void GameController::receiveMoveToNextPlayerResponse(const std::string& message)
     m_humanPlayersReadyToMoveToNextPlayer[m_players.at(playerIndex)] = true;
 
     moveToNextPlayer(false);
+}
+
+void GameController::receiveRemoteInformToldSuspicion(const std::string& message) {
+    std::stringstream ssIsSuspicionCorrect{ message };
+    int isSuspicionCorrect;
+    ssIsSuspicionCorrect >> isSuspicionCorrect;
+
+    Player* currentPlayer = getCurrentPlayer();
+    Player* selfPlayer = getSelfPlayer();
+
+    if (Player::PlayerType_SelfServer == selfPlayer->getPlayerType()) {
+        std::vector<RemotePlayer*> remotePlayers = getRemotePlayers();
+        for (RemotePlayer* remotePlayer : remotePlayers) {
+            if (remotePlayer != currentPlayer) {
+                std::stringstream ss;
+                ss << MessageIds::InformToldSuspicion << ":";
+                ss << isSuspicionCorrect;
+                m_tcpWinSocketServer->sendData(remotePlayer->getRemoteSocket(), ss.str());
+            }
+        }
+    }
+
+    emit otherPlayerToldSuspicion(isSuspicionCorrect);
 }

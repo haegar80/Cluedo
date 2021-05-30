@@ -27,7 +27,7 @@ public:
     void askPlayer(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
     void askPlayerResponse(int p_cluedoObjectNumber);
     bool tellSuspicion(int p_murderIndex, int p_weaponIndex, int p_roomIndex);
-    bool shouldTellSuspicion();
+    bool tellSuspicion(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
 
     // Server functions
     void selectAndDistributeCluedoObjects();
@@ -79,6 +79,7 @@ public:
     void showObject_requested(int p_murderNumber, int p_weaponNumber, int p_roomNumber);
     void askPlayerResponse_ready();
     void askPlayerFromOtherPlayer_finished(int p_askedMurderNumber, int p_askedWeaponNumber, int p_askedRoomNumber);
+    void otherPlayerToldSuspicion(bool p_isSuspicionCorrect);
 
 private:
     static constexpr int CluedoObjectNumberInitValue = 0;
@@ -126,6 +127,7 @@ private:
     void objectShownCallback();
     void noObjectCanBeShownCallback();
     void askplayerResponseInformNotInvolvedServerCallback();
+    void tellSuspicionCallback();
 
     void receiveRemoteCluedoObject(const std::string& message);
     void receiveRemoteInformEffectiveCluedoObject(const std::string& message);
@@ -135,6 +137,7 @@ private:
     void receiveRemoteAskOtherPlayer(const std::string& message);
     void receiveRemoteAskOtherPlayerResponse(const std::string& message);
     void receiveRemoteInformNotInvolvedPlayerResponse(const std::string& message);
-    void receiveNoCluedoObjectCanBeShownResponse();
-    void receiveMoveToNextPlayerResponse(const std::string& message);
+    void receiveRemoteNoCluedoObjectCanBeShownResponse();
+    void receiveRemoteMoveToNextPlayerResponse(const std::string& message);
+    void receiveRemoteInformToldSuspicion(const std::string& message);
 };

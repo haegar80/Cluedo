@@ -100,6 +100,21 @@ public:
         m_lastAskedRoom = p_lastAskedRoom;
     }
 
+    CluedoObject* getSuspectedMurder()
+    {
+        return m_suspectedMurder;
+    }
+
+    CluedoObject* getSuspectedWeapon()
+    {
+        return m_suspectedWeapon;
+    }
+
+    CluedoObject* getSuspectedRoom()
+    {
+        return m_suspectedRoom;
+    }
+
     bool getShouldTellSuspicion()
     {
         return m_shouldTellSuspicion;
@@ -123,6 +138,10 @@ private:
     CluedoObject* m_lastAskedMurder{ nullptr };
     CluedoObject* m_lastAskedWeapon{ nullptr };
     CluedoObject* m_lastAskedRoom{ nullptr };
+
+    CluedoObject* m_suspectedMurder{ nullptr };
+    CluedoObject* m_suspectedWeapon{ nullptr };
+    CluedoObject* m_suspectedRoom{ nullptr };
 
     bool m_shouldTellSuspicion{ false };
 
