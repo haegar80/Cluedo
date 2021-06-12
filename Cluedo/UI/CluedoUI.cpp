@@ -307,6 +307,23 @@ void CluedoUI::selectObjectToShowWindow_closed(bool p_objectCouldBeShown) {
     if (p_objectCouldBeShown) {
         GameController::getInstance().moveToNextPlayer();
     }
+    else {
+        Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
+        Player* selfPlayer = GameController::getInstance().getSelfPlayer();
+        std::vector<Player*>& players = GameController::getInstance().getPlayers();
+        for (int i = 0; i < players.size(); ++i) {
+            if (players.at(i) == selfPlayer) {
+                int nextIndex = i + 1;
+                if (players.size() == nextIndex) {
+                    nextIndex = 0;
+                }
+                if (players.at(nextIndex) == currentPlayer) {
+                    GameController::getInstance().moveToNextPlayer();
+                    break;
+                }
+            }
+        }
+    }
 }
 
 void CluedoUI::askPlayerFromOtherPlayer_finished(int p_askedMurderNumber, int p_askedWeaponNumber, int p_askedRoomNumber)
