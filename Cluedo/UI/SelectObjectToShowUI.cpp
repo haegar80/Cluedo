@@ -233,6 +233,7 @@ void SelectObjectToShowUI::closeEvent(QCloseEvent* event)
         event->ignore();
     }
     else {
+        bool objectCouldBeShown = true;
         if (m_showMurder) {
             GameController::getInstance().askPlayerResponse(m_selectedMurderNumber);
         }
@@ -244,9 +245,10 @@ void SelectObjectToShowUI::closeEvent(QCloseEvent* event)
         }
         else {
             GameController::getInstance().askPlayerResponse(0);
+            objectCouldBeShown = false;
         }
 
-        emit selectObjectToShowWindow_closed();
+        emit selectObjectToShowWindow_closed(objectCouldBeShown);
     }
 }
 

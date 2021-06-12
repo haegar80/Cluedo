@@ -45,7 +45,7 @@ public:
     void buttonShowRoom_clicked();
 
     signals:
-    void selectObjectToShowWindow_closed();
+    void selectObjectToShowWindow_closed(bool p_objectCouldBeShown);
 
 protected:
     void closeEvent(QCloseEvent* event) override;

@@ -44,7 +44,7 @@ public:
     void currentPlayerIndex_updated();
     void allCluedoObjects_distributed();
     void showObject_requested(int p_murderNumber, int p_weaponNumber, int p_roomNumber);
-    void selectObjectToShowWindow_closed();
+    void selectObjectToShowWindow_closed(bool p_objectCouldBeShown);
     void askPlayerFromOtherPlayer_finished(int p_askedMurderNumber, int p_askedWeaponNumber, int p_askedRoomNumber);
     void askPlayerFromOtherPlayerWindow_closed();
     void askPlayer_finished();
