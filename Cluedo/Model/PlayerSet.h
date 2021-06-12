@@ -34,11 +34,6 @@ public:
         return m_cluedoObjects;
     }
 
-    std::multimap<int, CluedoObject*>& getCluedoObjectsFromOtherPlayers()
-    {
-        return m_cluedoObjectsFromOtherPlayers;
-    }
-
     std::multimap<int, CluedoObject*>& getMissingCluedoObjectsAtOtherPlayers()
     {
         return m_missingCluedoObjectsAtOtherPlayers;

@@ -359,32 +359,23 @@ void GameRunner::getObjectsToAsk(CluedoObject** p_murder, CluedoObject** p_weapo
 
 std::vector<CluedoObject*> GameRunner::findUnknownObjects(std::vector<CluedoObject*>& p_cluedoObjectsToCheck)
 {
-    std::vector<CluedoObject*> unknownObjects;
+    std::vector<CluedoObject*> unknownObjectsFromCheckedObjects;
 
     PlayerSet* currentPlayerSet = m_players.at(m_currentPlayerIndex)->getPlayerSet().get();
-    std::vector<CluedoObject*>& cluedoObjects = currentPlayerSet->getCluedoObjects();
-    std::multimap<int, CluedoObject*>& cluedoObjectsFromOtherPlayers = currentPlayerSet->getCluedoObjectsFromOtherPlayers();
+    std::vector<CluedoObject*>& unknownObjects = currentPlayerSet->getUnknownCluedoObjects();
 
     for (CluedoObject* cluedoObject : p_cluedoObjectsToCheck)
     {
-        auto resultObjectsFromCurrentPlayer = std::find_if(
-            cluedoObjects.begin(),
-            cluedoObjects.end(),
+        auto resultUnknownObjects = std::find_if(
+            unknownObjects.begin(),
+            unknownObjects.end(),
             [cluedoObject](const CluedoObject* vectorObject) {return vectorObject == cluedoObject; });
 
-        if (cluedoObjects.end() == resultObjectsFromCurrentPlayer)
+        if (unknownObjects.end() != resultUnknownObjects)
         {
-            auto resultObjectsFromOtherPlayers = std::find_if(
-                cluedoObjectsFromOtherPlayers.begin(),
-                cluedoObjectsFromOtherPlayers.end(),
-                [cluedoObject](const auto& mapObject) {return mapObject.second == cluedoObject; });
-
-            if (cluedoObjectsFromOtherPlayers.end() == resultObjectsFromOtherPlayers)
-            {
-                unknownObjects.push_back(cluedoObject);
-            }
+            unknownObjectsFromCheckedObjects.push_back(cluedoObject);
         }
     }
 
-    return unknownObjects;
+    return unknownObjectsFromCheckedObjects;
 }
