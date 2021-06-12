@@ -123,7 +123,7 @@ void GameRunner::askPlayerResponseWithShownObject(CluedoObject* p_cluedoObject) 
     currentPlayerSet->setLastPlayerIndexWhoShowedCluedoObject(m_lastAskedPlayerIndex);
 
     // This is only needed when current player is a computer
-    currentPlayerSet->addCluedoObjectFromOtherPlayers(m_lastAskedPlayerIndex, p_cluedoObject);
+    currentPlayerSet->addCluedoObjectFromOtherPlayers(p_cluedoObject, m_lastAskedPlayerIndex);
 
     if (Player::PlayerType_SelfServer == currentPlayer->getPlayerType()) {
         m_objectShownCallback();

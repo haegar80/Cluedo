@@ -19,7 +19,7 @@ public:
     std::vector<CluedoObject*> getRooms();
 
     void addCluedoObject(CluedoObject* p_cluedoObject);
-    void addCluedoObjectFromOtherPlayers(int p_playerIndex, CluedoObject* p_cluedoObject);
+    void addCluedoObjectFromOtherPlayers(CluedoObject* p_cluedoObject, int p_playerIndex);
     void addMissingCluedoObjectsAtOtherPlayers(int p_playerIndex, CluedoObject* p_cluedoObject);
     void addPlayerIndexWithNoShownCluedoObjects(int p_playerIndex);
     void resetPlayerIndicesWithNoShownCluedoObjects();
@@ -137,7 +137,7 @@ private:
     // Only relevant for computer player
     std::vector<int> m_otherPlayerNumbers;
     std::vector<CluedoObject*> m_cluedoObjects;
-    std::multimap<int, CluedoObject*> m_cluedoObjectsFromOtherPlayers;
+    std::multimap<CluedoObject*, int> m_cluedoObjectsFromOtherPlayers;
     std::map<CluedoObject*, std::vector<int>> m_missingCluedoObjectsAtOtherPlayers;
     std::vector<int> m_playerIndicesWithNoShownCluedoObjects;
     std::vector<CluedoObject*> m_unknownCluedoObjects;
