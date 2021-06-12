@@ -280,26 +280,86 @@ void GameRunner::getObjectsToAsk(CluedoObject** p_murder, CluedoObject** p_weapo
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 
     CluedoObjectLoader& cluedoObjectLoader = CluedoObjectLoader::getInstance();
-    std::vector<CluedoObject*>murders = cluedoObjectLoader.getMurders();
+    std::vector<CluedoObject*> murders = cluedoObjectLoader.getMurders();
     auto randomEngineMurders = std::default_random_engine(seed);
     std::shuffle(std::begin(murders), std::end(murders), randomEngineMurders);
 
-    std::vector<CluedoObject*>weapons = cluedoObjectLoader.getWeapons();
+    std::vector<CluedoObject*> weapons = cluedoObjectLoader.getWeapons();
     auto randomEngineWeapons = std::default_random_engine(seed);
     std::shuffle(std::begin(weapons), std::end(weapons), randomEngineWeapons);
 
-    std::vector<CluedoObject*>rooms = cluedoObjectLoader.getRooms();
+    std::vector<CluedoObject*> rooms = cluedoObjectLoader.getRooms();
     auto randomEngineRooms = std::default_random_engine(seed);
     std::shuffle(std::begin(rooms), std::end(rooms), randomEngineRooms);
 
-    findUnknownObject(murders, p_murder);
-    findUnknownObject(weapons, p_weapon);
-    findUnknownObject(rooms, p_room);
+    constexpr size_t NumberReadyToSuspect = 1;
+    constexpr size_t NumberTryToFindOnlyMurder = 2;
+    constexpr size_t NumberTryToFindOnlyWeapon = 2;
+    constexpr size_t NumberTryToFindOnlyRoom = 3;
+    bool murderIsKnown = false;
+    bool weaponIsKnown = false;
+    bool roomIsKnown = false;
+    bool tryToFindOnlyMurder = false;
+    bool tryToFindOnlyWeapon = false;
+    bool tryToFindOnlyRoom = false;
+
+    std::vector<CluedoObject*> unknownMurders = findUnknownObjects(murders);
+    if (unknownMurders.size() == NumberReadyToSuspect) {
+        murderIsKnown = true;
+    }
+    else if (unknownMurders.size() == NumberTryToFindOnlyMurder) {
+        tryToFindOnlyMurder = true;
+    }
+
+    std::vector<CluedoObject*> unknownWeapons = findUnknownObjects(weapons);
+    if (unknownWeapons.size() == NumberReadyToSuspect) {
+        weaponIsKnown = true;
+    }
+    else if (unknownWeapons.size() == NumberTryToFindOnlyWeapon) {
+        tryToFindOnlyWeapon = true;
+    }
+
+    std::vector<CluedoObject*> unknownRooms = findUnknownObjects(rooms);
+    if (unknownRooms.size() == NumberReadyToSuspect) {
+        roomIsKnown = true;
+    }
+    else if (unknownRooms.size() == NumberTryToFindOnlyRoom) {
+        tryToFindOnlyRoom = true;
+    }
+
+    PlayerSet* currentPlayerSet = m_players.at(m_currentPlayerIndex)->getPlayerSet().get();
+
+    if(murderIsKnown || tryToFindOnlyWeapon || tryToFindOnlyRoom) {
+        std::vector<CluedoObject*> currentMurders = currentPlayerSet->getMurders();
+        std::shuffle(std::begin(currentMurders), std::end(currentMurders), randomEngineMurders);
+        (*p_murder) = currentMurders.at(0);
+    }
+    else {
+        (*p_murder) = unknownMurders.at(0);
+    }
+    
+    if (weaponIsKnown || tryToFindOnlyMurder || tryToFindOnlyRoom) {
+        std::vector<CluedoObject*> currentWeapons = currentPlayerSet->getWeapons();
+        std::shuffle(std::begin(currentWeapons), std::end(currentWeapons), randomEngineWeapons);
+        (*p_weapon) = currentWeapons.at(0);
+    }
+    else {
+        (*p_weapon) = unknownWeapons.at(0);
+    }
+
+    if (roomIsKnown || tryToFindOnlyMurder || tryToFindOnlyWeapon) {
+        std::vector<CluedoObject*> currentRooms = currentPlayerSet->getRooms();
+        std::shuffle(std::begin(currentRooms), std::end(currentRooms), randomEngineRooms);
+        (*p_room) = currentRooms.at(0);
+    }
+    else {
+        (*p_room) = unknownRooms.at(0);
+    }
 }
 
-void GameRunner::findUnknownObject(std::vector<CluedoObject*>& p_cluedoObjectsToCheck, CluedoObject** p_foundObject)
+std::vector<CluedoObject*> GameRunner::findUnknownObjects(std::vector<CluedoObject*>& p_cluedoObjectsToCheck)
 {
-    bool foundUnknownObject = false;
+    std::vector<CluedoObject*> unknownObjects;
 
     PlayerSet* currentPlayerSet = m_players.at(m_currentPlayerIndex)->getPlayerSet().get();
     std::vector<CluedoObject*>& cluedoObjects = currentPlayerSet->getCluedoObjects();
@@ -314,14 +374,6 @@ void GameRunner::findUnknownObject(std::vector<CluedoObject*>& p_cluedoObjectsTo
 
         if (cluedoObjects.end() == resultObjectsFromCurrentPlayer)
         {
-            *p_foundObject = cluedoObject;
-            foundUnknownObject = true;
-        }
-
-        if(foundUnknownObject)
-        {
-            foundUnknownObject = false;
-
             auto resultObjectsFromOtherPlayers = std::find_if(
                 cluedoObjectsFromOtherPlayers.begin(),
                 cluedoObjectsFromOtherPlayers.end(),
@@ -329,10 +381,10 @@ void GameRunner::findUnknownObject(std::vector<CluedoObject*>& p_cluedoObjectsTo
 
             if (cluedoObjectsFromOtherPlayers.end() == resultObjectsFromOtherPlayers)
             {
-                *p_foundObject = cluedoObject;
-                foundUnknownObject = true;
-                break;
+                unknownObjects.push_back(cluedoObject);
             }
         }
     }
+
+    return unknownObjects;
 }

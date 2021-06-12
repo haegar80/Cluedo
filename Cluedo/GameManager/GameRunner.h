@@ -83,6 +83,6 @@ private:
     CluedoObject* askObjectsAtComputer(CluedoObject* p_murder, CluedoObject* p_weapon, CluedoObject* p_room);
 
     void getObjectsToAsk(CluedoObject** p_murder, CluedoObject** p_weapon, CluedoObject** p_room);
-    void findUnknownObject(std::vector<CluedoObject*>& p_cluedoObjectsToCheck, CluedoObject** p_foundObject);
+    std::vector<CluedoObject*> findUnknownObjects(std::vector<CluedoObject*>& p_cluedoObjectsToCheck);
 };
 

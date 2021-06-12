@@ -11,6 +11,10 @@ public:
     PlayerSet(int p_playerNumber);
     virtual ~PlayerSet() = default;
 
+    std::vector<CluedoObject*> getMurders();
+    std::vector<CluedoObject*> getWeapons();
+    std::vector<CluedoObject*> getRooms();
+
     void addCluedoObject(CluedoObject* p_cluedoObject);
     void addCluedoObjectFromOtherPlayers(int p_playerIndex, CluedoObject* p_cluedoObject);
     void addMissingCluedoObjectsAtOtherPlayers(int p_playerIndex, CluedoObject* p_cluedoObject);

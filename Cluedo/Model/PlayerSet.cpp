@@ -5,6 +5,42 @@ PlayerSet::PlayerSet(int p_playerNumber) : m_playerNumber(p_playerNumber)
 {
 }
 
+std::vector<CluedoObject*> PlayerSet::getMurders() {
+    std::vector<CluedoObject*> murders;
+
+    for (CluedoObject* cluedoObject : m_cluedoObjects) {
+        if (CluedoObject::Murder == cluedoObject->getCluedoObjectType()) {
+            murders.push_back(cluedoObject);
+        }
+    }
+
+    return murders;
+}
+
+std::vector<CluedoObject*> PlayerSet::getWeapons() {
+    std::vector<CluedoObject*> weapons;
+
+    for (CluedoObject* cluedoObject : m_cluedoObjects) {
+        if (CluedoObject::Weapon == cluedoObject->getCluedoObjectType()) {
+            weapons.push_back(cluedoObject);
+        }
+    }
+
+    return weapons;
+}
+
+std::vector<CluedoObject*> PlayerSet::getRooms() {
+    std::vector<CluedoObject*> rooms;
+
+    for (CluedoObject* cluedoObject : m_cluedoObjects) {
+        if (CluedoObject::Room == cluedoObject->getCluedoObjectType()) {
+            rooms.push_back(cluedoObject);
+        }
+    }
+
+    return rooms;
+}
+
 void PlayerSet::addCluedoObject(CluedoObject* p_cluedoObject)
 {
     m_cluedoObjects.push_back(p_cluedoObject);
