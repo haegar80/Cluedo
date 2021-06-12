@@ -129,10 +129,27 @@ void StartGameUI::initializeGame() {
     {
         std::stringstream computerName;
         computerName << "Computer " << (i + 1);
-        (void)gameController.createNewPlayer(computerName.str().c_str(), Player::PlayerType_Computer);
+        Player* computerPlayer = gameController.createNewPlayer(computerName.str().c_str(), Player::PlayerType_Computer);
     }
 
-    (void) gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_SelfServer);
+    Player* selfPlayer = gameController.createNewPlayer(m_lineEditPlayerName->text().toStdString(), Player::PlayerType_SelfServer);
+
+    for (Player* computerPlayer : gameController.getComputerPlayers()) {
+        PlayerSet* computerPlayerSet = computerPlayer->getPlayerSet().get();
+        for (Player* tempComputerPlayer : gameController.getComputerPlayers()) {
+            if (tempComputerPlayer == computerPlayer) {
+                continue;
+            }
+            PlayerSet* tempComputerPlayerSet = tempComputerPlayer->getPlayerSet().get();
+            computerPlayerSet->addOtherPlayerNumber(tempComputerPlayerSet->getPlayerNumber());
+        }
+        for (RemotePlayer* remotePlayer : gameController.getRemotePlayers()) {
+            PlayerSet* remotePlayerSet = remotePlayer->getPlayerSet().get();
+            computerPlayerSet->addOtherPlayerNumber(remotePlayerSet->getPlayerNumber());
+        }
+        PlayerSet* selfPlayerSet = selfPlayer->getPlayerSet().get();
+        computerPlayerSet->addOtherPlayerNumber(selfPlayerSet->getPlayerNumber());
+    }
 
     gameController.startGame();
 

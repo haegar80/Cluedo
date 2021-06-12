@@ -302,6 +302,37 @@ Player* GameController::getCurrentPlayer()
     return currentPlayer;
 }
 
+std::vector<Player*> GameController::getComputerPlayers() {
+    std::vector<Player*> computerPlayers;
+
+    for (Player* player : m_players)
+    {
+        if (Player::PlayerType_Computer == player->getPlayerType()) {
+            if (player) {
+                computerPlayers.push_back(player);
+            }
+        }
+    }
+
+    return computerPlayers;
+}
+
+std::vector<RemotePlayer*> GameController::getRemotePlayers() {
+    std::vector<RemotePlayer*> remotePlayers;
+
+    for (Player* player : m_players)
+    {
+        if (Player::PlayerType_Remote == player->getPlayerType()) {
+            RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(player);
+            if (remotePlayer) {
+                remotePlayers.push_back(remotePlayer);
+            }
+        }
+    }
+
+    return remotePlayers;
+}
+
 void GameController::moveToNextPlayer(bool p_externalCall) {
     if (m_gameRunner) {
         if (p_externalCall) {
@@ -344,7 +375,7 @@ std::shared_ptr<PlayerSet> GameController::createNewPlayerSet()
 {
     int numberOfPlayers = static_cast<int>(m_players.size());
 
-    std::shared_ptr<PlayerSet> playerSet = std::make_shared<PlayerSet>(numberOfPlayers + 1);
+    std::shared_ptr<PlayerSet> playerSet = std::make_shared<PlayerSet>(numberOfPlayers);
     initPlayerSet(playerSet);
 
     return playerSet;
@@ -384,22 +415,6 @@ int GameController::getSelfPlayerIndex() {
     }
 
     return index;
-}
-
-std::vector<RemotePlayer*> GameController::getRemotePlayers() {
-    std::vector<RemotePlayer*> remotePlayers;
-
-    for (Player* player : m_players)
-    {
-        if (Player::PlayerType_Remote == player->getPlayerType()) {
-            RemotePlayer* remotePlayer = dynamic_cast<RemotePlayer*>(player);
-            if (remotePlayer) {
-                remotePlayers.push_back(remotePlayer);
-            }
-        }
-    }
-
-    return remotePlayers;
 }
 
 RemotePlayer* GameController::createNewRemotePlayer(int p_indexNumber, std::string p_name, SOCKET p_remoteSocket) {

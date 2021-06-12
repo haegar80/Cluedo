@@ -11,6 +11,9 @@ public:
     PlayerSet(int p_playerNumber);
     virtual ~PlayerSet() = default;
 
+    // Only relevant for computer player
+    void addOtherPlayerNumber(int p_otherPlayerNumber);
+
     std::vector<CluedoObject*> getMurders();
     std::vector<CluedoObject*> getWeapons();
     std::vector<CluedoObject*> getRooms();
@@ -24,6 +27,11 @@ public:
     void addUnknownCluedoObjects(CluedoObject* p_cluedoObject);
     void removeUnknownCluedoObjects(CluedoObject* p_cluedoObject);
 
+    int getPlayerNumber() 
+    {
+        return m_playerNumber;
+    }
+
     int getNumberOfCluedoObjects()
     {
         return static_cast<int>(m_cluedoObjects.size());
@@ -34,7 +42,7 @@ public:
         return m_cluedoObjects;
     }
 
-    std::multimap<int, CluedoObject*>& getMissingCluedoObjectsAtOtherPlayers()
+    std::map<CluedoObject*, std::vector<int>>& getMissingCluedoObjectsAtOtherPlayers()
     {
         return m_missingCluedoObjectsAtOtherPlayers;
     }
@@ -126,9 +134,11 @@ public:
 
 private:
     int m_playerNumber{ 0 };
+    // Only relevant for computer player
+    std::vector<int> m_otherPlayerNumbers;
     std::vector<CluedoObject*> m_cluedoObjects;
     std::multimap<int, CluedoObject*> m_cluedoObjectsFromOtherPlayers;
-    std::multimap<int, CluedoObject*> m_missingCluedoObjectsAtOtherPlayers;
+    std::map<CluedoObject*, std::vector<int>> m_missingCluedoObjectsAtOtherPlayers;
     std::vector<int> m_playerIndicesWithNoShownCluedoObjects;
     std::vector<CluedoObject*> m_unknownCluedoObjects;
 
@@ -144,5 +154,6 @@ private:
 
     bool m_shouldTellSuspicion{ false };
 
+    void checkAndUpdateUnknownCluedoObjects();
     void updateSuspicion();
 };

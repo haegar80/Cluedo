@@ -54,6 +54,8 @@ public:
     Player* getSelfPlayer();
     int getCurrentPlayerIndex();
     Player* getCurrentPlayer();
+    std::vector<Player*> getComputerPlayers();
+    std::vector<RemotePlayer*> getRemotePlayers();
     void moveToNextPlayer(bool p_externalCall = true);
 
     std::shared_ptr<GameRunner> getGameRunner() {
@@ -112,7 +114,6 @@ private:
     void initPlayerSet(std::shared_ptr<PlayerSet> playerSet);
 
     int getSelfPlayerIndex();
-    std::vector<RemotePlayer*> getRemotePlayers();
     RemotePlayer* createNewRemotePlayer(int p_indexNumber, std::string p_name, SOCKET p_remoteSocket);
 
     void selectEffectiveMurderWeaponRoom();

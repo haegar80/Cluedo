@@ -5,6 +5,10 @@ PlayerSet::PlayerSet(int p_playerNumber) : m_playerNumber(p_playerNumber)
 {
 }
 
+void PlayerSet::addOtherPlayerNumber(int p_otherPlayerNumber) {
+    m_otherPlayerNumbers.push_back(p_otherPlayerNumber);
+}
+
 std::vector<CluedoObject*> PlayerSet::getMurders() {
     std::vector<CluedoObject*> murders;
 
@@ -55,7 +59,9 @@ void PlayerSet::addCluedoObjectFromOtherPlayers(int p_playerIndex, CluedoObject*
 
 void PlayerSet::addMissingCluedoObjectsAtOtherPlayers(int p_playerIndex, CluedoObject* p_cluedoObject)
 {
-    m_missingCluedoObjectsAtOtherPlayers.insert(std::make_pair(p_playerIndex, p_cluedoObject));
+    m_missingCluedoObjectsAtOtherPlayers[p_cluedoObject].push_back(p_playerIndex);
+    checkAndUpdateUnknownCluedoObjects();
+    updateSuspicion();
 }
 
 void PlayerSet::addPlayerIndexWithNoShownCluedoObjects(int p_playerIndex)
@@ -81,6 +87,27 @@ void PlayerSet::removeUnknownCluedoObjects(CluedoObject* p_cluedoObject)
         m_unknownCluedoObjects.erase(it);
     }
     updateSuspicion();
+}
+
+void PlayerSet::checkAndUpdateUnknownCluedoObjects() {
+    
+    for (auto it = m_unknownCluedoObjects.begin(); m_unknownCluedoObjects.end() != it; ++it) {
+        auto itFoundMissingCluedoObjectsAtOtherPlayers = m_missingCluedoObjectsAtOtherPlayers.find(*it);
+        if (m_missingCluedoObjectsAtOtherPlayers.end() != itFoundMissingCluedoObjectsAtOtherPlayers) {
+            bool removeUnknownObject = true;
+            std::vector<int>& otherPlayersWithMissingObject = (*itFoundMissingCluedoObjectsAtOtherPlayers).second;
+            for (int otherPlayerNumber : m_otherPlayerNumbers) {
+                auto itFoundOtherPlayerNumber = std::find(otherPlayersWithMissingObject.begin(), otherPlayersWithMissingObject.end(), otherPlayerNumber);
+                if (otherPlayersWithMissingObject.end() == itFoundOtherPlayerNumber) {
+                    removeUnknownObject = false;
+                    break;
+                }
+            }
+            if (removeUnknownObject) {
+                it = m_unknownCluedoObjects.erase(it);
+            }
+        }
+    }
 }
 
 void PlayerSet::updateSuspicion()
