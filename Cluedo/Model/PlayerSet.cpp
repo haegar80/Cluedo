@@ -109,10 +109,10 @@ void PlayerSet::updateSuspicion()
                 m_suspectedMurder = unknownCluedoObject;
             }
             else if (CluedoObject::Weapon == unknownCluedoObject->getCluedoObjectType()) {
-                m_suspectedMurder = unknownCluedoObject;
+                m_suspectedWeapon = unknownCluedoObject;
             }
             else if (CluedoObject::Room == unknownCluedoObject->getCluedoObjectType()) {
-                m_suspectedMurder = unknownCluedoObject;
+                m_suspectedRoom = unknownCluedoObject;
             }
         }
 

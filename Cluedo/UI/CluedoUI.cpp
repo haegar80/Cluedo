@@ -353,12 +353,17 @@ void CluedoUI::askPlayer_finished()
     GameController::getInstance().moveToNextPlayer();
 }
 
-void CluedoUI::otherPlayerToldSuspicion(bool p_isSuspicionCorrect) {
+void CluedoUI::otherPlayerToldSuspicion(bool p_isSuspicionCorrect, int p_suspectedMurderNumber, int p_suspectedWeaponNumber, int p_suspectedRoomNumber) {
     Player* currentPlayer = GameController::getInstance().getCurrentPlayer();
+    CluedoObjectLoader& cluedoObjectLoader = CluedoObjectLoader::getInstance();
 
     QMessageBox msgBox;
     std::stringstream resultText;
-    resultText << "Spieler " << currentPlayer->getName() << " hat " << (p_isSuspicionCorrect ? "GEWONNEN!" : "VERLOREN!");
+    resultText << "Spieler " << currentPlayer->getName() << " spricht folgende Verd\303\244chtigung aus:\n";
+    resultText << "T\303\244ter: " << cluedoObjectLoader.findCluedoObjectByNumber(p_suspectedMurderNumber)->getName() << "\n";
+    resultText << "Waffe: " << cluedoObjectLoader.findCluedoObjectByNumber(p_suspectedWeaponNumber)->getName() << "\n";
+    resultText << "Raum: " << cluedoObjectLoader.findCluedoObjectByNumber(p_suspectedRoomNumber)->getName() << "\n";
+    resultText << "Die Verd\303\244chtigung ist: " << (p_isSuspicionCorrect ? "RICHTIG!" : "FALSCH!");
     msgBox.setText(resultText.str().c_str());
     msgBox.exec();
 }

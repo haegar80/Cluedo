@@ -79,7 +79,7 @@ public:
     void showObject_requested(int p_murderNumber, int p_weaponNumber, int p_roomNumber);
     void askPlayerResponse_ready();
     void askPlayerFromOtherPlayer_finished(int p_askedMurderNumber, int p_askedWeaponNumber, int p_askedRoomNumber);
-    void otherPlayerToldSuspicion(bool p_isSuspicionCorrect);
+    void otherPlayerToldSuspicion(bool p_isSuspicionCorrect, int p_suspectedMurderNumber, int p_suspectedWeaponNumber, int p_suspectedRoomNumber);
 
 private:
     static constexpr int CluedoObjectNumberInitValue = 0;

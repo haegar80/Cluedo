@@ -48,7 +48,7 @@ public:
     void askPlayerFromOtherPlayer_finished(int p_askedMurderNumber, int p_askedWeaponNumber, int p_askedRoomNumber);
     void askPlayerFromOtherPlayerWindow_closed();
     void askPlayer_finished();
-    void otherPlayerToldSuspicion(bool p_isSuspicionCorrect);
+    void otherPlayerToldSuspicion(bool p_isSuspicionCorrect, int p_suspectedMurderNumber, int p_suspectedWeaponNumber, int p_suspectedRoomNumber);
 
 private:
     static constexpr int referenceWidth = 1920;

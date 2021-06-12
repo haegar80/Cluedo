@@ -163,6 +163,14 @@ bool GameController::tellSuspicion(CluedoObject* p_murder, CluedoObject* p_weapo
         std::stringstream ss;
         ss << MessageIds::InformToldSuspicion << ":";
         ss << isSuspicionCorrect;
+        ss << ";";
+        ss << p_murder->getNumber();
+        ss << ";";
+        ss << p_weapon->getNumber();
+        ss << ";";
+        ss << p_room->getNumber();
+        ss << ";";
+
         m_tcpWinSocketServer->sendData(remotePlayer->getRemoteSocket(), ss.str());
     }
 
@@ -564,9 +572,12 @@ void GameController::tellSuspicionCallback() {
     Player* currentPlayer = getCurrentPlayer();
     PlayerSet* currentPlayerSet = currentPlayer->getPlayerSet().get();
 
+    CluedoObject* suspectedMurder = currentPlayerSet->getSuspectedMurder();
+    CluedoObject* suspectedWeapon = currentPlayerSet->getSuspectedWeapon();
+    CluedoObject* suspectedRoom = currentPlayerSet->getSuspectedRoom();
     bool isSuspicionCorrect = tellSuspicion(currentPlayerSet->getSuspectedMurder(), currentPlayerSet->getSuspectedWeapon(), currentPlayerSet->getSuspectedRoom());
 
-    emit otherPlayerToldSuspicion(isSuspicionCorrect);
+    emit otherPlayerToldSuspicion(isSuspicionCorrect, suspectedMurder->getNumber(), suspectedWeapon->getNumber(), suspectedRoom->getNumber());
 }
 
 void GameController::receiveRemoteCluedoObject(const std::string& message) {
@@ -828,24 +839,60 @@ void GameController::receiveRemoteMoveToNextPlayerResponse(const std::string& me
 }
 
 void GameController::receiveRemoteInformToldSuspicion(const std::string& message) {
-    std::stringstream ssIsSuspicionCorrect{ message };
-    int isSuspicionCorrect;
-    ssIsSuspicionCorrect >> isSuspicionCorrect;
+    std::size_t startPos = 0;
+    std::size_t delimiterPos = message.find(";", startPos);
 
-    Player* currentPlayer = getCurrentPlayer();
-    Player* selfPlayer = getSelfPlayer();
+    if (std::string::npos != delimiterPos) {
+        std::string isSuspicionCorrectString = message.substr(startPos, delimiterPos - startPos);
+        std::stringstream ssIsSuspicionCorrect;
+        int isSuspicionCorrect;
+        ssIsSuspicionCorrect << isSuspicionCorrectString;
+        ssIsSuspicionCorrect >> isSuspicionCorrect;
 
-    if (Player::PlayerType_SelfServer == selfPlayer->getPlayerType()) {
-        std::vector<RemotePlayer*> remotePlayers = getRemotePlayers();
-        for (RemotePlayer* remotePlayer : remotePlayers) {
-            if (remotePlayer != currentPlayer) {
-                std::stringstream ss;
-                ss << MessageIds::InformToldSuspicion << ":";
-                ss << isSuspicionCorrect;
-                m_tcpWinSocketServer->sendData(remotePlayer->getRemoteSocket(), ss.str());
+        startPos = delimiterPos + 1;
+        std::vector<CluedoObject*> suspectedCluedoObjects;
+
+        while (std::string::npos != (delimiterPos = message.find(";", startPos))) {
+            std::string cluedoObjectString = message.substr(startPos, delimiterPos - startPos);
+            std::stringstream ssCluedoObject;
+            int cluedoObjectNumber;
+            ssCluedoObject << cluedoObjectString;
+            ssCluedoObject >> cluedoObjectNumber;
+
+            CluedoObject* cluedoObject = CluedoObjectLoader::getInstance().findCluedoObjectByNumber(cluedoObjectNumber);
+            if (cluedoObject) {
+                suspectedCluedoObjects.push_back(cluedoObject);
+            }
+
+            startPos = delimiterPos + 1;
+        }
+
+        int murderNumber = suspectedCluedoObjects.at(0)->getNumber();
+        int weaponNumber = suspectedCluedoObjects.at(1)->getNumber();
+        int roomNumber = suspectedCluedoObjects.at(2)->getNumber();
+
+        Player* selfPlayer = getSelfPlayer();
+
+        if (Player::PlayerType_SelfServer == selfPlayer->getPlayerType()) {
+            std::vector<RemotePlayer*> remotePlayers = getRemotePlayers();
+            Player* currentPlayer = getCurrentPlayer();
+            for (RemotePlayer* remotePlayer : remotePlayers) {
+                if (remotePlayer != currentPlayer) {
+                    std::stringstream ss;
+                    ss << MessageIds::InformToldSuspicion << ":";
+                    ss << isSuspicionCorrect;
+                    ss << ";";
+                    ss << murderNumber;
+                    ss << ";";
+                    ss << weaponNumber;
+                    ss << ";";
+                    ss << roomNumber;
+                    ss << ";";
+                    m_tcpWinSocketServer->sendData(remotePlayer->getRemoteSocket(), ss.str());
+                }
             }
         }
-    }
 
-    emit otherPlayerToldSuspicion(isSuspicionCorrect);
+        emit otherPlayerToldSuspicion(isSuspicionCorrect, murderNumber, weaponNumber, roomNumber);
+    }
 }
